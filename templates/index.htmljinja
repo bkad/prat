@@ -1,0 +1,36 @@
+<!doctype html>
+<html>                                                                           
+<head>                                                                           
+  <title>backflexjaxchatlot</title>                                                   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script charset="utf-8">                              
+      $(document).ready(function(){                                            
+          $('form').submit(function(event){                                    
+              ws.send($('#data').val())                                        
+              return false;                                                    
+          });                                                                  
+          if ("WebSocket" in window) {                                         
+              ws = new WebSocket("ws://" + document.location.host + "/api");                
+              ws.onmessage = function (msg) {                                  
+                  $("#log").append("<p>"+msg.data+"</p>")                      
+              };                                                               
+          } else {                                                             
+              alert("WebSocket not supported");                                
+          }                                                                    
+      });                                                                      
+  </script>                                                                    
+</head>                                                                          
+<body>                                                                           
+    <h1>Send:</h1>                                                               
+    <form method='POST' action='#'>                                              
+        <textarea name='data' id="data"></textarea>                              
+        <div><input type='submit'></div>                                         
+    </form>                                                                      
+    <h1>Receive:</h1>                                                            
+    <div id="log">
+      {% for message in messages | reverse %}
+      <p>{{ message["message"] }} </p>
+      {% endfor %}
+    </div>                                                         
+</body>                                                                          
+</html>   
