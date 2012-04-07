@@ -27,6 +27,7 @@ app.config.from_pyfile("settings.py", silent=True)
 def before_request():
   g.css_compiler = Stylus(plugins={"nib":{}})
   g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
+  g.events = g.mongo.oochat.events
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -34,7 +35,8 @@ def page_not_found(error):
 
 @app.route('/')
 def index():
-  return render_template('index.htmljinja')
+  messages = g.events.find().sort("$natural", pymongo.DESCENDING).limit(50)
+  return render_template('index.htmljinja', messages=messages)
 
 @app.route('/assets/<path:asset_path>')
 def assets(asset_path):
@@ -59,16 +61,19 @@ def assets(asset_path):
 @app.route('/api')
 def api():
   if request.environ.get('wsgi.websocket'):
-    ws = request.environ['wsgi.websocket']
+    websocket = request.environ['wsgi.websocket']
     try:
       while True:
-        message = ws.receive()
-        g.mongo.events.insert({ "author": "bkad",
-                                "message": message,
-                                "datetime": datetime.datetime.utcnow() })
-        ws.send(message)
+        message = websocket.receive()
+        if message is None:
+          break
+        g.events.insert({ "author": "bkad",
+                          "message": message,
+                          "datetime": datetime.datetime.utcnow() })
+        websocket.send(message)
     except geventwebsocket.WebSocketError, e:
       print "{0} {1}".format(e.__class__.__name__, e)
+    websocket.close()
   return ""
 
 @werkzeug.serving.run_with_reloader
