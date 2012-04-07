@@ -8,6 +8,10 @@ import coffeescript
 import mimetypes
 from os import path
 import datetime
+import werkzeug.serving
+import gevent.monkey
+# line added to make the reloader work
+gevent.monkey.patch_all()
 
 DEBUG = True
 MONGO_HOST = "127.0.0.1"
@@ -67,7 +71,11 @@ def api():
       print "{0} {1}".format(e.__class__.__name__, e)
   return ""
 
-if __name__ == '__main__':
+@werkzeug.serving.run_with_reloader
+def run_server():
   http_server = WSGIServer(('',5000), app, handler_class=WebSocketHandler)
   http_server.serve_forever()
 
+
+if __name__ == '__main__':
+  run_server()
