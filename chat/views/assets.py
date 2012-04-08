@@ -13,8 +13,11 @@ def setup_stylus():
 @assets.route("/<path:asset_path>")
 def compiled_assets(asset_path):
   asset_path = path.join(current_app.config["COMPILED_ASSET_PATH"], asset_path)
-  with current_app.open_resource(asset_path) as fp:
-    file_contents = fp.read()
+  try:
+    with current_app.open_resource(asset_path) as fp:
+      file_contents = fp.read()
+  except IOError:
+    abort(404)
   if asset_path.endswith(".styl"):
     response = make_response(g.css_compiler.compile(file_contents))
     response.headers["Content-Type"] = "text/css"
