@@ -2,6 +2,8 @@ from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template
 import pymongo
+from gevent_zeromq import zmq
+import msgpack
 import gevent.monkey
 gevent.monkey.patch_all()
 
@@ -34,9 +36,14 @@ def configure_blueprints(app, blueprints):
 
 def configure_before_handlers(app):
   @app.before_request
-  def setup_mongo():
+  def setup():
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
+
+    g.zmq_context = zmq.Context()
+
+    g.msg_packer = msgpack.Packer()
+    g.msg_unpacker = msgpack.Unpacker()
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

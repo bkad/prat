@@ -6,3 +6,6 @@ class DefaultConfig(object):
   MONGO_PORT = 27017
   MONGO_DB_NAME = "oochat"
   COMPILED_ASSET_PATH = "assets"
+
+  PUSH_ADDRESS = "tcp://localhost:5555"
+  SUBSCRIBE_ADDRESS = "tcp://localhost:5556"

@@ -1,3 +1,84 @@
+@import "nib"
+
+global-reset()
+reset-html5()
+
+.container-fluid
+  height: 100%
+  width: 100%
+  position: absolute
+
+.left-sidebar
+  position: fixed
+  top: 0px
+  width: 15%
+  height: 100%
+  border-right: 2px solid #DDD
+
+.main-content
+  position: absolute
+  height: 100%
+  width: 70%
+  margin-left: 15%
+  margin-right: 15%
+  border-right: 2px solid #DDD
+  .chat-log
+    position: absolute
+    left: 0px
+    right 0px
+    top: 0px
+    bottom: 100px
+    overflow-y: auto
+    overflow-x: hidden
+    background: whiteSmoke
+    border-right: 2px solid #DDD
+    .message
+      border-bottom: 1px solid #DDD
+      display: table
+      width: 100%
+      .message-author
+        display: table-cell
+        width: 15%
+        overflow: ellipsis
+      .message-contents
+        display: table-cell
+        width: 85%
+        border-left: 1px solid #DDD
+  .input-container
+    bottom: 0px
+    height: 98px
+    border-top: 2px solid #DDD
+    position: absolute
+    textarea
+      width: 100%
+    .chat-controls
+      margin: 10px 0px
+      width: 100%
+      display: box
+      box-orient: horizontal
+      box-pack: end
+      .chat-control-spacer
+        display: box
+        box-orient: horizontal
+        box-flex: 1
+        margin-left: 10px
+      input[type="button"]
+        border-radius: 5px
+        border: 1px solid #AAA
+        padding: 7px 12px
+        font-weight: bold
+        cursor: pointer
+        &.chat-submit { box-ordinal-group: 2 }
+
+.right-sidebar
+  position: absolute
+  height: 100%
+  width: 15%
+  margin-left: 85%
+  background: #DDD
+
+// pygments styling
+
 .highlight
   background: #fff
 
@@ -200,4 +281,3 @@
 .highlight .gc
   color: #999
   background-color: #EAF2F5
-

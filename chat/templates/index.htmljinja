@@ -2,35 +2,40 @@
 <html>
 <head>
   <title>backflexjaxchatlot</title>
+  <link rel="stylesheet" href="/assets/style.styl"></link>
+  <script src="/assets/chat.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script charset="utf-8">
       $(document).ready(function(){
-          $('form').submit(function(event){
-              ws.send($('#data').val())
-              return false;
-          });
-          if ("WebSocket" in window) {
-              ws = new WebSocket("ws://" + document.location.host + "/eventhub");
-              ws.onmessage = function (msg) {
-                  $("#log").append("<p>"+msg.data+"</p>")
-              };
-          } else {
-              alert("WebSocket not supported");
-          }
+        chat = new Chat("ws://" + document.location.host + "/eventhub")
       });
   </script>
 </head>
 <body>
-    <h1>Send:</h1>
-    <form method='POST' action='#'>
-        <textarea name='data' id="data"></textarea>
-        <div><input type='submit'></div>
-    </form>
-    <h1>Receive:</h1>
-    <div id="log">
-      {% for message in messages | reverse %}
-      <p>{{ message["message"] }} </p>
-      {% endfor %}
+  <div class="container-fluid">
+    <div class="left-sidebar">
     </div>
+    <div class="main-content">
+      <div class="chat-log">
+        {% for message in messages | reverse %}
+        <div class="message">
+          <div class="message-author">{{ message["author"] }}</div>
+          <div class="message-contents">{{ message["message"] }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="input-container">
+        <textarea class="chat-text"></textarea>
+        <div class="chat-controls">
+          <input class="chat-submit" type="button">Send</input>
+          <div class="chat-control-spacer">
+            <input class="chat-preview" type="button">Preview</input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-sidebar">
+    </div>
+  </div>
 </body>
 </html>
