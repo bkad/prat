@@ -12,29 +12,38 @@
   </script>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="left-sidebar">
-    </div>
-    <div class="main-content">
-      <div class="chat-log">
+  <div class="left-sidebar">
+    <h1>LEFT</h1>
+  </div>
+  <div class="main-content">
+    <div class="chat-column">
+      <div class="chat-controls">
+        <button class="expand-left-sidebar">⇤</button>
+        <button class="expand-right-sidebar">⇥</button>
+      </div>
+      <div class="chat-messages-container">
+        {#
         {% for message in messages | reverse %}
-        <div class="message">
+        <div class="message-container" id="message-{{ message["_id"] }}",
+            data-time="{{ time.mktime(message["datetime"].timetuple()) }}">
+          <div class="message-separator">
+          </div>
           <div class="message-author">{{ message["author"] }}</div>
           <div class="message-contents">{{ message["message"] }}</div>
         </div>
         {% endfor %}
+        #}
       </div>
       <div class="input-container">
-        <textarea class="chat-text"></textarea>
-        <div class="chat-controls">
-          <input class="chat-submit" type="button">Send</input>
-          <div class="chat-control-spacer">
-            <input class="chat-preview" type="button">Preview</input>
-          </div>
+        <div class="chat-text-wrapper"><textarea class="chat-text"></textarea></div>
+        <div class="input-controls">
+          <button class="chat-submit">Send</button>
+          <button class="chat-preview">Preview</button>
         </div>
       </div>
     </div>
     <div class="right-sidebar">
+      <h1>RIGHT</h1>
     </div>
   </div>
 </body>

@@ -15,4 +15,4 @@ class window.Chat
       "<div class=\"message-author\">#{messageObject["author"]}</div>" +
       "<div class=\"message-contents\">#{messageObject["message"]}</div>" +
       "</div>"
-      $(".chat-log").append(newMessage)
+      $(".chat-messages-container").append(newMessage)

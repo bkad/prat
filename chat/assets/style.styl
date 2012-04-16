@@ -3,79 +3,134 @@
 global-reset()
 reset-html5()
 
-.container-fluid
-  height: 100%
+light-grey = #FAFAFA
+dark-grey = #C9C9C9
+dark-hover-grey = #B3B3B3
+dark-active-grey = #DDD
+border-grey = 1px solid dark-grey
+
+body
   width: 100%
-  position: absolute
+  height: 100%
+  overflow: hidden
+  min-width: 800px
+
+button
+  font-family: arial, sans-serif
+  font-size: 12px
+  font-weight: bold
+  color: #444
+  background: whiteSmoke
+  border: border-grey
+  border-radius: 2px
+  &:hover
+    box-shadow: 0px 1px 1px rgba(0,0,0,.1)
+    border: 1px solid dark-hover-grey
+  &:active
+    background: dark-active-grey
 
 .left-sidebar
-  position: fixed
-  top: 0px
-  width: 15%
+  absolute: top left
   height: 100%
-  border-right: 2px solid #DDD
+  width: 200px
+  border-right: border-grey
+  background: #E8B15B
 
 .main-content
-  position: absolute
+  background: white
+  absolute: top left 200px
+  right: 0px
   height: 100%
-  width: 70%
-  margin-left: 15%
-  margin-right: 15%
-  border-right: 2px solid #DDD
-  .chat-log
-    position: absolute
-    left: 0px
-    right 0px
-    top: 0px
-    bottom: 100px
-    overflow-y: auto
-    overflow-x: hidden
-    background: whiteSmoke
-    border-right: 2px solid #DDD
-    .message
-      border-bottom: 1px solid #DDD
-      display: table
-      width: 100%
-      .message-author
-        display: table-cell
-        width: 15%
-        overflow: ellipsis
-      .message-contents
-        display: table-cell
-        width: 85%
-        border-left: 1px solid #DDD
-  .input-container
-    bottom: 0px
-    height: 98px
-    border-top: 2px solid #DDD
-    position: absolute
-    textarea
-      width: 100%
-    .chat-controls
-      margin: 10px 0px
-      width: 100%
-      display: box
-      box-orient: horizontal
-      box-pack: end
-      .chat-control-spacer
-        display: box
-        box-orient: horizontal
-        box-flex: 1
-        margin-left: 10px
-      input[type="button"]
-        border-radius: 5px
-        border: 1px solid #AAA
-        padding: 7px 12px
-        font-weight: bold
-        cursor: pointer
-        &.chat-submit { box-ordinal-group: 2 }
-
 .right-sidebar
-  position: absolute
+  absolute: top right
   height: 100%
-  width: 15%
-  margin-left: 85%
-  background: #DDD
+  width: 200px
+  background: #CDFCA9
+.chat-column
+  absolute: top left
+  right: 200px
+  min-width: 400px
+  height: 100%
+.chat-controls
+  absolute: top left
+  right: 0px
+  height: 29px
+  background: light-grey
+  border-right: border-grey
+  border-bottom: border-grey
+  border-left: border-grey
+  button
+    height: 20px
+    width: 25px
+  .expand-left-sidebar
+    absolute: top left
+    margin: 5px
+    font-size: 13px
+  .expand-right-sidebar
+    absolute: top right
+    margin: 5px
+    font-size: 13px
+.chat-messages-container
+  absolute: top 30px left
+  bottom: 81px
+  width: 100%
+  background: white
+  overflow-y: auto
+  overflow-x: hidden
+  padding: 10px 0px 0px 0px
+//.message-container
+
+.message-separator
+  border-bottom: border-grey
+.input-container
+  background: light-grey
+  height: 80px
+  border-top: border-grey
+  border-left: border-grey
+  border-right: border-grey
+  absolute: bottom left
+  right: 0px
+.chat-text-wrapper
+  absolute: top left
+  right: 85px
+  bottom: 0px
+  padding: 10px
+  textarea
+    border-radius: 2px
+    border: border-grey
+    width: 100%
+    height: 100%
+    font-family: arial, sans-serif
+    font-size: 14px
+.input-controls
+  absolute: top right
+  bottom: 0px
+  padding: 10px 0px
+  width: 75px
+  button
+    height: 30px
+    width: 65px
+    &.chat-submit
+      margin-bottom: 5px
+//      padding: 10px 0px
+//      width: 100%
+//      box-orient: horizontal
+//      box-pack: end
+//      .chat-control-spacer
+//        display: box
+//        box-orient: horizontal
+//        box-flex: 1
+//        margin-left: 10px
+//      input[type="button"]
+//        display: box
+//        border-radius: 5px
+//        border: 1px solid #AAA
+//        padding: 7px 12px
+//        font-weight: bold
+//        cursor: pointer
+//        &.chat-submit { box-ordinal-group: 2 }
+//        &.chat-preview { box-ordinal-group: 1 }
+
 
 // pygments styling
 
