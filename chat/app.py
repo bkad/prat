@@ -28,7 +28,13 @@ def create_app(config=None, app_name=None, blueprints=None):
   configure_blueprints(app, blueprints)
   configure_before_handlers(app)
   configure_error_handlers(app)
+  configure_zmq(app)
   return app
+
+# dont create a context for each request
+# it creates a bunch of lingering fd's that are hard to clean up
+def configure_zmq(app):
+  app.zmq_context = zmq.Context()
 
 def configure_blueprints(app, blueprints):
   for blueprint, url_prefix in blueprints:
@@ -39,8 +45,6 @@ def configure_before_handlers(app):
   def setup():
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
-
-    g.zmq_context = zmq.Context()
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()

@@ -11,9 +11,9 @@ def eventhub_client():
   if not request.environ.get('wsgi.websocket'):
     return ""
   websocket = request.environ['wsgi.websocket']
-  push_socket = g.zmq_context.socket(zmq.PUSH)
+  push_socket = current_app.zmq_context.socket(zmq.PUSH)
   push_socket.connect(current_app.config["PUSH_ADDRESS"])
-  subscribe_socket = g.zmq_context.socket(zmq.SUB)
+  subscribe_socket = current_app.zmq_context.socket(zmq.SUB)
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, "")
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
@@ -45,7 +45,8 @@ def eventhub_client():
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
-  websocket.close()
-  subscribe_socket.close()
+  # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
   push_socket.close()
+  subscribe_socket.close()
+  websocket.close()
   return ""
