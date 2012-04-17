@@ -18,8 +18,8 @@
   <div class="main-content">
     <div class="chat-column">
       <div class="chat-controls">
-        <button class="expand-left-sidebar">⇤</button>
-        <button class="expand-right-sidebar">⇥</button>
+        <button class="toggle-left-sidebar">⇤</button>
+        <button class="toggle-right-sidebar">⇥</button>
       </div>
       <div class="chat-messages-container">
         {#
