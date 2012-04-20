@@ -21,6 +21,7 @@ a
   color: #D20000
 
 button
+  font-family: "Lucida Grande"
   font-size: 12px
   font-weight: bold
   color: #444
@@ -47,23 +48,17 @@ button
     absolute: top 100px left
     margin-left: -3px
     width: 150px
-    .channel-container
-      padding-left: 10px
-      text-align: left
-      font-size: 14px
+    button
       width: 150px
       height: 35px
-      margin: 8px 0px
-      font-weight: bold
-      color: #444
-      background: whiteSmoke
-      border: border-grey
-      border-radius: 2px
-      &:hover
-        box-shadow: 0px 1px 1px rgba(0,0,0,.1)
-        border: 1px solid dark-hover-grey
-      &:active
-        background: dark-active-grey
+      margin: 4px 0px
+      padding: 0px 5px 0px 10px
+      text-align: left
+      font-size: 14px
+      overflow: ellipsis
+    .current
+      background: #D25030
+      color: white
 
 .main-content
   background: white
@@ -87,6 +82,7 @@ button
   border-right: border-grey
   border-bottom: border-grey
   border-left: border-grey
+  border-radius: 2px
   button
     height: 20px
     width: 25px
@@ -111,13 +107,14 @@ button
 .message-separator
   border-bottom: border-grey
 .input-container
-  background: light-grey
+  absolute: bottom left
+  right: 0px
   height: 80px
+  background: light-grey
   border-top: border-grey
   border-left: border-grey
   border-right: border-grey
-  absolute: bottom left
-  right: 0px
+  border-radius: 2px
 .chat-text-wrapper
   absolute: top left
   right: 85px
@@ -139,25 +136,6 @@ button
     width: 65px
     &.chat-submit
       margin-bottom: 5px
-//      padding: 10px 0px
-//      width: 100%
-//      box-orient: horizontal
-//      box-pack: end
-//      .chat-control-spacer
-//        display: box
-//        box-orient: horizontal
-//        box-flex: 1
-//        margin-left: 10px
-//      input[type="button"]
-//        display: box
-//        border-radius: 5px
-//        border: 1px solid #AAA
-//        padding: 7px 12px
-//        font-weight: bold
-//        cursor: pointer
-//        &.chat-submit { box-ordinal-group: 2 }
-//        &.chat-preview { box-ordinal-group: 1 }
-
 
 // pygments styling
 
