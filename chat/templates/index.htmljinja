@@ -17,6 +17,20 @@
       <div>{{ "".join(name_jumble[:2]) }}</div>
       <div>{{ "".join(name_jumble[2:]) }}</div>
     </div>
+    <div class="channel-list-container">
+      <div class="channel-container">
+        <div class="channel-name">backlot</div>
+      </div>
+      <div class="channel-container">
+        <div class="channel-name">oosl</div>
+      </div>
+      <div class="channel-container">
+        <div class="channel-name">No Girls Aloud!</div>
+      </div>
+      <div class="channel-container">
+        <div class="channel-name">ALL CAAPSSSSSSS</div>
+      </div>
+    </div>
   </div>
   <div class="main-content">
     <div class="chat-column">
