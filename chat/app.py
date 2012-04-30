@@ -9,7 +9,7 @@ gevent.monkey.patch_all()
 
 DEFAULT_APP = "chat"
 DEFAULT_BLUEPRINTS = (
-    (views.frontend, ""),
+    (views.frontend, "/"),
     (views.assets, "/assets"),
     (views.eventhub, "/eventhub"),
 )
