@@ -35,17 +35,10 @@
         <button class="toggle-right-sidebar">⇥</button>
       </div>
       <div class="chat-messages-container">
-        {#
-        {% for message in messages | reverse %}
-        <div class="message-container" id="message-{{ message["_id"] }}",
-            data-time="{{ time.mktime(message["datetime"].timetuple()) }}">
-          <div class="message-separator">
-          </div>
-          <div class="message-author">{{ message["author"] }}</div>
-          <div class="message-contents">{{ message["message"] }}</div>
-        </div>
+        {% for message in messages|reverse %}
+        {{ render_template("chat_message.htmljinja",
+                           message=markdown_renderer.render(message["message"] or " "))|safe }}
         {% endfor %}
-        #}
       </div>
       <div class="input-container">
         <div class="chat-text-wrapper"><textarea class="chat-text"></textarea></div>

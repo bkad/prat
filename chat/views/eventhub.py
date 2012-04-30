@@ -1,8 +1,9 @@
-from flask import Blueprint, request, g, current_app
+from flask import Blueprint, request, g, current_app, render_template
 import datetime
 import geventwebsocket
 from gevent_zeromq import zmq
 import json
+from chat.markdown import markdown_renderer
 
 eventhub = Blueprint("eventhub", __name__)
 
@@ -31,16 +32,20 @@ def eventhub_client():
         websocket.send(json.dumps(unpacked))
       if websocket.socket.fileno() in events:
         message = websocket.receive()
-        # we use isoformat in msgpack because it cant handle datetime objects
-        time_now = datetime.datetime.utcnow()
-        event_object = { "author": "bkad",
-                         "message": message,
-                         "datetime": time_now.isoformat() }
-        packed = g.msg_packer.pack(event_object)
         if message is None:
           break
-        event_object["datetime"] = time_now
-        g.events.insert(event_object)
+        # we use isoformat in msgpack because it cant handle datetime objects
+        time_now = datetime.datetime.utcnow()
+        rendered_message = render_template("chat_message.htmljinja",
+                                           message=markdown_renderer.render(message))
+        msgpack_event_object = { "author": "bkad",
+                                 "message": rendered_message,
+                                 "datetime": time_now.isoformat() }
+        mongo_event_object = { "author": msgpack_event_object["author"],
+                               "message": message,
+                               "datetime": time_now }
+        packed = g.msg_packer.pack(msgpack_event_object)
+        g.events.insert(mongo_event_object)
         push_socket.send(packed)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)

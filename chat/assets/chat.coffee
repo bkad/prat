@@ -11,9 +11,5 @@ class window.Chat
 
   onEvent: (jsonMessage) =>
     messageObject = JSON.parse(jsonMessage.data)
-    newMessage = "<div class=\"message\">" +
-      "<div class=\"message-author\">#{messageObject["author"]}</div>" +
-      "<div class=\"message-contents\">#{messageObject["message"]}</div>" +
-      "</div>"
-      $(".chat-messages-container").append(newMessage)
+    $(".chat-messages-container").append(messageObject["message"])
 

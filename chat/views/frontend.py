@@ -2,6 +2,7 @@ import pymongo
 from flask import Blueprint, g, render_template
 import time
 from random import shuffle
+from chat.markdown import markdown_renderer
 
 frontend = Blueprint("frontend", __name__)
 
@@ -13,4 +14,4 @@ def index():
   shuffle(name_jumble)
   title = "".join(name_jumble)
   return render_template('index.htmljinja', messages=messages, time=time, name_jumble=name_jumble,
-      title=title)
+      title=title, render_template=render_template, markdown_renderer=markdown_renderer )
