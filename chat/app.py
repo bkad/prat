@@ -14,7 +14,7 @@ DEFAULT_BLUEPRINTS = (
     (views.frontend, "/"),
     (views.assets, "/assets"),
     (views.eventhub, "/eventhub"),
-    (views.auth, "/auth"),
+    (views.auth, ""),
 )
 
 oid = OpenID()
@@ -56,7 +56,14 @@ def configure_before_handlers(app):
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
 
-    g.user = {"name": "Anon{0}".format(randint(1000,9999))}
+    # Create anonymous handle for unauthed users
+    if 'anon_uname' in session:
+      g.user = {"name": session['anon_uname']}
+    else:
+      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
+      g.user = {"name": session['anon_uname']}
+
+    # Catch logged in users
     if 'openid' in session:
       g.user = g.users.find_one({"openid" : session['openid']})
 

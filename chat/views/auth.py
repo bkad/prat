@@ -4,7 +4,7 @@ from flaskext.openid import OpenID
 auth = Blueprint("auth", __name__)
 oid = OpenID()
 
-@auth.route('', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
   if g.user is not None:
