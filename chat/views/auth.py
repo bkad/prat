@@ -7,7 +7,7 @@ oid = OpenID()
 @auth.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
-  if g.user is not None:
+  if g.authed is True:
     return redirect(oid.get_next_url())
   if request.method == 'POST':
     openid = request.form.get('openid_identifier')
