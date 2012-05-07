@@ -6,7 +6,11 @@ class window.Chat
 
   onChatSubmit: =>
     message = $(".chat-text").val()
-    @socket.send(message)
+    author = $.trim($(".user-name").text())
+    message_obj =
+      message: message
+      author: author
+    @socket.send(JSON.stringify(message_obj))
     $(".chat-text").val("")
 
   onEvent: (jsonMessage) =>

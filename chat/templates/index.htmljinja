@@ -37,7 +37,8 @@
       <div class="chat-messages-container">
         {% for message in messages|reverse %}
         {{ render_template("chat_message.htmljinja",
-                           message=markdown_renderer.render(message["message"] or " "))|safe }}
+                           message=markdown_renderer.render(message["message"] or " "),
+                           author=message["author"])|safe }}
         {% endfor %}
       </div>
       <div class="input-container">
@@ -50,12 +51,8 @@
     </div>
     <div class="right-sidebar">
       <div class="user-data">
-        <div class="user-avatar">
-          <img height="18" width="18" src="{{ avatar_url }}">
-        </div>
-        <div class="user-name">
-          {{ user_name }}
-        </div>
+        <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">
+        <div class="user-name">{{ user_name }}</div>
       </div>
     </div>
   </div>

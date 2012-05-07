@@ -1,7 +1,7 @@
 <div class="separator"></div>
 <div class="message-container">
   {# data-time="{{ time.mktime(message["datetime"].timetuple()) }}" #}
-  <img class="gravatar" src="http://gravatar.com/avatar/d1110fe603027aed021858aa116c9bb4/?s=18">
-  <div class="author"><b>bkad</b></div>
+  <img class="gravatar" height="18" width="18" src="static/anon.jpg">
+  <div class="author"><b>{{ author|safe }}</b></div>
   <div class="message">{{ message|safe }}</div>
 </div>
