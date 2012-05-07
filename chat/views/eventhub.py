@@ -32,6 +32,7 @@ def eventhub_client():
         websocket.send(json.dumps(unpacked))
       if websocket.socket.fileno() in events:
         message = websocket.receive()
+        print message
         if message is None:
           break
         # we use isoformat in msgpack because it cant handle datetime objects

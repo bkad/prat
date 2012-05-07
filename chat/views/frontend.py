@@ -1,7 +1,7 @@
 import pymongo
 from flask import Blueprint, g, render_template
 import time
-from random import shuffle
+from random import shuffle, randint
 from chat.markdown import markdown_renderer
 
 frontend = Blueprint("frontend", __name__)
@@ -13,5 +13,7 @@ def index():
   name_jumble = ["back", "flex", "jax", "chat", "lot"]
   shuffle(name_jumble)
   title = "".join(name_jumble)
+  user_name = "anon{0}".format(randint(1000,9999))
+  avatar_url = "static/anon.jpg"
   return render_template('index.htmljinja', messages=messages, time=time, name_jumble=name_jumble,
-      title=title, render_template=render_template, markdown_renderer=markdown_renderer )
+      title=title, user_name=user_name, avatar_url=avatar_url, render_template=render_template, markdown_renderer=markdown_renderer )

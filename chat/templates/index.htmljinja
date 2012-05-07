@@ -49,7 +49,14 @@
       </div>
     </div>
     <div class="right-sidebar">
-      <h1>RIGHT</h1>
+      <div class="user-data">
+        <div class="user-avatar">
+          <img height="18" width="18" src="{{ avatar_url }}">
+        </div>
+        <div class="user-name">
+          {{ user_name }}
+        </div>
+      </div>
     </div>
   </div>
 </body>
