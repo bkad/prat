@@ -1,7 +1,8 @@
 from . import views
 from .config import DefaultConfig
-from flask import Flask, g, jsonify, request, render_template
+from flask import Flask, g, jsonify, request, render_template, session
 from flaskext.openid import OpenID
+from random import randint
 import pymongo
 from gevent_zeromq import zmq
 import msgpack
@@ -50,11 +51,14 @@ def configure_before_handlers(app):
   def setup():
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
+    g.users = g.mongo.oochat.users
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
 
-    g.user = None
+    g.user = {"name": "Anon{0}".format(randint(1000,9999))}
+    if 'openid' in session:
+      g.user = g.users.find_one({"openid" : session['openid']})
 
 def configure_error_handlers(app):
   @app.errorhandler(404)
