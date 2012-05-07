@@ -46,7 +46,8 @@ def eventhub_client():
                                            message=markdown_renderer.render(message),
                                            author=g.user["name"],
                                            message_id=message_id,
-                                           gravatar=g.user["gravatar"])
+                                           gravatar=g.user["gravatar"],
+                                           merge_messages=False)
         msgpack_event_object = { "author": g.user["name"],
                                  "message": rendered_message,
                                  "datetime": time_now.isoformat() }
