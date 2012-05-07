@@ -1,6 +1,7 @@
 from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template
+from flaskext.openid import OpenID
 import pymongo
 from gevent_zeromq import zmq
 import msgpack
@@ -12,7 +13,10 @@ DEFAULT_BLUEPRINTS = (
     (views.frontend, "/"),
     (views.assets, "/assets"),
     (views.eventhub, "/eventhub"),
+    (views.auth, "/auth"),
 )
+
+oid = OpenID()
 
 def create_app(config=None, app_name=None, blueprints=None):
   if app_name is None:
@@ -29,6 +33,7 @@ def create_app(config=None, app_name=None, blueprints=None):
   configure_before_handlers(app)
   configure_error_handlers(app)
   configure_zmq(app)
+  oid.init_app(app)
   return app
 
 # dont create a context for each request
@@ -48,6 +53,8 @@ def configure_before_handlers(app):
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
+
+    g.user = None
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

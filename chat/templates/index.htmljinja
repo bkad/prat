@@ -50,9 +50,11 @@
       </div>
     </div>
     <div class="right-sidebar">
-      <div class="user-data">
-        <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">
-        <div class="user-name">{{ user_name }}</div>
+      <div class="user-container">
+        <div class="user-data">
+          <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">
+          <div class="user-name">{{ user_name }}</div>
+        </div>
       </div>
     </div>
   </div>
