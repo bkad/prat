@@ -126,9 +126,7 @@ button
   background: white
   overflow-y: auto
   overflow-x: hidden
-  padding: 10px 0px 0px 0px
-  .separator
-    border-bottom: 1px solid #F1F1F1
+  padding-top: 5px
   .message-container
     font-family: arial, sans-serif
     font-size: 14px
@@ -162,6 +160,8 @@ button
     display: inline
 
 .message-separator
+  &:first-child
+    display: none
   margin-top: 8px
   margin-bottom: 7px
   border-bottom: border-grey
