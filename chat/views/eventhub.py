@@ -39,12 +39,15 @@ def eventhub_client():
         time_now = datetime.datetime.utcnow()
         mongo_event_object = { "author": g.user["name"],
                                "message": message,
+                               "gravatar": g.user["gravatar"],
                                "datetime": time_now }
         message_id = g.events.insert(mongo_event_object)
         rendered_message = render_template("chat_message.htmljinja",
                                            message=markdown_renderer.render(message),
                                            author=g.user["name"],
-                                           message_id=message_id)
+                                           message_id=message_id,
+                                           gravatar=g.user["gravatar"],
+                                           merge_messages=False)
         msgpack_event_object = { "author": g.user["name"],
                                  "message": rendered_message,
                                  "datetime": time_now.isoformat() }

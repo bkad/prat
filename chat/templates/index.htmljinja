@@ -42,7 +42,8 @@
         {{ render_template("chat_message.htmljinja",
                            message=markdown_renderer.render(message["message"] or " "),
                            author=message["author"],
-                           message_id=message["_id"])|safe }}
+                           message_id=message["_id"],
+                           gravatar=message["gravatar"] or "static/anon.jpg")|safe }}
         {% endfor %}
       </div>
       <div class="input-container">

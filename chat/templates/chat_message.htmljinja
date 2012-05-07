@@ -2,9 +2,11 @@
 <div class="message-container" id="{{ message_id }}">
   {# data-time="{{ time.mktime(message["datetime"].timetuple()) }}" #}
   <div class="author-container">
-  	<img class="gravatar" height="18" width="18" src="static/anon.jpg">
+  	<img class="gravatar" height="18" width="18" src="{{ gravatar|safe }}">
   	<div class="author">{{ author|safe }}</div>
   </div>
-  <script>if($('#{{ message_id }}').prev().prev().find('.author').text() == $('#{{ message_id }}').find('.author').text()){ $('#{{ message_id }}').prev().hide(); $('#{{ message_id }}').find('.author-container').hide(); }</script>
+  {% if merge_messages %}
+  	<script>if($('#{{ message_id }}').prev().prev().find('.author').text() == $('#{{ message_id }}').find('.author').text()){ $('#{{ message_id }}').prev().hide(); $('#{{ message_id }}').find('.author-container').hide(); }</script>
+  {% endif %}
   <div class="message">{{ message|safe }}</div>
 </div>
