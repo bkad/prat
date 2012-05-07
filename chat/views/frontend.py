@@ -13,7 +13,6 @@ def index():
   name_jumble = ["back", "flex", "jax", "chat", "lot"]
   shuffle(name_jumble)
   title = "".join(name_jumble)
-  avatar_url = g.user["gravatar"] if "gravatar" in g.user else "static/anon.jpg"
   return render_template('index.htmljinja', messages=messages, time=time, name_jumble=name_jumble,
-      title=title, user_name=g.user['name'], avatar_url=avatar_url, authed=g.authed,
+      title=title, user_name=g.user['name'], avatar_url=g.user["gravatar"], authed=g.authed,
       render_template=render_template, markdown_renderer=markdown_renderer)
