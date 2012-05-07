@@ -41,7 +41,8 @@
         {% for message in messages|reverse %}
         {{ render_template("chat_message.htmljinja",
                            message=markdown_renderer.render(message["message"] or " "),
-                           author=message["author"])|safe }}
+                           author=message["author"],
+                           message_id=message["_id"])|safe }}
         {% endfor %}
       </div>
       <div class="input-container">

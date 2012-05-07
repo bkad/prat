@@ -23,6 +23,7 @@ def eventhub_client():
   poller.register(websocket.socket, zmq.POLLIN)
 
   try:
+    message = None
     while True:
       events = dict(poller.poll())
       if subscribe_socket in events:
@@ -32,20 +33,21 @@ def eventhub_client():
         websocket.send(json.dumps(unpacked))
       if websocket.socket.fileno() in events:
         message = websocket.receive()
-        print message
         if message is None:
           break
         # we use isoformat in msgpack because it cant handle datetime objects
         time_now = datetime.datetime.utcnow()
-        rendered_message = render_template("chat_message.htmljinja",
-                                           message=markdown_renderer.render(message),
-                                           author=g.user['name'])
-        msgpack_event_object = { "author": g.user['name'],
-                                 "message": rendered_message,
-                                 "datetime": time_now.isoformat() }
-        mongo_event_object = { "author": msgpack_event_object["author"],
+        mongo_event_object = { "author": g.user["name"],
                                "message": message,
                                "datetime": time_now }
+        message_id = g.events.insert(mongo_event_object)
+        rendered_message = render_template("chat_message.htmljinja",
+                                           message=markdown_renderer.render(message),
+                                           author=g.user["name"],
+                                           message_id=message_id)
+        msgpack_event_object = { "author": g.user["name"],
+                                 "message": rendered_message,
+                                 "datetime": time_now.isoformat() }
         packed = g.msg_packer.pack(msgpack_event_object)
         g.events.insert(mongo_event_object)
         push_socket.send(packed)

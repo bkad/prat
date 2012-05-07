@@ -1,7 +1,10 @@
-<div class="separator"></div>
-<div class="message-container">
+<div class="message-separator"></div>
+<div class="message-container" id="{{ message_id }}">
   {# data-time="{{ time.mktime(message["datetime"].timetuple()) }}" #}
-  <img class="gravatar" height="18" width="18" src="static/anon.jpg">
-  <div class="author"><b>{{ author|safe }}</b></div>
+  <div class="author-container">
+  	<img class="gravatar" height="18" width="18" src="static/anon.jpg">
+  	<div class="author">{{ author|safe }}</div>
+  </div>
+  <script>if($('#{{ message_id }}').prev().prev().find('.author').text() == $('#{{ message_id }}').find('.author').text()){ $('#{{ message_id }}').prev().hide(); $('#{{ message_id }}').find('.author-container').hide(); }</script>
   <div class="message">{{ message|safe }}</div>
 </div>
