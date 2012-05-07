@@ -52,7 +52,6 @@ def eventhub_client():
                                  "message": rendered_message,
                                  "datetime": time_now.isoformat() }
         packed = g.msg_packer.pack(msgpack_event_object)
-        g.events.insert(mongo_event_object)
         push_socket.send(packed)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
