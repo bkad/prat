@@ -1,6 +1,8 @@
 from . import views
 from .config import DefaultConfig
-from flask import Flask, g, jsonify, request, render_template
+from flask import Flask, g, jsonify, request, render_template, session
+from flaskext.openid import OpenID
+from random import randint
 import pymongo
 from gevent_zeromq import zmq
 import msgpack
@@ -12,7 +14,10 @@ DEFAULT_BLUEPRINTS = (
     (views.frontend, "/"),
     (views.assets, "/assets"),
     (views.eventhub, "/eventhub"),
+    (views.auth, None),
 )
+
+oid = OpenID()
 
 def create_app(config=None, app_name=None, blueprints=None):
   if app_name is None:
@@ -29,6 +34,7 @@ def create_app(config=None, app_name=None, blueprints=None):
   configure_before_handlers(app)
   configure_error_handlers(app)
   configure_zmq(app)
+  oid.init_app(app)
   return app
 
 # dont create a context for each request
@@ -45,9 +51,24 @@ def configure_before_handlers(app):
   def setup():
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
+    g.users = g.mongo.oochat.users
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
+
+    g.authed = False
+
+    # Create anonymous handle for unauthed users
+    if 'anon_uname' in session:
+      g.user = {"name": session['anon_uname']}
+    else:
+      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
+      g.user = {"name": session['anon_uname']}
+
+    # Catch logged in users
+    if 'openid' in session:
+      g.user = g.users.find_one({"openid" : session['openid']})
+      g.authed = True
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

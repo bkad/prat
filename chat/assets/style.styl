@@ -69,6 +69,31 @@ button
   absolute: top right
   height: 100%
   width: 200px
+  .user-container
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0px;
+    height: 29px;
+    background: light-grey
+    border-right: border-grey
+    border-bottom: border-grey
+    border-left: border-grey
+    border-radius: 2px
+    .user-data
+      absolute: top left
+      margin: 5px
+      .gravatar
+        display: inline-block
+      .user-name
+        display: inline
+        font-size: 12px
+        font-weight: bold
+        color: #333
+      a.login
+        absolute: top right
+      a.logout
+        absolute: top right
 .chat-column
   absolute: top left
   right: 200px
