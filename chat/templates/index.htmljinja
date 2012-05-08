@@ -40,6 +40,7 @@
       <div class="chat-controls">
         <button class="toggle-left-sidebar">⇤</button>
         <button class="toggle-right-sidebar">⇥</button>
+        <div class="channel-name">{{ channels[0] }}</div>
       </div>
       <div class="chat-messages-container">
         {% for message in messages|reverse %}

@@ -23,6 +23,7 @@ class window.Chat
     action = socketObject["action"]
     data = socketObject["data"]
     if action == "switch_channel"
+      $(".channel-name").text(data["channel"])
       $(".chat-messages-container").children().remove()
       $(".chat-messages-container").append(message) for message in data["messages"]
     if action == "message"
