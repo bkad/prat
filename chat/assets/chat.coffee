@@ -6,7 +6,10 @@ class window.Chat
 
   onChatSubmit: =>
     message = $(".chat-text").val()
-    @socket.send(message)
+    channel = document.location.hash
+    if channel.length >= 0
+      channel = channel.substring(1)
+    @socket.send(JSON.stringify({"message":message, "channel":channel}))
     $(".chat-text").val("")
 
   onEvent: (jsonMessage) =>

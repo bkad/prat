@@ -32,9 +32,12 @@ def eventhub_client():
         unpacked = g.msg_unpacker.unpack()
         websocket.send(json.dumps(unpacked))
       if websocket.socket.fileno() in events:
-        message = websocket.receive()
-        if message is None:
+        socket_data = json.loads(websocket.receive())
+        if socket_data is None:
           break
+        message = socket_data["message"]
+        channel = socket_data["channel"]
+        print channel
         # we use isoformat in msgpack because it cant handle datetime objects
         time_now = datetime.datetime.utcnow()
         mongo_event_object = { "author": g.user["name"],
