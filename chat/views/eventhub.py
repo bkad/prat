@@ -32,27 +32,49 @@ def eventhub_client():
         unpacked = g.msg_unpacker.unpack()
         websocket.send(json.dumps(unpacked))
       if websocket.socket.fileno() in events:
-        message = websocket.receive()
-        if message is None:
+        socket_data = json.loads(websocket.receive())
+        if socket_data is None:
           break
-        # we use isoformat in msgpack because it cant handle datetime objects
-        time_now = datetime.datetime.utcnow()
-        mongo_event_object = { "author": g.user["name"],
-                               "message": message,
-                               "gravatar": g.user["gravatar"],
-                               "datetime": time_now }
-        message_id = g.events.insert(mongo_event_object)
-        rendered_message = render_template("chat_message.htmljinja",
-                                           message=markdown_renderer.render(message),
-                                           author=g.user["name"],
-                                           message_id=message_id,
-                                           gravatar=g.user["gravatar"],
-                                           merge_messages=False)
-        msgpack_event_object = { "author": g.user["name"],
-                                 "message": rendered_message,
-                                 "datetime": time_now.isoformat() }
-        packed = g.msg_packer.pack(msgpack_event_object)
-        push_socket.send(packed)
+        action = socket_data["action"]
+        data = socket_data["data"]
+        if action == "switch_channel":
+          messages = [ render_template("chat_message.htmljinja",
+                           message=markdown_renderer.render(msg_obj["message"]),
+                           author=msg_obj["author"],
+                           message_id=msg_obj["_id"],
+                           gravatar=msg_obj["gravatar"],
+                           merge_messages=False)
+            for msg_obj in g.events.find({"channel":data["channel"]}) ]
+          msgpack_event_object = {"action":"switch_channel",
+                                  "data":{
+                                    "channel": data["channel"],
+                                    "messages": messages }}
+          packed = g.msg_packer.pack(msgpack_event_object)
+          push_socket.send(packed)
+        if action == "publish_message":
+          message = data["message"]
+          channel = data["channel"]
+          # we use isoformat in msgpack because it cant handle datetime objects
+          time_now = datetime.datetime.utcnow()
+          mongo_event_object = { "author": g.user["name"],
+                                 "message": message,
+                                 "channel": channel,
+                                 "gravatar": g.user["gravatar"],
+                                 "datetime": time_now }
+          message_id = g.events.insert(mongo_event_object)
+          rendered_message = render_template("chat_message.htmljinja",
+                                             message=markdown_renderer.render(message),
+                                             author=g.user["name"],
+                                             message_id=message_id,
+                                             gravatar=g.user["gravatar"],
+                                             merge_messages=False)
+          msgpack_event_object = {"action":"message",
+                                  "data":{
+                                    "author": g.user["name"],
+                                    "message": rendered_message,
+                                    "datetime": time_now.isoformat() }}
+          packed = g.msg_packer.pack(msgpack_event_object)
+          push_socket.send(packed)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 

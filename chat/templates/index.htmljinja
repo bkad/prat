@@ -25,10 +25,13 @@
       <div>{{ "".join(name_jumble[2:]) }}</div>
     </div>
     <div class="channel-list-container">
-      <button class="channel current">backlot</button>
-      <button class="channel">oosl</button>
-      <button class="channel">ALL CAAPSSSSSSS</button>
-      <button class="channel">overflow asjkls sda fjkdlsa fjklasjfks ajkl</button>
+      {% for channel in channels %}
+        {% if loop.index == 1 %}
+          <button class="switch-channel channel current" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+        {% else %}
+          <button class="switch-channel channel" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
   <div class="main-content">

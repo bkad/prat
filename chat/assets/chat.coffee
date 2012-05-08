@@ -1,18 +1,32 @@
 class window.Chat
   constructor: (@address) ->
     $(".chat-submit").click(@onChatSubmit)
+    $(".switch-channel").click(@onSwitchChannel)
     @socket = new WebSocket(@address)
     @socket.onmessage = @onEvent
 
+  onSwitchChannel: =>
+    channel = document.location.hash.substring(1)
+    @socket.send(JSON.stringify({"action":"switch_channel", "data":{"channel":channel}}))
+
   onChatSubmit: =>
     message = $(".chat-text").val()
-    @socket.send(message)
+    channel = document.location.hash
+    if channel.length >= 0
+      channel = channel.substring(1)
+    @socket.send(JSON.stringify({"action":"publish_message", "data":{"message":message, "channel":channel}}))
     $(".chat-text").val("")
 
   onEvent: (jsonMessage) =>
     bottom = @scrolledToBottom()
-    messageObject = JSON.parse(jsonMessage.data)
-    $(".chat-messages-container").append(messageObject["message"])
+    socketObject = JSON.parse(jsonMessage.data)
+    action = socketObject["action"]
+    data = socketObject["data"]
+    if action == "switch_channel"
+      $(".chat-messages-container").children().remove()
+      $(".chat-messages-container").append(message) for message in data["messages"]
+    if action == "message"
+      $(".chat-messages-container").append(data["message"])
     @scrollToBottom() if bottom
 
 
