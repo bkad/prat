@@ -38,7 +38,6 @@ def eventhub_client():
         action = socket_data["action"]
         data = socket_data["data"]
         if action == "switch_channel":
-          print "switching to channel %s" % data["channel"]
           messages = [ render_template("chat_message.htmljinja",
                            message=markdown_renderer.render(msg_obj["message"]),
                            author=msg_obj["author"],
@@ -46,7 +45,6 @@ def eventhub_client():
                            gravatar=msg_obj["gravatar"],
                            merge_messages=False)
             for msg_obj in g.events.find({"channel":data["channel"]}) ]
-          print messages
           msgpack_event_object = {"action":"switch_channel",
                                   "data":{
                                     "channel": data["channel"],
