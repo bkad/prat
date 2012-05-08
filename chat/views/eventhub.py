@@ -3,6 +3,7 @@ import datetime
 import geventwebsocket
 from gevent_zeromq import zmq
 import json
+import pymongo
 from chat.markdown import markdown_renderer
 
 eventhub = Blueprint("eventhub", __name__)
@@ -44,7 +45,7 @@ def eventhub_client():
                            message_id=msg_obj["_id"],
                            gravatar=msg_obj["gravatar"],
                            merge_messages=False)
-            for msg_obj in g.events.find({"channel":data["channel"]}) ]
+            for msg_obj in g.events.find({"channel":data["channel"]}).sort("$natural", pymongo.DESCENDING).limit(100) ]
           msgpack_event_object = {"action":"switch_channel",
                                   "data":{
                                     "channel": data["channel"],

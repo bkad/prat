@@ -12,6 +12,7 @@
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
         channelControls = new ChannelControls()
+        document.location.hash = "{{ channels[0] }}";
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
