@@ -20,7 +20,7 @@ def eventhub_client():
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
   poller = zmq.Poller()
-  poller.register(subscribe_socket, zmq.POLLIN)
+  poller.register(subscribe_socket, zmq.POLLIN) 
   poller.register(websocket.socket, zmq.POLLIN)
 
   try:
@@ -39,13 +39,16 @@ def eventhub_client():
         action = socket_data["action"]
         data = socket_data["data"]
         if action == "switch_channel":
+          # Potential gotcha: return messages in reverse order
+          # This differs from frontend.py that does the reversing in the jinja
+          # template
           messages = [ render_template("chat_message.htmljinja",
                            message=markdown_renderer.render(msg_obj["message"]),
                            author=msg_obj["author"],
                            message_id=msg_obj["_id"],
                            gravatar=msg_obj["gravatar"],
                            merge_messages=False)
-            for msg_obj in g.events.find({"channel":data["channel"]}).sort("$natural", pymongo.DESCENDING).limit(100) ]
+            for msg_obj in g.events.find({"channel":data["channel"]}).sort("$natural", pymongo.ASCENDING).limit(100) ]
           msgpack_event_object = {"action":"switch_channel",
                                   "data":{
                                     "channel": data["channel"],
