@@ -27,9 +27,9 @@
     <div class="channel-list-container">
       {% for channel in channels %}
         {% if loop.index == 1 %}
-          <button class="channel current" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+          <button class="switch-channel channel current" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
         {% else %}
-          <button class="channel" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+          <button class="switch-channel channel" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
         {% endif %}
       {% endfor %}
     </div>
