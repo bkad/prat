@@ -49,12 +49,11 @@ def eventhub_client():
                            gravatar=msg_obj["gravatar"],
                            merge_messages=False)
             for msg_obj in g.events.find({"channel":data["channel"]}).sort("$natural", pymongo.ASCENDING).limit(100) ]
-          msgpack_event_object = {"action":"switch_channel",
+          switch_channel_object = {"action":"switch_channel",
                                   "data":{
                                     "channel": data["channel"],
                                     "messages": messages }}
-          packed = g.msg_packer.pack(msgpack_event_object)
-          push_socket.send(packed)
+          websocket.send(json.dumps(switch_channel_object))
         if action == "publish_message":
           message = data["message"]
           channel = data["channel"]
