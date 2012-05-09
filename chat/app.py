@@ -60,20 +60,17 @@ def configure_before_handlers(app):
     g.authed = False
     g.default_channel_name = "general"
 
+    # Create anonymous handle for unauthed users
+    if 'anon_uname' not in session:
+      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
+    g.user = {"name": session['anon_uname'],
+              "gravatar": "static/anon.jpg",
+              "channels": [g.default_channel_name]}
+
     # Catch logged in users
     if 'openid' in session:
       g.user = g.users.find_one({"openid" : session['openid']})
       g.authed = True
-    # Create anonymous handle for unauthed users
-    elif 'anon_uname' in session:
-      g.user = {"name": session['anon_uname'],
-                "gravatar": "static/anon.jpg",
-                "channels": [g.default_channel_name]}
-    else:
-      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-      g.user = {"name": session['anon_uname'],
-                "gravatar": "static/anon.jpg",
-                "channels": [g.default_channel_name]}
 
 def configure_error_handlers(app):
   @app.errorhandler(404)
