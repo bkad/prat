@@ -16,12 +16,19 @@
         document.location.hash = "{{ default_channel['name'] }}";
         $('.add-channel-container').hover(
           function(e){
-            $('.add-channel-container').width('133px');
-            $('.new-channel-name').show();
+            $('.add-channel-container').animate({
+              width: '133px'
+            }, 500, function() {
+              $('.new-channel-name').show();
+            }); 
           },
           function(e){
-            $('.add-channel-container').width('15px');
             $('.new-channel-name').hide();
+            $('.add-channel-container').animate({
+              width: '15px'
+            }, 500, function() {
+              $('.new-channel-name').hide();
+            }); 
           }
         );
       })
