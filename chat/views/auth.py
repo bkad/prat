@@ -33,7 +33,8 @@ def create_or_login(resp):
     mongo_user_object = { "openid": resp.identity_url,
                            "name": resp.fullname or resp.nickname,
                            "email": resp.email,
-                           "gravatar": gravatar_url}
+                           "gravatar": gravatar_url,
+                           "channels": [g.default_channel_name] }
     g.users.insert(mongo_user_object)
     g.user = mongo_user_object
   flash(u'Successfully logged in')

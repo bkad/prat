@@ -27,11 +27,20 @@ def eventhub_client():
     message = None
     while True:
       events = dict(poller.poll())
+
+      # Server -> Client
       if subscribe_socket in events:
         packed = subscribe_socket.recv()
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
-        websocket.send(json.dumps(unpacked))
+        action = unpacked["action"]
+        data = unpacked["data"]
+        if action == "message":
+          channel = data["channel"]
+          if channel in g.user["channels"]:
+            websocket.send(json.dumps(unpacked))
+
+      # Client -> Server
       if websocket.socket.fileno() in events:
         socket_data = json.loads(websocket.receive())
         if socket_data is None:
@@ -53,6 +62,9 @@ def eventhub_client():
                                   "data":{
                                     "channel": data["channel"],
                                     "messages": messages }}
+
+          g.user['channels'] = [ data["channel"] ]
+          # -> Client
           websocket.send(json.dumps(switch_channel_object))
         if action == "publish_message":
           message = data["message"]
@@ -75,8 +87,11 @@ def eventhub_client():
                                   "data":{
                                     "author": g.user["name"],
                                     "message": rendered_message,
+                                    "channel": channel,
                                     "datetime": time_now.isoformat() }}
           packed = g.msg_packer.pack(msgpack_event_object)
+
+          # -> Everyone
           push_socket.send(packed)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)

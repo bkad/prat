@@ -66,10 +66,14 @@ def configure_before_handlers(app):
       g.authed = True
     # Create anonymous handle for unauthed users
     elif 'anon_uname' in session:
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
+      g.user = {"name": session['anon_uname'],
+                "gravatar": "static/anon.jpg",
+                "channels": [g.default_channel_name]}
     else:
       session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
+      g.user = {"name": session['anon_uname'],
+                "gravatar": "static/anon.jpg",
+                "channels": [g.default_channel_name]}
 
 def configure_error_handlers(app):
   @app.errorhandler(404)
