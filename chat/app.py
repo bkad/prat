@@ -52,23 +52,24 @@ def configure_before_handlers(app):
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
     g.users = g.mongo.oochat.users
+    g.channels = g.mongo.oochat.channels
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
 
     g.authed = False
-
-    # Create anonymous handle for unauthed users
-    if 'anon_uname' in session:
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
-    else:
-      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
+    g.default_channel_name = "general"
 
     # Catch logged in users
     if 'openid' in session:
       g.user = g.users.find_one({"openid" : session['openid']})
       g.authed = True
+    # Create anonymous handle for unauthed users
+    elif 'anon_uname' in session:
+      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
+    else:
+      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
+      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

@@ -12,7 +12,7 @@
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
         channelControls = new ChannelControls()
-        document.location.hash = "{{ channels[0] }}";
+        document.location.hash = "{{ default_channel['name'] }}";
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
@@ -27,10 +27,10 @@
     </div>
     <div class="channel-list-container">
       {% for channel in channels %}
-        {% if loop.index == 1 %}
-          <button class="switch-channel channel current" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+        {% if channel['name'] == default_channel['name'] %}
+          <button class="switch-channel channel current" id="{{ channel['name'] }}" onclick="location.href='#{{ channel['name'] }}'">{{ channel['name'] }}</button>
         {% else %}
-          <button class="switch-channel channel" id="{{ channel }}" onclick="location.href='#{{ channel }}'">{{ channel }}</button>
+          <button class="switch-channel channel" id="{{ channel['name'] }}" onclick="location.href='#{{ channel['name'] }}'">{{ channel['name'] }}</button>
         {% endif %}
       {% endfor %}
     </div>
@@ -40,7 +40,7 @@
       <div class="chat-controls">
         <button class="toggle-left-sidebar">⇤</button>
         <button class="toggle-right-sidebar">⇥</button>
-        <div class="channel-name">{{ channels[0] }}</div>
+        <div class="channel-name">{{ default_channel['name'] }}</div>
       </div>
       <div class="chat-messages-container">
         {% for message in messages|reverse %}
