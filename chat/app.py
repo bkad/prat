@@ -59,11 +59,9 @@ def configure_before_handlers(app):
     g.authed = False
 
     # Create anonymous handle for unauthed users
-    if 'anon_uname' in session:
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
-    else:
+    if 'anon_uname' not in session:
       session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-      g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
+    g.user = {"name": session['anon_uname'], "gravatar": "static/anon.jpg"}
 
     # Catch logged in users
     if 'openid' in session:
