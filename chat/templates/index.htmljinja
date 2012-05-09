@@ -14,6 +14,16 @@
         chatControls = new ChatControls()
         channelControls = new ChannelControls()
         document.location.hash = "{{ default_channel['name'] }}";
+        $('.add-channel-container').hover(
+          function(e){
+            $('.add-channel-container').width('133px');
+            $('.new-channel-name').show();
+          },
+          function(e){
+            $('.add-channel-container').width('15px');
+            $('.new-channel-name').hide();
+          }
+        );
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
@@ -34,6 +44,10 @@
           <button class="switch-channel channel" id="{{ channel['name'] }}" onclick="location.href='#{{ channel['name'] }}'">{{ channel['name'] }}</button>
         {% endif %}
       {% endfor %}
+      <div class="add-channel-container">
+        <div class="plus-label">+</div>
+        <input type="text" size="17" class="new-channel-name" />
+      </div>
     </div>
   </div>
   <div class="main-content">
