@@ -1,5 +1,7 @@
 class window.ChatControls
   constructor: ->
+
+  init: ->
     $(".toggle-right-sidebar").click(@onCollapseRightSidebar)
     $(".toggle-left-sidebar").click(@onCollapseLeftSidebar)
 

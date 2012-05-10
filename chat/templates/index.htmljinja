@@ -21,6 +21,7 @@
       $(document).ready(function(){
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
+        chatControls.init()
         channelControls = new ChannelControls()
         document.location.hash = "{{ default_channel['name'] }}";
         $('.add-channel-container').toggle(
