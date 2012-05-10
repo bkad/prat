@@ -9,28 +9,32 @@
   <script src="/assets/channel_controls.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script charset="utf-8">
+      function newChannelHide(e){
+        $('.new-channel-name').val('');
+        $('.new-channel-name').hide();
+        $('.add-channel-container').stop(true).animate({
+          width: '15px'
+        }, 500, function() {
+          $('.new-channel-name').hide();
+        });
+      }
       $(document).ready(function(){
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
         channelControls = new ChannelControls()
         document.location.hash = "{{ default_channel['name'] }}";
-        $('.add-channel-container').hover(
+        $('.add-channel-container').toggle(
           function(e){
-            $('.add-channel-container').animate({
+
+            $('.add-channel-container').stop(true).animate({
               width: '133px'
             }, 500, function() {
               $('.new-channel-name').show();
             }); 
           },
-          function(e){
-            $('.new-channel-name').hide();
-            $('.add-channel-container').animate({
-              width: '15px'
-            }, 500, function() {
-              $('.new-channel-name').hide();
-            }); 
-          }
+          newChannelHide
         );
+        $('.new-channel-name').click(function(e){e.stopPropagation();});
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
