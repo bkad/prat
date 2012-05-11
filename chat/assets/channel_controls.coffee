@@ -1,7 +1,22 @@
 class window.ChannelControls
-  constructor: ->
+  constructor: (@defaultChannel) ->
+
+  init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)
+    document.location.hash = @defaultChannel
+    $('.add-channel-container').toggle(
+      ((event) -> $('.add-channel-container').stop(true).animate({ width: '133px' }, 500, ->
+        $('.new-channel-name').show())),
+      @hideNewChannel)
+    $('.new-channel-name').click((event) -> event.stopPropagation())
 
   onSelectActiveChannel: (event) =>
+    location.href = "##{$(event.target).data("channelName")}"
     $(".channel.current").removeClass("current").mouseup(@onSelectActiveChannel)
     $(event.target).addClass("current").off("mouseup")
+
+  hideNewChannel: (event) ->
+    newChannelName = $('.new-channel-name')
+    newChannelName.val('')
+    newChannelName.hide()
+    $('.add-channel-container').stop(true).animate({ width: '15px' }, 500, -> newChannelName.hide())

@@ -9,33 +9,13 @@
   <script src="/assets/channel_controls.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script charset="utf-8">
-      function newChannelHide(e){
-        $('.new-channel-name').val('');
-        $('.new-channel-name').hide();
-        $('.add-channel-container').stop(true).animate({
-          width: '15px'
-        }, 500, function() {
-          $('.new-channel-name').hide();
-        });
-      }
+
       $(document).ready(function(){
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
         chatControls.init()
-        channelControls = new ChannelControls()
-        document.location.hash = "{{ default_channel['name'] }}";
-        $('.add-channel-container').toggle(
-          function(e){
-
-            $('.add-channel-container').stop(true).animate({
-              width: '133px'
-            }, 500, function() {
-              $('.new-channel-name').show();
-            }); 
-          },
-          newChannelHide
-        );
-        $('.new-channel-name').click(function(e){e.stopPropagation();});
+        channelControls = new ChannelControls("{{ default_channel['name'] }}")
+        channelControls.init()
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
@@ -50,11 +30,8 @@
     </div>
     <div class="channel-list-container">
       {% for channel in channels %}
-        {% if channel['name'] == default_channel['name'] %}
-          <button class="switch-channel channel current" id="{{ channel['name'] }}" onclick="location.href='#{{ channel['name'] }}'">{{ channel['name'] }}</button>
-        {% else %}
-          <button class="switch-channel channel" id="{{ channel['name'] }}" onclick="location.href='#{{ channel['name'] }}'">{{ channel['name'] }}</button>
-        {% endif %}
+        <button class="switch-channel channel {{ "current" if channel['name'] == default_channel['name'] else "" }}"
+          data-channel-name="{{ channel['name'] }}">{{ channel['name'] }}</button>
       {% endfor %}
       <div class="add-channel-container">
         <div class="plus-label">+</div>
