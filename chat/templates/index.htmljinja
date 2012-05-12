@@ -34,7 +34,7 @@
     </div>
     <div class="channel-list-container">
       {% for channel in channels %}
-        <button class="switch-channel channel {{ "current" if channel == last_selected_channel else "" }}"
+        <button class="channel {{ "current" if channel == last_selected_channel else "" }}"
           data-channel-name="{{ channel }}">{{ channel }}</button>
       {% endfor %}
       <div class="add-channel-container">
