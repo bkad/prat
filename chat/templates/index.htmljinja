@@ -12,10 +12,14 @@
 
       $(document).ready(function(){
         chat = new Chat("ws://" + document.location.host + "/eventhub")
+        chat.init()
         chatControls = new ChatControls()
         chatControls.init()
         channelControls = new ChannelControls("{{ last_selected_channel }}")
         channelControls.init()
+
+        chat.setChannelControls(channelControls)
+        channelControls.setChat(chat)
       })
       $(window).load(function() {
         chat.scrollToBottom(false)
@@ -46,15 +50,18 @@
         <button class="toggle-right-sidebar">⇥</button>
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
-      <div class="chat-messages-container">
-        {% for message in messages|reverse %}
-        {{ render_template("chat_message.htmljinja",
-                           message=markdown_renderer.render(message["message"] or " "),
-                           author=message["author"],
-                           message_id=message["_id"],
-                           gravatar=message["gravatar"] or "static/anon.jpg")|safe }}
-        {% endfor %}
-      </div>
+      {% for channel, messages in message_dict.iteritems() %}
+        <div class="chat-messages-container {{ "current" if channel == last_selected_channel else "" }}"
+            data-channel="{{ channel }}">
+          {% for message in messages|reverse %}
+          {{ render_template("chat_message.htmljinja",
+                             message=markdown_renderer.render(message["message"] or " "),
+                             author=message["author"],
+                             message_id=message["_id"],
+                             gravatar=message["gravatar"] or "static/anon.jpg")|safe }}
+          {% endfor %}
+        </div>
+      {% endfor %}
       <div class="input-container">
         <div class="chat-text-wrapper"><textarea class="chat-text"></textarea></div>
         <div class="input-controls">
