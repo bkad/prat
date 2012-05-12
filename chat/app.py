@@ -52,25 +52,36 @@ def configure_before_handlers(app):
     g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
     g.events = g.mongo.oochat.events
     g.users = g.mongo.oochat.users
-    g.channels = g.mongo.oochat.channels
 
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
 
     g.authed = False
-    g.default_channel_name = "general"
 
     # Create anonymous handle for unauthed users
     if 'anon_uname' not in session:
       session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-    g.user = {"name": session['anon_uname'],
-              "gravatar": "static/anon.jpg",
-              "channels": [g.default_channel_name]}
+    g.user = { "name": session['anon_uname'],
+               "gravatar": "static/anon.jpg",
+               "channels": ["general"],
+               "last_selected_channel": "general" }
 
     # Catch logged in users
     if 'openid' in session:
       g.user = g.users.find_one({"openid" : session['openid']})
       g.authed = True
+
+      # code below is to correct old user models
+      # TODO(kle): remove at some point
+      if "channels" not in g.user:
+        g.user["channels"] = ["general", "Backlot", "OOSL"]
+        g.users.save(g.user)
+      if "last_selected_channel" not in g.user:
+        g.user["last_selected_channel"] = "general"
+        g.users.save(g.user)
+
+
+
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

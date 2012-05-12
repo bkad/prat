@@ -14,7 +14,7 @@
         chat = new Chat("ws://" + document.location.host + "/eventhub")
         chatControls = new ChatControls()
         chatControls.init()
-        channelControls = new ChannelControls("{{ default_channel['name'] }}")
+        channelControls = new ChannelControls("{{ last_selected_channel }}")
         channelControls.init()
       })
       $(window).load(function() {
@@ -30,8 +30,8 @@
     </div>
     <div class="channel-list-container">
       {% for channel in channels %}
-        <button class="switch-channel channel {{ "current" if channel['name'] == default_channel['name'] else "" }}"
-          data-channel-name="{{ channel['name'] }}">{{ channel['name'] }}</button>
+        <button class="switch-channel channel {{ "current" if channel == last_selected_channel else "" }}"
+          data-channel-name="{{ channel }}">{{ channel }}</button>
       {% endfor %}
       <div class="add-channel-container">
         <div class="plus-label">+</div>
@@ -44,7 +44,7 @@
       <div class="chat-controls">
         <button class="toggle-left-sidebar">⇤</button>
         <button class="toggle-right-sidebar">⇥</button>
-        <div class="channel-name">{{ default_channel['name'] }}</div>
+        <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
       <div class="chat-messages-container">
         {% for message in messages|reverse %}

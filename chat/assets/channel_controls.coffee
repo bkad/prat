@@ -1,9 +1,9 @@
 class window.ChannelControls
-  constructor: (@defaultChannel) ->
+  constructor: (@lastSelectedChannel) ->
 
   init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)
-    document.location.hash = @defaultChannel
+    document.location.hash = @lastSelectedChannel
     $('.add-channel-container').toggle(
       ((event) -> $('.add-channel-container').stop(true).animate({ width: '133px' }, 500, ->
         $('.new-channel-name').show())),
