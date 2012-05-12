@@ -11,9 +11,10 @@ class window.ChannelControls
     $('.new-channel-name').click((event) -> event.stopPropagation())
 
   onSelectActiveChannel: (event) =>
-    location.href = "##{$(event.target).data("channelName")}"
+    target = $(event.target)
+    location.href = "##{target.data("channelName")}"
     $(".channel.current").removeClass("current").mouseup(@onSelectActiveChannel)
-    $(event.target).addClass("current").off("mouseup")
+    target.addClass("current").off("mouseup")
 
   hideNewChannel: (event) ->
     newChannelName = $('.new-channel-name')
