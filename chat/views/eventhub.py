@@ -42,9 +42,10 @@ def eventhub_client():
 
       # Client -> Server
       if websocket.socket.fileno() in events:
-        socket_data = json.loads(websocket.receive())
+        socket_data = websocket.receive()
         if socket_data is None:
           break
+        socket_data = json.loads(socket_data)
         action = socket_data["action"]
         data = socket_data["data"]
         if action == "switch_channel":
