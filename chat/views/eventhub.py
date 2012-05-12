@@ -64,7 +64,8 @@ def eventhub_client():
                                     "messages": messages }}
 
           # Update channel logged in user is subscribed to
-          g.user['channels'] = [ data["channel"] ]
+          g.user['last_selected_channel'] = data["channel"]
+          g.users.save(g.user)
 
           # -> Client
           websocket.send(json.dumps(switch_channel_object))
