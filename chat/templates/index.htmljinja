@@ -27,7 +27,7 @@
   </script>
 </head>
 <body>
-  <div class="left-sidebar" style="{{ "display: none;" if left_sidebar_closed else "" }}">
+  <div class="left-sidebar {{ "closed" if left_sidebar_closed else "" }}">
     <div class="logo-title">
       <div>{{ "".join(name_jumble[:2]) }}</div>
       <div>{{ "".join(name_jumble[2:]) }}</div>
@@ -43,8 +43,8 @@
       </div>
     </div>
   </div>
-  <div class="main-content" style="{{ "left: 0px;" if left_sidebar_closed else "" }}">
-    <div class="chat-column" style="{{ "right: 0px;" if right_sidebar_closed else "" }}">
+  <div class="main-content {{ "collapse-left" if left_sidebar_closed else "" }}">
+    <div class="chat-column {{ "collapse-right" if right_sidebar_closed else "" }}">
       <div class="chat-controls">
         <button class="toggle-left-sidebar">{{ "⇥" if left_sidebar_closed else "⇤" }}</button>
         <button class="toggle-right-sidebar">{{ "⇤" if right_sidebar_closed else "⇥" }}</button>
@@ -70,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div class="right-sidebar" style="{{ "display: none;" if right_sidebar_closed else "" }}">
+    <div class="right-sidebar {{ "closed" if right_sidebar_closed else "" }}">
       <div class="user-container">
         <div class="user-data">
           <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">

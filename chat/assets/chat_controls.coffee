@@ -11,8 +11,8 @@ class window.ChatControls
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.unbind("click")
     rightSidebarButton.html("⇥")
-    $(".right-sidebar").css("display", "block")
-    $(".chat-column").css("right", "200px")
+    $(".right-sidebar").removeClass("closed")
+    $(".chat-column").removeClass("collapse-right")
     rightSidebarButton.click(@onCollapseRightSidebar)
     document.cookie = "rightSidebar=open"
 
@@ -20,8 +20,8 @@ class window.ChatControls
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.unbind("click")
     rightSidebarButton.html("⇤")
-    $(".right-sidebar").css("display", "none")
-    $(".chat-column").css("right", "0px")
+    $(".right-sidebar").addClass("closed")
+    $(".chat-column").addClass("collapse-right")
     rightSidebarButton.click(@onExpandRightSidebar)
     document.cookie = "rightSidebar=closed"
 
@@ -29,8 +29,8 @@ class window.ChatControls
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.unbind("click")
     leftSidebarButton.html("⇤")
-    $(".left-sidebar").css("display", "block")
-    $(".main-content").css("left", "200px")
+    $(".left-sidebar").removeClass("closed")
+    $(".main-content").removeClass("collapse-left")
     leftSidebarButton.click(@onCollapseLeftSidebar)
     document.cookie = "leftSidebar=open"
 
@@ -38,7 +38,7 @@ class window.ChatControls
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.unbind("click")
     leftSidebarButton.html("⇥")
-    $(".left-sidebar").css("display", "none")
-    $(".main-content").css("left", "0px")
+    $(".left-sidebar").addClass("closed")
+    $(".main-content").addClass("collapse-left")
     leftSidebarButton.click(@onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
