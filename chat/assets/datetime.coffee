@@ -49,15 +49,17 @@ class window.DateTimeHelper
     @updateTimestamps()
     @setUpdateTimestampsInterval(60000)
 
-  bindAll: ->
-    $(".author-container .time").each((index, timeContainer) ->
-      timeContainer = $(timeContainer)
-      timeContainer.data("datetime", new DateTime(parseInt(timeContainer.data("time")))))
+  bindAll: =>
+    $(".author-container .time").each((index, timeContainer) => @bindOne($(timeContainer)))
 
-  updateTimestamps: ->
-    $(".author-container .time").each((index, timeContainer) ->
-      timeContainer = $(timeContainer)
-      timeContainer.html(timeContainer.data("datetime").contextualTime()))
+  bindOne: (timeContainer) ->
+      timeContainer.data("datetime", new DateTime(parseInt(timeContainer.data("time"))))
+
+  updateTimestamps: =>
+    $(".author-container .time").each((index, timeContainer) => @updateTimestamp($(timeContainer)))
+
+  updateTimestamp: (timeContainer) ->
+    timeContainer.html(timeContainer.data("datetime").contextualTime())
 
   setUpdateTimestampsInterval: (interval) ->
     @intervalID = setInterval(@updateTimestamps, interval)

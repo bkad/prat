@@ -21,7 +21,11 @@ class window.Chat
     action = socketObject["action"]
     data = socketObject["data"]
     if action == "message"
-      $(".chat-messages-container[data-channel='#{data["channel"]}']").append(data["message"])
+      message = $(data["message"])
+      timeContainer = message.find(".author-container .time")
+      dateTimeHelper.bindOne(timeContainer)
+      dateTimeHelper.updateTimestamp(timeContainer)
+      message.appendTo(".chat-messages-container[data-channel='#{data["channel"]}']")
     @scrollToBottom() if bottom
 
 
@@ -36,3 +40,4 @@ class window.Chat
     messages[method](scrollTop: messages[0].scrollHeight)
 
   setChannelControls: (channelControls) -> @channelControls = channelControls
+  setDateTimeHelper: (dateTimeHelper) -> @dateTimeHelper = dateTimeHelper

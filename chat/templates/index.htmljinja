@@ -22,6 +22,7 @@
         dateTimeHelper.init()
 
         chat.setChannelControls(channelControls)
+        chat.setDateTimeHelper(dateTimeHelper)
         channelControls.setChat(chat)
       })
       $(window).load(function() {
