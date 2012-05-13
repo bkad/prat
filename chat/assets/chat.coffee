@@ -26,12 +26,12 @@ class window.Chat
 
 
   scrolledToBottom: ->
-    messages = $(".chat-messages-container")
+    messages = $(".chat-messages-container.current")
     difference = (messages[0].scrollHeight - messages.scrollTop()) is messages.outerHeight()
     return difference <= 1
 
   scrollToBottom: (animate=true) ->
-    messages = $(".chat-messages-container")
+    messages = $(".chat-messages-container.current")
     method = if animate then "animate" else "prop"
     messages[method](scrollTop: messages[0].scrollHeight)
 
