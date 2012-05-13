@@ -5,6 +5,7 @@ from gevent_zeromq import zmq
 import json
 import pymongo
 from chat.markdown import markdown_renderer
+from chat.tardis import datetime_to_unix
 
 eventhub = Blueprint("eventhub", __name__)
 
@@ -68,6 +69,7 @@ def eventhub_client():
                                              author=g.user["name"],
                                              message_id=message_id,
                                              gravatar=g.user["gravatar"],
+                                             time=datetime_to_unix(time_now),
                                              merge_messages=False)
           msgpack_event_object = {"action":"message",
                                   "data":{
