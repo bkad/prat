@@ -11,7 +11,7 @@ class window.ChannelControls
 
   onSelectActiveChannel: (event) =>
     target = $(event.target)
-    @currentChannel = target.data("channelName")
+    @currentChannel = target.data("channel-name")
     $(".chat-controls .channel-name").html(@currentChannel)
     $(".channel.current").removeClass("current").mouseup(@onSelectActiveChannel)
     $(".chat-messages-container.current").removeClass("current")
