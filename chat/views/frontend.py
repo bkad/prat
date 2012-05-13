@@ -1,5 +1,5 @@
 import pymongo
-from flask import Blueprint, g, render_template
+from flask import Blueprint, g, render_template, request
 import time
 from random import shuffle
 from chat.markdown import markdown_renderer
@@ -18,7 +18,10 @@ def index():
   name_jumble = ["back", "flex", "jax", "chat", "lot"]
   shuffle(name_jumble)
   title = "".join(name_jumble)
+  right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
+  left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
   return render_template('index.htmljinja', message_dict=message_dict, time=time, name_jumble=name_jumble,
       title=title, user_name=g.user['name'], avatar_url=g.user["gravatar"], authed=g.authed,
       channels=channels, last_selected_channel=last_selected_channel, render_template=render_template,
-      markdown_renderer=markdown_renderer)
+      markdown_renderer=markdown_renderer, right_sidebar_closed=right_sidebar_closed,
+      left_sidebar_closed=left_sidebar_closed)

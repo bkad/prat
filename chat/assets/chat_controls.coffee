@@ -1,9 +1,11 @@
 class window.ChatControls
   constructor: ->
 
-  init: ->
-    $(".toggle-right-sidebar").click(@onCollapseRightSidebar)
-    $(".toggle-left-sidebar").click(@onCollapseLeftSidebar)
+  init: (leftSidebarClosed, rightSidebarClosed) ->
+    rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
+    leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
+    $(".toggle-right-sidebar").click(rightToggle)
+    $(".toggle-left-sidebar").click(leftToggle)
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
@@ -12,6 +14,7 @@ class window.ChatControls
     $(".right-sidebar").css("display", "block")
     $(".chat-column").css("right", "200px")
     rightSidebarButton.click(@onCollapseRightSidebar)
+    document.cookie = "rightSidebar=open"
 
   onCollapseRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
@@ -20,6 +23,7 @@ class window.ChatControls
     $(".right-sidebar").css("display", "none")
     $(".chat-column").css("right", "0px")
     rightSidebarButton.click(@onExpandRightSidebar)
+    document.cookie = "rightSidebar=closed"
 
   onExpandLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
@@ -28,6 +32,7 @@ class window.ChatControls
     $(".left-sidebar").css("display", "block")
     $(".main-content").css("left", "200px")
     leftSidebarButton.click(@onCollapseLeftSidebar)
+    document.cookie = "leftSidebar=open"
 
   onCollapseLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
@@ -36,3 +41,4 @@ class window.ChatControls
     $(".left-sidebar").css("display", "none")
     $(".main-content").css("left", "0px")
     leftSidebarButton.click(@onExpandLeftSidebar)
+    document.cookie = "leftSidebar=closed"
