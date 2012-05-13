@@ -1,9 +1,8 @@
 class window.ChannelControls
-  constructor: (@defaultChannel) ->
+  constructor: (@currentChannel) ->
 
   init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)
-    document.location.hash = @defaultChannel
     $('.add-channel-container').toggle(
       ((event) -> $('.add-channel-container').stop(true).animate({ width: '133px' }, 500, ->
         $('.new-channel-name').show())),
@@ -11,12 +10,19 @@ class window.ChannelControls
     $('.new-channel-name').click((event) -> event.stopPropagation())
 
   onSelectActiveChannel: (event) =>
-    location.href = "##{$(event.target).data("channelName")}"
+    target = $(event.target)
+    @currentChannel = target.data("channelName")
+    $(".chat-controls .channel-name").html(@currentChannel)
     $(".channel.current").removeClass("current").mouseup(@onSelectActiveChannel)
-    $(event.target).addClass("current").off("mouseup")
+    $(".chat-messages-container.current").removeClass("current")
+    target.addClass("current").off("mouseup")
+    $(".chat-messages-container[data-channel='#{@currentChannel}']").addClass("current")
+    @chat.sendSwitchChannelEvent(@currentChannel)
 
   hideNewChannel: (event) ->
     newChannelName = $('.new-channel-name')
     newChannelName.val('')
     newChannelName.hide()
     $('.add-channel-container').stop(true).animate({ width: '15px' }, 500, -> newChannelName.hide())
+
+  setChat: (chat) -> @chat = chat

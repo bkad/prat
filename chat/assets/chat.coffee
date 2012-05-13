@@ -1,19 +1,17 @@
 class window.Chat
   constructor: (@address) ->
+
+  init: ->
     $(".chat-submit").click(@onChatSubmit)
-    $(".switch-channel").click(@onSwitchChannel)
     @socket = new WebSocket(@address)
     @socket.onmessage = @onEvent
 
-  onSwitchChannel: =>
-    channel = document.location.hash.substring(1)
+  sendSwitchChannelEvent: (channel) =>
     @socket.send(JSON.stringify({"action":"switch_channel", "data":{"channel":channel}}))
 
   onChatSubmit: =>
     message = $(".chat-text").val()
-    channel = document.location.hash
-    if channel.length >= 0
-      channel = channel.substring(1)
+    channel = @channelControls.currentChannel
     @socket.send(JSON.stringify({"action":"publish_message", "data":{"message":message, "channel":channel}}))
     $(".chat-text").val("")
 
@@ -22,12 +20,8 @@ class window.Chat
     socketObject = JSON.parse(jsonMessage.data)
     action = socketObject["action"]
     data = socketObject["data"]
-    if action == "switch_channel"
-      $(".channel-name").text(data["channel"])
-      $(".chat-messages-container").children().remove()
-      $(".chat-messages-container").append(message) for message in data["messages"]
     if action == "message"
-      $(".chat-messages-container").append(data["message"])
+      $(".chat-messages-container[data-channel='#{data["channel"]}']").append(data["message"])
     @scrollToBottom() if bottom
 
 
@@ -40,3 +34,5 @@ class window.Chat
     messages = $(".chat-messages-container")
     method = if animate then "animate" else "prop"
     messages[method](scrollTop: messages[0].scrollHeight)
+
+  setChannelControls: (channelControls) -> @channelControls = channelControls

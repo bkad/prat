@@ -39,6 +39,7 @@ button
   height: 100%
   width: 200px
   border-right: border-grey
+  &.closed { display: none }
   .logo-title
     absolute: top 20px left 10px
     font-family: impact
@@ -90,10 +91,12 @@ button
   absolute: top left 200px
   right: 0px
   height: 100%
+  &.collapse-left { left: 0px }
 .right-sidebar
   absolute: top right
   height: 100%
   width: 200px
+  &.closed { display: none }
   .user-container
     position: absolute;
     top: 0;
@@ -124,6 +127,7 @@ button
   right: 200px
   min-width: 400px
   height: 100%
+  &.collapse-right { right: 0px }
 .chat-controls
   absolute: top left
   right: 0px
@@ -153,6 +157,8 @@ button
     margin-bottom: 5px
     text-align: center
 .chat-messages-container
+  &.current { display: block }
+  &:not(.current) { display: none }
   absolute: top 30px left
   bottom: 81px
   width: 100%
