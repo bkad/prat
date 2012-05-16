@@ -14,7 +14,7 @@ class window.Chat
     message = $(".chat-text").val()
     channel = @channelControls.currentChannel
     @socket.send(JSON.stringify({"action":"publish_message", "data":{"message":message, "channel":channel}}))
-    $(".chat-text").val("")
+    $(".chat-text").val("").focus()
 
   onEvent: (jsonMessage) =>
     bottom = @scrolledToBottom()
