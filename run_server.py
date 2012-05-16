@@ -7,7 +7,7 @@ from chat import create_app
 @werkzeug.serving.run_with_reloader
 def run_server():
   app = create_app()
-  http_server = WSGIServer(('',5000), app, handler_class=WebSocketHandler)
+  http_server = WSGIServer(('0.0.0.0',5000), app, handler_class=WebSocketHandler)
   http_server.serve_forever()
 
 if __name__ == "__main__":
