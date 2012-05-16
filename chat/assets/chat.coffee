@@ -3,6 +3,7 @@ class window.Chat
 
   init: ->
     $(".chat-submit").click(@onChatSubmit)
+    $(".chat-text").on("keyup.ctrl_return", @onChatSubmit)
     @socket = new WebSocket(@address)
     @socket.onmessage = @onEvent
 
