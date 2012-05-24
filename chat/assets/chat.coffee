@@ -1,11 +1,18 @@
 class window.Chat
-  constructor: (@address) ->
+  constructor: (@address, @reconnectTimeout) ->
 
   init: ->
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-text").on("keyup.ctrl_return", @onChatSubmit)
+    @createSocket()
+
+  createSocket: =>
+    @timeoutID = setTimeout(@createSocket, @reconnectTimeout)
+    console.log "Connecting to #{@address}"
     @socket = new WebSocket(@address)
     @socket.onmessage = @onEvent
+    @socket.onclose = @onConnectionFailed
+    @socket.onopen = @onConnectionOpened
 
   sendSwitchChannelEvent: (channel) =>
     @socket.send(JSON.stringify({"action":"switch_channel", "data":{"channel":channel}}))
@@ -29,6 +36,18 @@ class window.Chat
       message.appendTo(".chat-messages-container[data-channel='#{data["channel"]}']")
     @scrollToBottom() if bottom
 
+  onConnectionFailed: =>
+    clearTimeout(@timeoutID)
+    console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
+    setTimeout(@createSocket, @reconnectTimeout)
+
+  onConnectionOpened: =>
+    clearTimeout(@timeoutID)
+    console.log "Connection successful"
+
+  onConnectionTimedOut: =>
+    console.log "Connection timed out"
+    @socket.close()
 
   scrolledToBottom: ->
     messages = $(".chat-messages-container.current")
