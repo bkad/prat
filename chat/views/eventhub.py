@@ -65,12 +65,13 @@ def eventhub_client():
                                  "datetime": time_now }
           message_id = g.events.insert(mongo_event_object)
           rendered_message = render_template("chat_message.htmljinja",
+                                             render_template=render_template,
                                              message=markdown_renderer.render(message),
                                              author=g.user["name"],
                                              message_id=message_id,
                                              gravatar=g.user["gravatar"],
                                              time=datetime_to_unix(time_now),
-                                             merge_messages=False)
+                                             merged_messages=False)
           msgpack_event_object = {"action":"message",
                                   "data":{
                                     "author": g.user["name"],

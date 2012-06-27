@@ -1,12 +1,13 @@
 <div class="message-separator"></div>
-<div class="message-container" id="{{ message_id }}">
+<div class="message-container">
   <div class="author-container">
     <img class="gravatar" height="18" width="18" src="{{ gravatar|safe }}">
     <div class="author">{{ author|safe }}</div>
     <div class="time" data-time="{{ time|int }}"></div>
   </div>
-  {% if merge_messages %}
-    <script>if($('#{{ message_id }}').prev().prev().find('.author').text() == $('#{{ message_id }}').find('.author').text()){ $('#{{ message_id }}').prev().hide(); $('#{{ message_id }}').find('.author-container').hide(); }</script>
+  {% if merged_messages %}
+  {{ messages|safe }}
+  {% else %}
+  {{ render_template("chat_message_partial.htmljinja", message_id=message_id, message=message)|safe }}
   {% endif %}
-  <div class="message">{{ message|safe }}</div>
 </div>

@@ -28,13 +28,25 @@ class window.Chat
     socketObject = JSON.parse(jsonMessage.data)
     action = socketObject["action"]
     data = socketObject["data"]
-    if action == "message"
-      message = $(data["message"])
-      timeContainer = message.find(".author-container .time")
-      dateTimeHelper.bindOne(timeContainer)
-      dateTimeHelper.updateTimestamp(timeContainer)
-      message.appendTo(".chat-messages-container[data-channel='#{data["channel"]}']")
+    @appendMessage(data["message"], data["channel"]) if action is "message"
+
     @scrollToBottom() if bottom
+
+  appendMessage: (message, channel) =>
+    findAuthor = (message) -> message.find(".author").text()
+    message = $(message)
+    messagesContainer = $(".chat-messages-container[data-channel='#{channel}']")
+    lastMessage = messagesContainer.find(".message-container").last()
+    if findAuthor(lastMessage) is findAuthor(message)
+      message.find(".message").appendTo(lastMessage)
+      timeContainer = lastMessage.find(".time")
+      timeContainer.attr("data-time", message.find(".time").attr("data-time"))
+      @dateTimeHelper.removeBindings(timeContainer)
+    else
+      message.appendTo(messagesContainer)
+      timeContainer = message.find(".time")
+    @dateTimeHelper.bindOne(timeContainer)
+    @dateTimeHelper.updateTimestamp(timeContainer)
 
   onConnectionFailed: =>
     clearTimeout(@timeoutID)

@@ -58,14 +58,9 @@
       {% for channel, messages in message_dict.iteritems() %}
         <div class="chat-messages-container {{ "current" if channel == last_selected_channel else "" }}"
             data-channel="{{ channel }}">
-          {% for message in messages|reverse %}
-          {{ render_template("chat_message.htmljinja",
-                             message=markdown_renderer.render(message["message"] or " "),
-                             author=message["author"],
-                             message_id=message["_id"],
-                             time=datetime_to_unix(message["datetime"]),
-                             gravatar=message["gravatar"] or "static/anon.jpg")|safe }}
-          {% endfor %}
+        {% for message in messages %}
+          {{ message|safe }}
+        {% endfor %}
         </div>
       {% endfor %}
       <div class="input-container">

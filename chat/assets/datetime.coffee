@@ -54,7 +54,10 @@ class window.DateTimeHelper
     $(".author-container .time").each((index, timeContainer) => @bindOne($(timeContainer)))
 
   bindOne: (timeContainer) ->
-      timeContainer.data("datetime", new DateTime(parseInt(timeContainer.data("time"))))
+    timeContainer.data("datetime", new DateTime(parseInt(timeContainer.attr("data-time"))))
+
+  removeBindings: (timeContainer) -> timeContainer.removeData("datetime")
+
 
   updateTimestamps: =>
     $(".author-container .time").each((index, timeContainer) => @updateTimestamp($(timeContainer)))
