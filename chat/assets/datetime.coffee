@@ -8,6 +8,7 @@ class window.DateTime
     @year = @posted.getFullYear()
     @date = @posted.getDate()
     @weekday = DateTime.DAYS[@posted.getDay()]
+    @month = DateTime.MONTHS[@posted.getMonth()]
     @hours = @posted.getHours()
     @minutes = @posted.getMinutes()
     @minutes = if @minutes < 10 then "0#{@minutes}" else @minutes
