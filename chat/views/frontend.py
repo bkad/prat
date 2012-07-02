@@ -37,6 +37,7 @@ def collapsed_messages(messages):
                            merged_messages=True,
                            messages=collapsed_messages,
                            author=last_message["author"],
+                           email=last_message["email"],
                            time=datetime_to_unix(last_message["datetime"]),
                            gravatar=last_message["gravatar"] or "static/anon.jpg")
   last_message = None
@@ -45,7 +46,7 @@ def collapsed_messages(messages):
     if last_message is None:
       last_message = message
       collapsed_messages = render_message(message)
-    elif message["author"] != last_message["author"]:
+    elif message["email"] != last_message["email"]:
       yield render_collapsed_messages()
       last_message = message
       collapsed_messages = render_message(message)

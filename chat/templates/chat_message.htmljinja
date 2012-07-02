@@ -3,6 +3,7 @@
   <div class="author-container">
     <img class="gravatar" height="18" width="18" src="{{ gravatar|safe }}">
     <div class="author">{{ author|safe }}</div>
+    <div class="email">{{ email|safe }}</div>
     <div class="time" data-time="{{ time|int }}"></div>
   </div>
   {% if merged_messages %}

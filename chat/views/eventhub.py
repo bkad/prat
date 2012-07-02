@@ -60,6 +60,7 @@ def eventhub_client():
           time_now = datetime.datetime.utcnow()
           mongo_event_object = { "author": g.user["name"],
                                  "message": message,
+                                 "email": g.user["email"],
                                  "channel": channel,
                                  "gravatar": g.user["gravatar"],
                                  "datetime": time_now }
@@ -68,6 +69,7 @@ def eventhub_client():
                                              render_template=render_template,
                                              message=markdown_renderer.render(message),
                                              author=g.user["name"],
+                                             email=g.user["email"],
                                              message_id=message_id,
                                              gravatar=g.user["gravatar"],
                                              time=datetime_to_unix(time_now),

@@ -63,6 +63,7 @@ def configure_before_handlers(app):
       session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
     g.user = { "name": session['anon_uname'],
                "gravatar": "static/anon.jpg",
+               "email": session["anon_uname"],
                "channels": ["general"],
                "last_selected_channel": "general" }
 

@@ -33,12 +33,15 @@ class window.Chat
     @scrollToBottom() if bottom
 
   appendMessage: (message, channel) =>
-    findAuthor = (message) -> message.find(".author").text()
+    findEmail = (message) -> message.find(".email").text()
     message = $(message)
     messagesContainer = $(".chat-messages-container[data-channel='#{channel}']")
     lastMessage = messagesContainer.find(".message-container").last()
-    if findAuthor(lastMessage) is findAuthor(message)
+
+    # if the author of consecutive messages are the same, collapse them
+    if findEmail(lastMessage) is findEmail(message)
       message.find(".message").appendTo(lastMessage)
+      # remove the old time data binding and refresh the time attribute
       timeContainer = lastMessage.find(".time")
       timeContainer.attr("data-time", message.find(".time").attr("data-time"))
       @dateTimeHelper.removeBindings(timeContainer)
