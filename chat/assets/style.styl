@@ -14,7 +14,6 @@ body
   width: 100%
   height: 100%
   overflow: hidden
-  min-width: 800px
 
 a
   text-decoration: none
@@ -88,9 +87,9 @@ button
 
 .main-content
   background: white
-  absolute: top left 200px
-  right: 0px
+  absolute: top right
   height: 100%
+  &:not(.collapse-left) { left: 200px }
   &.collapse-left { left: 0px }
 .right-sidebar
   absolute: top right
@@ -124,10 +123,10 @@ button
         absolute: top right
 .chat-column
   absolute: top left
-  right: 200px
-  min-width: 400px
+  min-width: 300px
   height: 100%
   &.collapse-right { right: 0px }
+  &:not(.collapse-right) { right: 200px }
 .chat-controls
   absolute: top left
   right: 0px
