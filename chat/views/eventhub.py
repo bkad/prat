@@ -21,7 +21,7 @@ def eventhub_client():
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
   poller = zmq.Poller()
-  poller.register(subscribe_socket, zmq.POLLIN) 
+  poller.register(subscribe_socket, zmq.POLLIN)
   poller.register(websocket.socket, zmq.POLLIN)
 
   try:
