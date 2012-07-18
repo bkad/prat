@@ -1,0 +1,3 @@
+*.pyc
+# TODO: don't ignore node_modules, use node shrinkwrap instead
+/node_modules/*
