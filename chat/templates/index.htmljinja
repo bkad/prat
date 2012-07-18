@@ -13,7 +13,7 @@
   <script charset="utf-8">
 
       $(document).ready(function(){
-        chat = new Chat("ws://" + document.location.host + "/eventhub", 4000)
+        chat = new Chat("ws://" + document.location.host + "/eventhub", 4000, {{ time_window }})
         chat.init()
         chatControls = new ChatControls()
         chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})

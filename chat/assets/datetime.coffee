@@ -58,7 +58,6 @@ class window.DateTimeHelper
 
   removeBindings: (timeContainer) -> timeContainer.removeData("datetime")
 
-
   updateTimestamps: =>
     $(".author-container .time").each((index, timeContainer) => @updateTimestamp($(timeContainer)))
 

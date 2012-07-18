@@ -1,5 +1,5 @@
 from pymongo import DESCENDING
-from flask import Blueprint, g, render_template, request
+from flask import Blueprint, g, render_template, request, current_app
 from chat.tardis import datetime_to_unix
 from random import shuffle
 from chat.markdown import markdown_renderer
@@ -26,8 +26,10 @@ def index():
       name_jumble=name_jumble, title=title, user_name=g.user['name'], avatar_url=g.user["gravatar"],
       channels=channels, last_selected_channel=last_selected_channel, render_template=render_template,
       markdown_renderer=markdown_renderer, right_sidebar_closed=right_sidebar_closed,
-      left_sidebar_closed=left_sidebar_closed, datetime_to_unix=datetime_to_unix)
+      left_sidebar_closed=left_sidebar_closed, datetime_to_unix=datetime_to_unix,
+      time_window=current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"])
 
+# A generator which yields combines subsequent messages from the same author within a given time window.
 def collapsed_messages(messages):
   def render_message(message):
     return render_template("chat_message_partial.htmljinja",
@@ -41,13 +43,15 @@ def collapsed_messages(messages):
                            email=last_message["email"],
                            time=datetime_to_unix(last_message["datetime"]),
                            gravatar=last_message["gravatar"] or "static/anon.jpg")
+  delta_seconds = lambda x,y: (x['datetime'] - y['datetime']).total_seconds()
+  time_window = current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"]
   last_message = None
   collapsed_messages = None
   for message in messages:
     if last_message is None:
       last_message = message
       collapsed_messages = render_message(message)
-    elif message["email"] != last_message["email"]:
+    elif delta_seconds(message, last_message) > time_window or message["email"] != last_message["email"]:
       yield render_collapsed_messages()
       last_message = message
       collapsed_messages = render_message(message)

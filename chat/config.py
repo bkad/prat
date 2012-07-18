@@ -6,6 +6,7 @@ class DefaultConfig(object):
   MONGO_PORT = 27017
   MONGO_DB_NAME = "oochat"
   COMPILED_ASSET_PATH = "assets"
+  COLLAPSED_MESSAGE_TIME_WINDOW = 5 * 60 # seconds
 
   PUSH_ADDRESS = "tcp://localhost:5555"
   SUBSCRIBE_ADDRESS = "tcp://localhost:5556"

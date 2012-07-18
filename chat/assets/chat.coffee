@@ -1,5 +1,5 @@
 class window.Chat
-  constructor: (@address, @reconnectTimeout) ->
+  constructor: (@address, @reconnectTimeout, @collapseTimeWindow) ->
 
   init: ->
     $(".chat-submit").click(@onChatSubmit)
@@ -34,16 +34,19 @@ class window.Chat
 
   appendMessage: (message, channel) =>
     findEmail = (message) -> message.find(".email").text()
+    getMessageTime = (message) -> parseInt(message.find(".time").attr("data-time"))
+    newMessageInTimeWindow = (recentMessage, oldMessage) ->
+      (getMessageTime(recentMessage) - getMessageTime(oldMessage)) <= @collapseTimeWindow
     message = $(message)
     messagesContainer = $(".chat-messages-container[data-channel='#{channel}']")
     lastMessage = messagesContainer.find(".message-container").last()
 
     # if the author of consecutive messages are the same, collapse them
-    if findEmail(lastMessage) is findEmail(message)
+    if findEmail(lastMessage) is findEmail(message) and newMessageInTimeWindow(message, lastMessage)
       message.find(".message").appendTo(lastMessage)
       # remove the old time data binding and refresh the time attribute
       timeContainer = lastMessage.find(".time")
-      timeContainer.attr("data-time", message.find(".time").attr("data-time"))
+      timeContainer.attr("data-time", getMessageTime(message))
       @dateTimeHelper.removeBindings(timeContainer)
     else
       message.appendTo(messagesContainer)
