@@ -3,9 +3,10 @@ from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session
 from flaskext.openid import OpenID
 from random import randint
-import pymongo
 from gevent_zeromq import zmq
 import msgpack
+import datastore
+from chat.datastore import db
 import gevent.monkey
 gevent.monkey.patch_all()
 
@@ -29,6 +30,7 @@ def create_app(config=None, app_name=None, blueprints=None):
 
   app = Flask(app_name)
   app.config.from_object(config)
+  datastore.init_app(app)
 
   configure_blueprints(app, blueprints)
   configure_before_handlers(app)
@@ -49,10 +51,6 @@ def configure_blueprints(app, blueprints):
 def configure_before_handlers(app):
   @app.before_request
   def setup():
-    g.mongo = pymongo.Connection(host=app.config["MONGO_HOST"], port=app.config["MONGO_PORT"], tz_aware=True)
-    g.events = g.mongo.oochat.events
-    g.users = g.mongo.oochat.users
-
     g.msg_packer = msgpack.Packer()
     g.msg_unpacker = msgpack.Unpacker()
 
@@ -69,20 +67,17 @@ def configure_before_handlers(app):
 
     # Catch logged in users
     if 'openid' in session:
-      g.user = g.users.find_one({"openid" : session['openid']})
+      g.user = db.users.find_one({"openid" : session['openid']})
       g.authed = True
 
       # code below is to correct old user models
       # TODO(kle): remove at some point
       if "channels" not in g.user:
         g.user["channels"] = ["general", "Backlot", "OOSL"]
-        g.users.save(g.user)
+        db.users.save(g.user)
       if "last_selected_channel" not in g.user:
         g.user["last_selected_channel"] = "general"
-        g.users.save(g.user)
-
-
-
+        db.users.save(g.user)
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

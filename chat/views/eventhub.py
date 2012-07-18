@@ -3,7 +3,7 @@ import datetime
 import geventwebsocket
 from gevent_zeromq import zmq
 import json
-import pymongo
+from chat.datastore import db
 from chat.markdown import markdown_renderer
 from chat.tardis import datetime_to_unix
 
@@ -52,7 +52,7 @@ def eventhub_client():
         if action == "switch_channel":
           # Update channel logged in user is subscribed to
           g.user['last_selected_channel'] = data["channel"]
-          g.users.save(g.user)
+          db.users.save(g.user)
         if action == "publish_message":
           message = data["message"]
           channel = data["channel"]
@@ -64,7 +64,7 @@ def eventhub_client():
                                  "channel": channel,
                                  "gravatar": g.user["gravatar"],
                                  "datetime": time_now }
-          message_id = g.events.insert(mongo_event_object)
+          message_id = db.events.insert(mongo_event_object)
           rendered_message = render_template("chat_message.htmljinja",
                                              render_template=render_template,
                                              message=markdown_renderer.render(message),

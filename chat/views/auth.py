@@ -1,6 +1,7 @@
 from flask import Blueprint, g, render_template, request, flash, session, redirect
 from flaskext.openid import OpenID
 from hashlib import md5
+from chat.datastore import db
 import urllib
 
 auth = Blueprint("auth", __name__)
@@ -23,7 +24,7 @@ def login():
 def create_or_login(resp):
   user = None
   session['openid'] = resp.identity_url
-  user = g.users.find_one({"openid" : resp.identity_url})
+  user = db.users.find_one({"openid" : resp.identity_url})
   if user is not None:
     g.user = user
   else:
@@ -36,7 +37,7 @@ def create_or_login(resp):
                            "gravatar": gravatar_url,
                            "last_selected_channel": "general",
                            "channels": ["general", "Backlot", "OOSL"] }
-    g.users.insert(mongo_user_object)
+    db.users.insert(mongo_user_object)
     g.user = mongo_user_object
   flash(u'Successfully logged in')
   return redirect(oid.get_next_url())
