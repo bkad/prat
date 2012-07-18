@@ -3,7 +3,7 @@ class window.Chat
 
   init: ->
     $(".chat-submit").click(@onChatSubmit)
-    $(".chat-text").on("keyup.ctrl_return", @onChatSubmit)
+    $(".chat-text").on("keyup.return", @onChatSubmit)
     @createSocket()
 
   createSocket: =>
