@@ -35,7 +35,7 @@ class window.Chat
   appendMessage: (message, channel) =>
     findEmail = (message) -> message.find(".email").text()
     getMessageTime = (message) -> parseInt(message.find(".time").attr("data-time"))
-    newMessageInTimeWindow = (recentMessage, oldMessage) ->
+    newMessageInTimeWindow = (recentMessage, oldMessage) =>
       (getMessageTime(recentMessage) - getMessageTime(oldMessage)) <= @collapseTimeWindow
     message = $(message)
     messagesContainer = $(".chat-messages-container[data-channel='#{channel}']")
