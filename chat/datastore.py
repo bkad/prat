@@ -1,4 +1,5 @@
 import pymongo
+from pymongo import DESCENDING
 from flask import _app_ctx_stack
 from werkzeug.local import LocalProxy
 
@@ -27,5 +28,8 @@ def close_db_connection(error):
 
 def get_db():
   return get_db_connection().oochat
+
+def get_recent_messages(channel):
+  return reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
 
 db = LocalProxy(get_db)

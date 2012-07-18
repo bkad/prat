@@ -4,7 +4,7 @@ from chat.tardis import datetime_to_unix
 from random import shuffle
 from chat.markdown import markdown_renderer
 from collections import OrderedDict
-from chat.datastore import db
+from chat.datastore import db, get_recent_messages
 
 frontend = Blueprint("frontend", __name__)
 
@@ -13,7 +13,7 @@ def index():
   channels = g.user["channels"]
   message_dict = OrderedDict()
   for channel in channels:
-    messages = reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
+    messages = get_recent_messages(channel)
     message_dict[channel] = collapsed_messages(messages)
   last_selected_channel = g.user["last_selected_channel"]
   # maybe use backchat, flexjaxlot (it lines it up nicely)
