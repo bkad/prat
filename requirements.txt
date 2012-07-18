@@ -7,7 +7,7 @@ Pygments==1.5
 Werkzeug==0.8.3
 bpython==0.10.1
 -e git+git@github.com:bkad/gevent.git@16fb81f69237624e0efb4c13f8db56b820231533#egg=gevent-dev
--e git+git@github.com:bkad/gevent-websocket.git@51ae9859c38d072fae2885b13801b704f4bd2aa4#egg=gevent_websocket-dev
+-e git+git@github.com:bkad/gevent-websocket.git@9ab30fddabba7d0ead39b662eae755cbc10ec828#egg=gevent_websocket-dev
 -e git+git@github.com:bkad/gevent-zeromq.git@67507e08d2623d25519ec28c24c3634ced56d46f#egg=gevent_zeromq-dev
 greenlet==0.3.4
 gunicorn==0.14.2
