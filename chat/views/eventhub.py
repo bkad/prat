@@ -18,7 +18,14 @@ def eventhub_client():
   push_socket = zmq_context.socket(zmq.PUSH)
   push_socket.connect(current_app.config["PUSH_ADDRESS"])
   subscribe_socket = zmq_context.socket(zmq.SUB)
-  subscribe_socket.setsockopt(zmq.SUBSCRIBE, "")
+  user_channels = {}
+
+  # only listen for messages the user is subscribed to
+  for channel in g.user["channels"]:
+    channel_id = str(db.channels.find_one({"name": channel})["_id"])
+    user_channels[channel] = channel_id
+    subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
+
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
   poller = zmq.Poller()
@@ -32,7 +39,8 @@ def eventhub_client():
 
       # Server -> Client
       if subscribe_socket in events:
-        packed = subscribe_socket.recv()
+        message = subscribe_socket.recv()
+        channel_id, packed = message.split(" ", 1)
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
         action = unpacked["action"]
@@ -84,7 +92,8 @@ def eventhub_client():
           packed = g.msg_packer.pack(msgpack_event_object)
 
           # -> Everyone
-          push_socket.send(packed)
+          # prepend an identifier showing which channel the event happened on for PUB/SUB
+          push_socket.send(" ".join([user_channels[channel], packed]))
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
