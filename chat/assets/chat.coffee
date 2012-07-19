@@ -19,8 +19,14 @@ class window.Chat
 
   onChatSubmit: =>
     message = $(".chat-text").val()
-    channel = @channelControls.currentChannel
-    @socket.send(JSON.stringify({"action":"publish_message", "data":{"message":message, "channel":channel}}))
+    if message.replace(/\s*$/, "") isnt ""
+      channel = @channelControls.currentChannel
+      messageObject =
+        action: "publish_message"
+        data:
+          message: message
+          channel: channel
+      @socket.send(JSON.stringify(messageObject))
     $(".chat-text").val("").focus()
 
   onEvent: (jsonMessage) =>
