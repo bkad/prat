@@ -3,7 +3,7 @@ class window.Chat
 
   init: ->
     $(".chat-submit").click(@onChatSubmit)
-    $(".chat-text").on("keyup.return", @onChatSubmit)
+    $(".chat-text").on("keydown.return", @onChatSubmit)
     @createSocket()
 
   createSocket: =>
@@ -17,7 +17,7 @@ class window.Chat
   sendSwitchChannelEvent: (channel) =>
     @socket.send(JSON.stringify({"action":"switch_channel", "data":{"channel":channel}}))
 
-  onChatSubmit: =>
+  onChatSubmit: (event) =>
     message = $(".chat-text").val()
     if message.replace(/\s*$/, "") isnt ""
       channel = @channelControls.currentChannel
@@ -28,6 +28,7 @@ class window.Chat
           channel: channel
       @socket.send(JSON.stringify(messageObject))
     $(".chat-text").val("").focus()
+    event.preventDefault()
 
   onEvent: (jsonMessage) =>
     bottom = @scrolledToBottom()
