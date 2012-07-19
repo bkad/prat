@@ -4,6 +4,7 @@ from flask import Flask, g, jsonify, request, render_template, session
 from flaskext.openid import OpenID
 from random import randint
 from gevent_zeromq import zmq
+import zmq_context
 import msgpack
 import datastore
 from chat.datastore import db
@@ -30,19 +31,15 @@ def create_app(config=None, app_name=None, blueprints=None):
 
   app = Flask(app_name)
   app.config.from_object(config)
+
   datastore.init_app(app)
+  zmq_context.init_app(app)
 
   configure_blueprints(app, blueprints)
   configure_before_handlers(app)
   configure_error_handlers(app)
-  configure_zmq(app)
   oid.init_app(app)
   return app
-
-# dont create a context for each request
-# it creates a bunch of lingering fd's that are hard to clean up
-def configure_zmq(app):
-  app.zmq_context = zmq.Context()
 
 def configure_blueprints(app, blueprints):
   for blueprint, url_prefix in blueprints:

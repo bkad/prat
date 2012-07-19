@@ -6,6 +6,7 @@ import json
 from chat.datastore import db
 from chat.markdown import markdown_renderer
 from chat.tardis import datetime_to_unix
+from chat.zmq_context import zmq_context
 
 eventhub = Blueprint("eventhub", __name__)
 
@@ -14,9 +15,9 @@ def eventhub_client():
   if not request.environ.get('wsgi.websocket'):
     return ""
   websocket = request.environ['wsgi.websocket']
-  push_socket = current_app.zmq_context.socket(zmq.PUSH)
+  push_socket = zmq_context.socket(zmq.PUSH)
   push_socket.connect(current_app.config["PUSH_ADDRESS"])
-  subscribe_socket = current_app.zmq_context.socket(zmq.SUB)
+  subscribe_socket = zmq_context.socket(zmq.SUB)
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, "")
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 

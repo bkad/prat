@@ -10,7 +10,6 @@ def _get_connection_attribute():
   context = _app_ctx_stack.top
   return getattr(context, "oochat_db", None)
 
-
 def get_db_connection():
   context = _app_ctx_stack.top
   connection = _get_connection_attribute()
