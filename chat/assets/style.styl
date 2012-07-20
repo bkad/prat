@@ -132,9 +132,8 @@ button
   right: 0px
   height: 29px
   background: light-grey
-  border-right: border-grey
-  border-bottom: border-grey
-  border-left: border-grey
+  border: border-grey
+  border-top: none
   border-radius: 2px
   button
     height: 20px
@@ -169,11 +168,14 @@ button
     font-family: arial, sans-serif
     font-size: 14px
     color: #333
-    margin: 0px 5px
+    margin: 8px
+    position: relative
     .author
-      display: inline
+      display: inline-block
       font-size: 12px
+      line-height: 0
       font-weight: bold
+      absolute: top 9px left 18px + 3px
     .email
       display: none
     .gravatar
@@ -198,7 +200,6 @@ button
       border: 1px solid #D0CABD
       border-radius: 2px
 
-
   .message
     img
       max-width: 300px
@@ -207,12 +208,13 @@ button
     em
       font-style: italic
     display: inline
+    &:last-child
+      p, ol, div, ul
+        margin-bottom: 0
 
 .message-separator
   &:first-child
     display: none
-  margin-top: 8px
-  margin-bottom: 7px
   border-bottom: border-grey
 .input-container
   absolute: bottom left
