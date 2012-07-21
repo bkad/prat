@@ -4,6 +4,7 @@
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/assets/style.styl"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <script src="/assets/util.coffee"></script>
   <script src="/assets/chat.coffee"></script>
   <script src="/assets/chat_controls.coffee"></script>
   <script src="/assets/channel_controls.coffee"></script>
@@ -27,7 +28,7 @@
         channelControls.setChat(chat)
       })
       $(window).load(function() {
-        chat.scrollToBottom(false)
+        Util.scrollToBottom("noAnimate")
       })
   </script>
 </head>

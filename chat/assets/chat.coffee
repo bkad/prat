@@ -31,13 +31,13 @@ class window.Chat
     event.preventDefault()
 
   onEvent: (jsonMessage) =>
-    bottom = @scrolledToBottom()
+    bottom = Util.scrolledToBottom()
     socketObject = JSON.parse(jsonMessage.data)
     action = socketObject["action"]
     data = socketObject["data"]
     @appendMessage(data["message"], data["channel"]) if action is "message"
 
-    @scrollToBottom() if bottom
+    Util.scrollToBottom("animate") if bottom
 
   appendMessage: (message, channel) =>
     findEmail = (message) -> message.find(".email").text()
@@ -73,16 +73,6 @@ class window.Chat
   onConnectionTimedOut: =>
     console.log "Connection timed out"
     @socket.close()
-
-  scrolledToBottom: ->
-    messages = $(".chat-messages-container.current")
-    difference = (messages[0].scrollHeight - messages.scrollTop()) is messages.outerHeight()
-    return difference <= 1
-
-  scrollToBottom: (animate=true) ->
-    messages = $(".chat-messages-container.current")
-    method = if animate then "animate" else "prop"
-    messages[method](scrollTop: messages[0].scrollHeight)
 
   setChannelControls: (channelControls) -> @channelControls = channelControls
   setDateTimeHelper: (dateTimeHelper) -> @dateTimeHelper = dateTimeHelper

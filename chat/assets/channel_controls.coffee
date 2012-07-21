@@ -18,7 +18,7 @@ class window.ChannelControls
     target.addClass("current").off("mouseup")
     $(".chat-messages-container[data-channel='#{@currentChannel}']").addClass("current")
     @chat.sendSwitchChannelEvent(@currentChannel)
-    @chat.scrollToBottom(false)
+    Util.scrollToBottom("noAnimate")
 
   hideNewChannel: (event) ->
     newChannelName = $('.new-channel-name')
