@@ -3,6 +3,7 @@ from stylus import Stylus
 import coffeescript
 from os import path
 import mimetypes
+from email.utils import formatdate
 
 assets = Blueprint("assets", __name__)
 
@@ -29,4 +30,6 @@ def compiled_assets(asset_path):
     content_tuple = mimetypes.guess_type(asset_path)
     content_type = content_tuple[0] or "text/plain"
     response.headers["Content-Type"] = content_type
+  absolute_path = path.join(current_app.root_path, asset_path)
+  response.headers["Last-Modified"] = formatdate(path.getmtime(absolute_path))
   return response
