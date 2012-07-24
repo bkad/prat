@@ -38,6 +38,8 @@ def eventhub_client():
       # Server -> Client
       if subscribe_socket in events:
         message = subscribe_socket.recv()
+
+        # the message is prepended by the channel_id (for PUB/SUB reasons)
         channel_id, packed = message.split(" ", 1)
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
