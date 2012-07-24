@@ -44,11 +44,8 @@ def eventhub_client():
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
         action = unpacked["action"]
-        data = unpacked["data"]
         if action == "message":
-          channel = data["channel"]
-          if channel in g.user["channels"]:
-            websocket.send(json.dumps(unpacked))
+          websocket.send(json.dumps(unpacked))
 
       # Client -> Server
       if websocket.socket.fileno() in events:
@@ -65,30 +62,28 @@ def eventhub_client():
         if action == "publish_message":
           message = data["message"]
           channel = data["channel"]
+          author = g.user["name"]
+          email = g.user["email"]
+          gravatar = g.user["gravatar"]
           # we use isoformat in msgpack because it cant handle datetime objects
           time_now = datetime.datetime.utcnow()
-          mongo_event_object = { "author": g.user["name"],
+          mongo_event_object = { "author": author,
                                  "message": message,
-                                 "email": g.user["email"],
+                                 "email": email,
                                  "channel": channel,
-                                 "gravatar": g.user["gravatar"],
+                                 "gravatar": gravatar,
                                  "datetime": time_now }
           message_id = db.events.insert(mongo_event_object)
-          rendered_message = render_template("chat_message.htmljinja",
-                                             render_template=render_template,
-                                             message=markdown_renderer.render(message),
-                                             author=g.user["name"],
-                                             email=g.user["email"],
-                                             message_id=message_id,
-                                             gravatar=g.user["gravatar"],
-                                             time=datetime_to_unix(time_now),
-                                             merged_messages=False)
-          msgpack_event_object = {"action":"message",
-                                  "data":{
-                                    "author": g.user["name"],
-                                    "message": rendered_message,
-                                    "channel": channel,
-                                    "datetime": time_now.isoformat() }}
+          # override and add certain fields to the event we pass to the client
+          message_modifications = { "message": markdown_renderer.render(message),
+                                    "datetime": datetime_to_unix(time_now),
+                                    "message_id": str(message_id),
+                                  }
+          event_object = dict(list(mongo_event_object.items()) + list(message_modifications.items()))
+          del event_object["_id"]
+          msgpack_event_object = { "action":"message",
+                                   "data": event_object,
+                                 }
           packed = g.msg_packer.pack(msgpack_event_object)
 
           # -> Everyone

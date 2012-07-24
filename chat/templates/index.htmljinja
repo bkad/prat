@@ -11,26 +11,34 @@
   <script src="/assets/datetime.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/static/js/jquery.hotkeys.js"></script>
+  <script src="/static/js/mustache.js"></script>
   <script src="/static/js/livecss.js"></script>
+  <script id="message-container-template" type="text/x-mustache-template">
+    {{ message_container_template|safe }}
+  </script>
+  <script id="message-partial-template" type="text/x-mustache-template">
+    {{ message_partial_template|safe }}
+  </script>
   <script charset="utf-8">
+    $(document).ready(function() {
+      initialMessages = {{ initial_messages }}
 
-      $(document).ready(function(){
-        chat = new Chat("ws://" + document.location.host + "/eventhub", 4000, {{ time_window }})
-        chat.init()
-        chatControls = new ChatControls()
-        chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})
-        channelControls = new ChannelControls("{{ last_selected_channel }}")
-        channelControls.init()
-        dateTimeHelper = new DateTimeHelper()
-        dateTimeHelper.init()
+      chat = new Chat("ws://" + document.location.host + "/eventhub", 4000, {{ time_window }})
+      chat.init()
+      chatControls = new ChatControls()
+      chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})
+      channelControls = new ChannelControls("{{ last_selected_channel }}")
+      channelControls.init()
+      dateTimeHelper = new DateTimeHelper()
+      dateTimeHelper.init()
 
-        chat.setChannelControls(channelControls)
-        chat.setDateTimeHelper(dateTimeHelper)
-        channelControls.setChat(chat)
-      })
-      $(window).load(function() {
-        Util.scrollToBottom("noAnimate")
-      })
+      chat.setChannelControls(channelControls)
+      chat.setDateTimeHelper(dateTimeHelper)
+      channelControls.setChat(chat)
+
+      chat.appendInitialMessages(initialMessages)
+    })
+    $(window).load(function() { Util.scrollToBottom("noAnimate") })
   </script>
 </head>
 <body>
@@ -57,12 +65,9 @@
         <button class="toggle-right-sidebar">{{ "⇤" if right_sidebar_closed else "⇥" }}</button>
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
-      {% for channel, messages in message_dict.iteritems() %}
+      {% for channel in channels %}
         <div class="chat-messages-container {{ "current" if channel == last_selected_channel else "" }}"
-            data-channel="{{ channel }}">
-        {% for message in messages %}
-          {{ message|safe }}
-        {% endfor %}
+          data-channel="{{ channel }}">
         </div>
       {% endfor %}
       <div class="input-container">
