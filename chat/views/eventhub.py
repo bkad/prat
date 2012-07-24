@@ -3,9 +3,7 @@ import datetime
 import geventwebsocket
 from gevent_zeromq import zmq
 import json
-from chat.datastore import db
-from chat.markdown import markdown_renderer
-from chat.tardis import datetime_to_unix
+from chat.datastore import db, message_dict_from_event_object
 from chat.zmq_context import zmq_context
 
 eventhub = Blueprint("eventhub", __name__)
@@ -73,16 +71,10 @@ def eventhub_client():
                                  "channel": channel,
                                  "gravatar": gravatar,
                                  "datetime": time_now }
-          message_id = db.events.insert(mongo_event_object)
-          # override and add certain fields to the event we pass to the client
-          message_modifications = { "message": markdown_renderer.render(message),
-                                    "datetime": datetime_to_unix(time_now),
-                                    "message_id": str(message_id),
-                                  }
-          event_object = dict(list(mongo_event_object.items()) + list(message_modifications.items()))
-          del event_object["_id"]
+          # db insertion adds an _id field
+          db.events.insert(mongo_event_object)
           msgpack_event_object = { "action":"message",
-                                   "data": event_object,
+                                   "data": message_dict_from_event_object(mongo_event_object),
                                  }
           packed = g.msg_packer.pack(msgpack_event_object)
 

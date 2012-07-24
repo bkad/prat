@@ -1,9 +1,7 @@
 from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
-from chat.tardis import datetime_to_unix
 from random import shuffle
-from chat.markdown import markdown_renderer
-from chat.datastore import db, get_recent_messages
+from chat.datastore import db, get_recent_messages, message_dict_from_event_object
 import json
 
 frontend = Blueprint("frontend", __name__)
@@ -14,14 +12,7 @@ def index():
   message_dict = {}
   for channel in channels:
     messages = get_recent_messages(channel)
-    message_dict[channel] = [{ "message_id": str(message["_id"]),
-                               "author": message["author"],
-                               "channel": message["channel"],
-                               "gravatar": message["gravatar"],
-                               "datetime": datetime_to_unix(message["datetime"]),
-                               "email": message["email"],
-                               "message": markdown_renderer.render(message["message"] or " "),
-                             } for message in messages]
+    message_dict[channel] = [message_dict_from_event_object(message) for message in messages]
   initial_messages = json.dumps(message_dict)
   last_selected_channel = g.user["last_selected_channel"]
   # maybe use backchat, flexjaxlot (it lines it up nicely)
