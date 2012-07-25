@@ -1,5 +1,5 @@
 import pymongo
-from chat.markdown import markdown_renderer
+from chat import markdown
 from chat.tardis import datetime_to_unix
 from pymongo import DESCENDING
 from flask import _app_ctx_stack
@@ -40,7 +40,7 @@ def message_dict_from_event_object(event_object):
            "gravatar": event_object["gravatar"],
            "datetime": datetime_to_unix(event_object["datetime"]),
            "email": event_object["email"],
-           "message": markdown_renderer.render(event_object["message"] or " "),
+           "message": markdown.render(event_object["message"] or " "),
          }
 
 db = LocalProxy(get_db)
