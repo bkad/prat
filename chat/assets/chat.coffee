@@ -1,43 +1,23 @@
 class window.Chat
-  constructor: (@address, @reconnectTimeout, @collapseTimeWindow) ->
+  constructor: (@messageHub, @collapseTimeWindow, @channelControls, @dateTimeHelper) ->
 
   init: ->
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-text").on("keydown.return", @onChatSubmit)
-    @createSocket()
-
-  createSocket: =>
-    @timeoutID = setTimeout(@createSocket, @reconnectTimeout)
-    console.log "Connecting to #{@address}"
-    @socket = new WebSocket(@address)
-    @socket.onmessage = @onEvent
-    @socket.onclose = @onConnectionFailed
-    @socket.onopen = @onConnectionOpened
-
-  sendSwitchChannelEvent: (channel) =>
-    @socket.send(JSON.stringify({"action":"switch_channel", "data":{"channel":channel}}))
+    @messageHub.subscribe("message", @onNewMessage)
 
   onChatSubmit: (event) =>
     message = $(".chat-text").val()
     if message.replace(/\s*$/, "") isnt ""
-      channel = @channelControls.currentChannel
-      messageObject =
-        action: "publish_message"
-        data:
-          message: message
-          channel: channel
-      @socket.send(JSON.stringify(messageObject))
+      @messageHub.sendChat(message, @channelControls.currentChannel)
     $(".chat-text").val("").focus()
     event.preventDefault()
 
-  onEvent: (jsonMessage) =>
+  onNewMessage: (messageObject) =>
     bottom = Util.scrolledToBottom()
-    socketObject = JSON.parse(jsonMessage.data)
-    action = socketObject["action"]
-    @appendMessage(socketObject["data"]) if action is "message"
-
+    @appendMessage(messageObject.data) if messageObject.action is "message"
     Util.scrollToBottom("animate") if bottom
 
   appendInitialMessages: (messageDict) =>
@@ -72,19 +52,3 @@ class window.Chat
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)
-
-  onConnectionFailed: =>
-    clearTimeout(@timeoutID)
-    console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
-    setTimeout(@createSocket, @reconnectTimeout)
-
-  onConnectionOpened: =>
-    clearTimeout(@timeoutID)
-    console.log "Connection successful"
-
-  onConnectionTimedOut: =>
-    console.log "Connection timed out"
-    @socket.close()
-
-  setChannelControls: (channelControls) -> @channelControls = channelControls
-  setDateTimeHelper: (dateTimeHelper) -> @dateTimeHelper = dateTimeHelper

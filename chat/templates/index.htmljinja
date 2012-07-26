@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="/assets/style.styl"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <script src="/assets/util.coffee"></script>
+  <script src="/assets/message_hub.coffee"></script>
   <script src="/assets/chat.coffee"></script>
   <script src="/assets/chat_controls.coffee"></script>
   <script src="/assets/channel_controls.coffee"></script>
@@ -23,18 +24,18 @@
     $(document).ready(function() {
       initialMessages = {{ initial_messages }}
 
-      chat = new Chat("ws://" + document.location.host + "/eventhub", 4000, {{ time_window }})
-      chat.init()
-      chatControls = new ChatControls()
-      chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})
-      channelControls = new ChannelControls("{{ last_selected_channel }}")
-      channelControls.init()
-      dateTimeHelper = new DateTimeHelper()
-      dateTimeHelper.init()
+      messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000)
+      messageHub.init()
 
-      chat.setChannelControls(channelControls)
-      chat.setDateTimeHelper(dateTimeHelper)
-      channelControls.setChat(chat)
+      dateTimeHelper = new DateTimeHelper()
+      channelControls = new ChannelControls("{{ last_selected_channel }}", messageHub)
+      chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper)
+      chatControls = new ChatControls()
+
+      chat.init()
+      chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})
+      channelControls.init()
+      dateTimeHelper.init()
 
       chat.appendInitialMessages(initialMessages)
     })

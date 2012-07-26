@@ -1,5 +1,5 @@
 class window.ChannelControls
-  constructor: (@currentChannel) ->
+  constructor: (@currentChannel, @messageHub) ->
 
   init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)
@@ -17,7 +17,7 @@ class window.ChannelControls
     $(".chat-messages-container.current").removeClass("current")
     target.addClass("current").off("mouseup")
     $(".chat-messages-container[data-channel='#{@currentChannel}']").addClass("current")
-    @chat.sendSwitchChannelEvent(@currentChannel)
+    @messageHub.switchChannel(@currentChannel)
     Util.scrollToBottom("noAnimate")
 
   hideNewChannel: (event) ->
@@ -25,5 +25,3 @@ class window.ChannelControls
     newChannelName.val('')
     newChannelName.hide()
     $('.add-channel-container').stop(true).animate({ width: '15px' }, 500, -> newChannelName.hide())
-
-  setChat: (chat) -> @chat = chat
