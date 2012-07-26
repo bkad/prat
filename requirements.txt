@@ -11,7 +11,7 @@ bpython==0.10.1
 -e git+git@github.com:bkad/gevent-zeromq.git@67507e08d2623d25519ec28c24c3634ced56d46f#egg=gevent_zeromq-dev
 greenlet==0.3.4
 gunicorn==0.14.2
-misaka==1.0.1
+-e git+git@github.com:bkad/misaka.git@ccb20ee19113232b07ab3d7869a7533737c4a230#egg=misaka-dev
 msgpack-python==0.1.12
 pymongo==2.1.1
 python-openid==2.2.5
