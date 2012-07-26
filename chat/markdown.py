@@ -4,11 +4,16 @@ from misaka import (Markdown, HtmlRenderer, EXT_NO_INTRA_EMPHASIS, EXT_AUTOLINK,
 import pygments
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
+from pygments.util import ClassNotFound
 
 class HtmlPygmentsRenderer(HtmlRenderer):
   def block_code(self, code, language):
     language = language or "text"
-    lexer = get_lexer_by_name(language, encoding="utf-8", stripnl=False, stripall=False)
+    lexer_options = { "encoding": "utf-8", "stripnl": False, "stripall": False }
+    try:
+      lexer = get_lexer_by_name(language, **lexer_options)
+    except ClassNotFound as exception:
+      lexer = get_lexer_by_name("text", **lexer_options)
     formatter = HtmlFormatter(nowrap=True)
     rendered_code = pygments.highlight(code, lexer, formatter)
     return "<div class=\"highlight\">{0}</div>".format(rendered_code)
