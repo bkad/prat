@@ -33,7 +33,7 @@ def index():
                          authed=g.authed,
                          name_jumble=name_jumble,
                          title=title,
-                         user_name=g.user['name'],
+                         full_name=g.user['name'],
                          avatar_url=g.user["gravatar"],
                          channels=channels,
                          last_selected_channel=last_selected_channel,
