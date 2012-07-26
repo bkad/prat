@@ -8,13 +8,13 @@ Werkzeug==0.8.3
 bpython==0.10.1
 -e git+git@github.com:bkad/gevent.git@16fb81f69237624e0efb4c13f8db56b820231533#egg=gevent-dev
 -e git+git@github.com:bkad/gevent-websocket.git@d8b3d12b53a304e88336be4a65e2ae54902d979d#egg=gevent_websocket-dev
--e git+git@github.com:bkad/gevent-zeromq.git@67507e08d2623d25519ec28c24c3634ced56d46f#egg=gevent_zeromq-dev
+gevent-zeromq==0.2.4
 greenlet==0.3.4
 gunicorn==0.14.2
 -e git+git@github.com:bkad/misaka.git@ccb20ee19113232b07ab3d7869a7533737c4a230#egg=misaka-dev
 msgpack-python==0.1.12
 pymongo==2.1.1
 python-openid==2.2.5
-pyzmq==2.1.11
+pyzmq==2.2.0
 stylus==0.1.0
 wsgiref==0.1.2

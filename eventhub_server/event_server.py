@@ -1,4 +1,4 @@
-from gevent_zeromq import zmq
+import zmq
 
 context = zmq.Context()
 pull_socket = context.socket(zmq.PULL)
