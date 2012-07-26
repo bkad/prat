@@ -1,3 +1,9 @@
+supported browsers:
+  chrome, and chrome only
+
+system package prerequisites:
+  zeromq, mongodb
+
 to install python requirements (i recommend use of virtualenv)
 
 `pip install -r requirements.txt`
