@@ -38,6 +38,7 @@ def message_dict_from_event_object(event_object):
            "author": event_object["author"],
            "channel": event_object["channel"],
            "gravatar": event_object["gravatar"],
+           "username": event_object["email"].split("@")[0],
            "datetime": datetime_to_unix(event_object["datetime"]),
            "email": event_object["email"],
            "message": markdown.render(event_object["message"] or " "),

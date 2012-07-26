@@ -2,7 +2,8 @@
 <div class="message-container">
   <div class="author-container">
     <img class="gravatar" height="18" width="18" src="{{{ gravatar }}}">
-    <div class="author">{{ author }}</div>
+    <div class="author">{{ author }} <span class="username">({{ username }})</span>
+</div>
     <div class="email">{{ email }}</div>
     <div class="time" data-time="{{ datetime }}"></div>
   </div>
