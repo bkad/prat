@@ -1,5 +1,5 @@
 class window.Chat
-  constructor: (@messageHub, @collapseTimeWindow, @channelControls, @dateTimeHelper) ->
+  constructor: (@messageHub, @collapseTimeWindow, @channelControls, @dateTimeHelper, @username, @sound) ->
 
   init: ->
     @messageContainerTemplate = $("#message-container-template").html()
@@ -15,15 +15,23 @@ class window.Chat
     $(".chat-text").val("").focus()
     event.preventDefault()
 
+  checkAndNotify: (message) =>
+    if message.find(".its-you").length > 0 and (!document.hasFocus() or document.webkitHidden)
+      @sound.playNewMessageAudio()
+
   onNewMessage: (messageObject) =>
+    return unless messageObject.action is "message"
     bottom = Util.scrolledToBottom()
-    @appendMessage(messageObject.data) if messageObject.action is "message"
+    messagePartial = @renderMessagePartial(messageObject.data)
+    @checkAndNotify(messagePartial)
+    @appendMessage(messageObject.data, messagePartial)
     Util.scrollToBottom("animate") if bottom
 
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict
       for message in messages
-        @appendMessage(message)
+        messagePartial = @renderMessagePartial(message)
+        @appendMessage(message, messagePartial)
 
   # following three functions are helpers for @appendMessage
   findMessageEmail: (message) -> message.find(".email").text()
@@ -33,21 +41,25 @@ class window.Chat
     # oldMessage: a JQuery object (from the DOM)
     (recentMessage["datetime"] - @findMessageTime(oldMessage)) <= @collapseTimeWindow
 
-  appendMessage: (message) =>
+  renderMessagePartial: (message) =>
+    mustached = $(Mustache.render(@messagePartialTemplate, message))
+    mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
+    mustached
+
+  appendMessage: (message, messagePartial) =>
     messagesList = $(".chat-messages-container[data-channel='#{message["channel"]}']")
     lastMessage = messagesList.find(".message-container").last()
-    $message = $(Mustache.render(@messagePartialTemplate, message))
 
     # if the author of consecutive messages are the same, collapse them
     if @findMessageEmail(lastMessage) is message["email"] and @newMessageInTimeWindow(message, lastMessage)
-      $message.appendTo(lastMessage)
+      messagePartial.appendTo(lastMessage)
       # remove the old time data binding and refresh the time attribute
       timeContainer = lastMessage.find(".time")
       timeContainer.attr("data-time", message["datetime"])
       @dateTimeHelper.removeBindings(timeContainer)
     else
       $messageContainer = $(Mustache.render(@messageContainerTemplate, message))
-      $messageContainer.filter(".message-container").append($message)
+      $messageContainer.filter(".message-container").append(messagePartial)
       $messageContainer.appendTo(messagesList)
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)

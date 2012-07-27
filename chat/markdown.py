@@ -5,8 +5,18 @@ import pygments
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
+import cgi
+import re
 
 class HtmlPygmentsRenderer(HtmlRenderer):
+  def normal_text(self, text):
+    escaped_text = cgi.escape(text)
+
+    # mark up user mentions (@username)
+    escaped_text = re.sub(r'(@)([a-zA-Z0-9_.-]+)',
+                          r'<span class="user-mention" data-username="\2">\1\2</span>',
+                          escaped_text)
+    return escaped_text
   def block_code(self, code, language):
     language = language or "text"
     lexer_options = { "encoding": "utf-8", "stripnl": False, "stripall": False }

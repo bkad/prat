@@ -8,6 +8,7 @@ dark-grey = #C9C9C9
 dark-hover-grey = #B3B3B3
 dark-active-grey = #DDD
 border-grey = 1px solid dark-grey
+accent-red = #D25030
 
 body
   font-family: arial, sans-serif
@@ -57,7 +58,7 @@ button
       font-size: 14px
       overflow: ellipsis
     .current
-      background: #D25030
+      background: accent-red
       color: white
     div.add-channel-container
       font-family: "Lucida Grande"
@@ -170,6 +171,10 @@ button
     color: #333
     margin: 8px
     position: relative
+    .user-mention
+      font-weight: bold
+    .its-you
+      color: accent-red
     .author
       display: inline-block
       font-size: 12px

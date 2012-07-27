@@ -10,6 +10,7 @@
   <script src="/assets/chat_controls.coffee"></script>
   <script src="/assets/channel_controls.coffee"></script>
   <script src="/assets/datetime.coffee"></script>
+  <script src="/assets/sound.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/static/js/jquery.hotkeys.js"></script>
   <script src="/static/js/mustache.js"></script>
@@ -27,9 +28,13 @@
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000)
       messageHub.init()
 
+      sound = new Sound("/static/audio/hey.mp3")
+      sound.init()
+
       dateTimeHelper = new DateTimeHelper()
       channelControls = new ChannelControls("{{ last_selected_channel }}", messageHub)
-      chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper)
+      chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper, "{{ username }}",
+                      sound)
       chatControls = new ChatControls()
 
       chat.init()

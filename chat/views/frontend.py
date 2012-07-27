@@ -19,6 +19,7 @@ def index():
   name_jumble = ["back", "flex", "jax", "chat", "lot"]
   shuffle(name_jumble)
   title = "".join(name_jumble)
+  username = g.user["email"].split("@")[0]
 
   right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
@@ -34,6 +35,7 @@ def index():
                          name_jumble=name_jumble,
                          title=title,
                          full_name=g.user['name'],
+                         username=username,
                          avatar_url=g.user["gravatar"],
                          channels=channels,
                          last_selected_channel=last_selected_channel,
