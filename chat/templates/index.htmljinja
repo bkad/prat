@@ -28,7 +28,7 @@
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000)
       messageHub.init()
 
-      sound = new Sound("/static/audio/blip.mp3")
+      sound = new Sound("/static/audio/hey.mp3")
       sound.init()
 
       dateTimeHelper = new DateTimeHelper()
