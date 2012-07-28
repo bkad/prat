@@ -92,7 +92,7 @@
           {% if authed %}
           <a href="/logout"><button class="logout">Logout</button></a>
           {% else %}
-          <a href="/login" target="_blank"><button class="login">Login</button></a>
+          <a href="/login"><button class="login">Login</button></a>
           {% endif %}
         </div>
       </div>
