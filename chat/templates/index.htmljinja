@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.css"></link>
   <link rel="stylesheet" href="/assets/style.styl"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <script src="/assets/util.coffee"></script>
@@ -12,10 +11,8 @@
   <script src="/assets/channel_controls.coffee"></script>
   <script src="/assets/datetime.coffee"></script>
   <script src="/assets/sound.coffee"></script>
-  <script src="/assets/alert.coffee"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="/static/js/jquery.hotkeys.js"></script>
-  <script src="/static/js/bootstrap-alert.js"></script>
   <script src="/static/js/mustache.js"></script>
   <script src="/static/js/livecss.js"></script>
   <script id="message-container-template" type="text/x-mustache-template">
@@ -28,7 +25,7 @@
     $(document).ready(function() {
       initialMessages = {{ initial_messages }}
 
-      messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
+      messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000)
       messageHub.init()
 
       sound = new Sound("/static/audio/blip.mp3")
@@ -36,7 +33,8 @@
 
       dateTimeHelper = new DateTimeHelper()
       channelControls = new ChannelControls("{{ last_selected_channel }}", messageHub)
-      chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper, "{{ username }}", sound)
+      chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper, "{{ username }}",
+                      sound)
       chatControls = new ChatControls()
 
       chat.init()
@@ -68,7 +66,6 @@
   </div>
   <div class="main-content {{ "collapse-left" if left_sidebar_closed else "" }}">
     <div class="chat-column {{ "collapse-right" if right_sidebar_closed else "" }}">
-      <div class="alert-container"></div>
       <div class="chat-controls">
         <button class="toggle-left-sidebar">{{ "⇥" if left_sidebar_closed else "⇤" }}</button>
         <button class="toggle-right-sidebar">{{ "⇤" if right_sidebar_closed else "⇥" }}</button>

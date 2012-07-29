@@ -1,5 +1,5 @@
 class window.MessageHub
-  constructor: (@address, @reconnectTimeout, @alertHelper) ->
+  constructor: (@address, @reconnectTimeout) ->
     @eventListeners = {}
 
   init: ->
@@ -41,17 +41,14 @@ class window.MessageHub
 
   onConnectionFailed: =>
     clearTimeout(@timeoutID)
-    @alertHelper.newAlert("alert-error", "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds")
     console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
     setTimeout(@createSocket, @reconnectTimeout)
 
   onConnectionOpened: =>
-    @alertHelper.delAlert()
     clearTimeout(@timeoutID)
     console.log "Connection successful"
 
   onConnectionTimedOut: =>
-    @alertHelper.newAlert("alert-error", "Connection timed out")
     console.log "Connection timed out"
     @socket.close()
 
