@@ -14,7 +14,7 @@ to install nodejs requirements (using local package.json file)
 
 to create mongo capped collection (while mongod is running)
 
-`mongo oochat schema_create.js`
+`mongo oochat reset_db.js`
 
 running the servers:
 
