@@ -56,33 +56,9 @@ def eventhub_client():
         action = socket_data["action"]
         data = socket_data["data"]
         if action == "switch_channel":
-          # Update channel logged in user is subscribed to
-          g.user['last_selected_channel'] = data["channel"]
-          db.users.save(g.user)
-        if action == "publish_message":
-          message = data["message"]
-          channel = data["channel"]
-          author = g.user["name"]
-          email = g.user["email"]
-          gravatar = g.user["gravatar"]
-          # we use isoformat in msgpack because it cant handle datetime objects
-          time_now = datetime.datetime.utcnow()
-          mongo_event_object = { "author": author,
-                                 "message": message,
-                                 "email": email,
-                                 "channel": channel,
-                                 "gravatar": gravatar,
-                                 "datetime": time_now }
-          # db insertion adds an _id field
-          db.events.insert(mongo_event_object)
-          msgpack_event_object = { "action":"message",
-                                   "data": message_dict_from_event_object(mongo_event_object),
-                                 }
-          packed = g.msg_packer.pack(msgpack_event_object)
-
-          # -> Everyone
-          # prepend an identifier showing which channel the event happened on for PUB/SUB
-          push_socket.send(" ".join([user_channels[channel], packed]))
+          handle_switch_channel(data["channel"])
+        elif action == "publish_message":
+          handle_publish_message(data, push_socket, user_channels)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -91,3 +67,33 @@ def eventhub_client():
   subscribe_socket.close()
   websocket.close()
   return ""
+
+def handle_switch_channel(channel_name):
+  # Update channel logged in user is subscribed to
+  g.user['last_selected_channel'] = channel_name
+  db.users.save(g.user)
+
+def handle_publish_message(data, push_socket, user_channels):
+  message = data["message"]
+  channel = data["channel"]
+  author = g.user["name"]
+  email = g.user["email"]
+  gravatar = g.user["gravatar"]
+  # we use isoformat in msgpack because it cant handle datetime objects
+  time_now = datetime.datetime.utcnow()
+  mongo_event_object = { "author": author,
+                         "message": message,
+                         "email": email,
+                         "channel": channel,
+                         "gravatar": gravatar,
+                         "datetime": time_now }
+  # db insertion adds an _id field
+  db.events.insert(mongo_event_object)
+  msgpack_event_object = { "action":"message",
+                           "data": message_dict_from_event_object(mongo_event_object),
+                         }
+  packed = g.msg_packer.pack(msgpack_event_object)
+
+  # -> Everyone
+  # prepend an identifier showing which channel the event happened on for PUB/SUB
+  push_socket.send(" ".join([user_channels[channel], packed]))
