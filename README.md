@@ -2,7 +2,7 @@ supported browsers:
   chrome, and chrome only
 
 system package prerequisites:
-  zeromq, mongodb
+  zeromq, mongodb, redis
 
 to install python requirements (i recommend use of virtualenv)
 

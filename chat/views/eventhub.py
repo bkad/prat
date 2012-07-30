@@ -3,7 +3,8 @@ import datetime
 import geventwebsocket
 from gevent_zeromq import zmq
 import json
-from chat.datastore import db, message_dict_from_event_object, find_or_create_channel
+from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
+                            add_user_to_channel, zmq_channel_key)
 from chat.zmq_context import zmq_context
 import uuid
 
@@ -22,7 +23,7 @@ def eventhub_client():
 
   # listen for messages that happen on channels the user is subscribed to
   for channel in g.user["channels"]:
-    channel_id = str(db.channels.find_one({"name": channel})["_id"])
+    channel_id = zmq_channel_key(channel)
     user_channels[channel] = channel_id
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
 
@@ -87,21 +88,8 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, user_chann
 
   # unsubscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
-  
 
-  if channel_name in g.user["channels"]:
-    g.user["channels"].remove(channel_name)
-    db.users.save(g.user)
-
-  channel = find_or_create_channel(channel_name)
-  channel_id = str(channel["_id"])
-
-  if g.user["email"] not in channel["users"]:
-    return
-
-  del channel["users"][g.user["email"]]
-
-  db.channels.save(channel)
+  channel_id = remove_user_from_channel(g.user, channel_name)
 
   leave_channel_event = {
       "action": "leave_channel",
@@ -126,22 +114,13 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, user_chann
 def handle_join_channel(channel_name, subscribe_socket, push_socket, user_channels, client_id):
   if channel_name in user_channels:
     return
-  channel = find_or_create_channel(channel_name)
-  channel_id = str(channel["_id"])
   user_channels[channel_name] = channel_id
+
+  channel_id = add_user_to_channel(g.user, channel_name)
 
   # subscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
-  
-  if channel_name not in g.user["channels"]:
-    g.user["channels"].append(channel_name)
-    db.users.save(g.user)
 
-  if g.user["email"] in channel["users"]:
-    return
-
-  channel["users"][g.user["email"]] = "active"
-  db.channels.save(channel)
   join_channel_event = {
       "action": "join_channel",
       "data": {

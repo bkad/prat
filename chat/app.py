@@ -63,24 +63,11 @@ def configure_before_handlers(app):
                "last_selected_channel": "general" }
 
     # Catch logged in users
-    if 'openid' in session:
-      g.user = db.users.find_one({"openid" : session['openid']})
-      g.authed = True
-
-      # code below is to correct old models
-      # TODO(kle): remove at some point
-      default_channels = ["general", "Backlot", "OOSL"]
-      for channel in default_channels:
-        record = db.channels.find_one({"name": channel})
-        if record is None:
-          db.channels.save({"name": channel, "users":[]})
-
-      if "channels" not in g.user:
-        g.user["channels"] = default_channels
-        db.users.save(g.user)
-      if "last_selected_channel" not in g.user:
-        g.user["last_selected_channel"] = "general"
-        db.users.save(g.user)
+    if "email" in session:
+      user = db.users.find_one({"email" : session["email"]})
+      if user is not None:
+        g.user =  user
+        g.authed = True
 
 def configure_error_handlers(app):
   @app.errorhandler(404)

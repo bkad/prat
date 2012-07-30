@@ -16,5 +16,6 @@ msgpack-python==0.1.12
 pymongo==2.1.1
 python-openid==2.2.5
 pyzmq==2.2.0
+redis==2.6.0
 stylus==0.1.0
 wsgiref==0.1.2
