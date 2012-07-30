@@ -6,6 +6,10 @@ import json
 
 frontend = Blueprint("frontend", __name__)
 
+def read_template(template_name):
+  with current_app.open_resource("templates/" + template_name) as template:
+    return template.read().decode("utf-8")
+
 @frontend.route('/')
 def index():
   channels = g.user["channels"]
@@ -24,10 +28,9 @@ def index():
   right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
 
-  with current_app.open_resource("templates/message_container.mustache") as message_container_mustache:
-    message_container_template = message_container_mustache.read()
-  with current_app.open_resource("templates/message_partial.mustache") as message_partial_mustache:
-    message_partial_template = message_partial_mustache.read()
+  message_container_template = read_template("message_container.mustache")
+  message_partial_template = read_template("message_partial.mustache")
+  alert_template = read_template("alert.mustache")
 
   return render_template('index.htmljinja',
                          initial_messages=initial_messages,
@@ -44,4 +47,5 @@ def index():
                          time_window=current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
                          message_container_template=message_container_template,
                          message_partial_template=message_partial_template,
+                         alert_template=alert_template,
                         )

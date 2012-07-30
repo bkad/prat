@@ -24,6 +24,9 @@
   <script id="message-partial-template" type="text/x-mustache-template">
     {{ message_partial_template|safe }}
   </script>
+  <script id="alert-template" type="text/x-mustache-template">
+    {{ alert_template|safe }}
+  </script>
   <script charset="utf-8">
     $(document).ready(function() {
       initialMessages = {{ initial_messages }}

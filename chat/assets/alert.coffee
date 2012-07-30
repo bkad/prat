@@ -4,8 +4,9 @@ class window.AlertHelper
   constructor: ->
 
   newAlert: (type, message) ->
-  	@delAlert()
-  	$(".alert-container").append($("<div class='alert " + type + "'>" + message + "<a class='close' data-dismiss='alert'>×</a></div>"))
+    @delAlert()
+    rendered = Mustache.render($("#alert-template").html(), type: type, message: message)
+    $(".alert-container").append(rendered)
 
   delAlert: ->
-  	$(".alert").remove()
+    $(".alert").remove()
