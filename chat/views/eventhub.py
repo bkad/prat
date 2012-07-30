@@ -18,7 +18,6 @@ def eventhub_client():
   push_socket = zmq_context.socket(zmq.PUSH)
   push_socket.connect(current_app.config["PUSH_ADDRESS"])
   subscribe_socket = zmq_context.socket(zmq.SUB)
-  user_channels = {}
   client_id = uuid.uuid4()
 
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
@@ -26,7 +25,6 @@ def eventhub_client():
   # listen for messages that happen on channels the user is subscribed to
   for channel in g.user["channels"]:
     channel_id = zmq_channel_key(channel)
-    user_channels[channel] = channel_id
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
     set_user_active(g.user, channel)
     send_user_active_update(g.user, channel, push_socket)
@@ -69,9 +67,9 @@ def eventhub_client():
         if action == "switch_channel":
           handle_switch_channel(data["channel"])
         elif action == "publish_message":
-          handle_publish_message(data, push_socket, user_channels)
+          handle_publish_message(data, push_socket)
         elif action == "join_channel":
-          handle_join_channel(data["channel"], subscribe_socket, push_socket, user_channels, client_id)
+          handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -82,12 +80,7 @@ def eventhub_client():
   return ""
 
 
-def handle_leave_channel(channel_name, subscribe_socket, push_socket, user_channels, client_id):
-  if channel_name not in user_channels:
-    return
-
-  del user_channels[channel_name]
-
+def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id):
   # unsubscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
 
@@ -113,11 +106,7 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, user_chann
   push_socket.send(" ".join(g.user["email"], packed_self_leave_channel))
 
 
-def handle_join_channel(channel_name, subscribe_socket, push_socket, user_channels, client_id):
-  if channel_name in user_channels:
-    return
-  user_channels[channel_name] = channel_id
-
+def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
   channel_id = add_user_to_channel(g.user, channel_name)
 
   # subscribe to events happening on this channel
@@ -161,7 +150,7 @@ def handle_switch_channel(channel_name):
   db.users.save(g.user)
 
 
-def handle_publish_message(data, push_socket, user_channels):
+def handle_publish_message(data, push_socket):
   message = data["message"]
   channel = data["channel"]
   author = g.user["name"]
@@ -184,7 +173,7 @@ def handle_publish_message(data, push_socket, user_channels):
 
   # -> Everyone
   # prepend an identifier showing which channel the event happened on for PUB/SUB
-  push_socket.send(" ".join([user_channels[channel], packed]))
+  push_socket.send(" ".join([zmq_channel_key(channel), packed]))
 
 
 # event_type must be either "join" or "leave"
