@@ -4,7 +4,7 @@ import geventwebsocket
 from gevent_zeromq import zmq
 import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
-                            add_user_to_channel, zmq_channel_key)
+                            add_user_to_channel, zmq_channel_key, set_user_active)
 from chat.zmq_context import zmq_context
 import uuid
 
@@ -21,16 +21,18 @@ def eventhub_client():
   user_channels = {}
   client_id = uuid.uuid4()
 
+  subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
+
   # listen for messages that happen on channels the user is subscribed to
   for channel in g.user["channels"]:
     channel_id = zmq_channel_key(channel)
     user_channels[channel] = channel_id
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
+    set_user_active(g.user, channel)
+    send_user_active_update(g.user, channel, push_socket)
 
   # subscribe to events the user triggered that could affect the user's other open clients
   subscribe_socket.setsockopt_string(zmq.SUBSCRIBE, g.user["email"])
-
-  subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
   poller = zmq.Poller()
   poller.register(subscribe_socket, zmq.POLLIN)
@@ -142,9 +144,20 @@ def handle_join_channel(channel_name, subscribe_socket, push_socket, user_channe
   push_socket.send(" ".join(g.user["email"], packed_self_join_channel))
 
 
+def send_user_active_update(user, channel_name, push_socket):
+  event_object = {
+      "action": "user_active",
+      "data": {
+        "email": user["email"],
+      },
+  }
+  packed = g.msg_packer.pack(event_object)
+  push_socket.send(" ".join([zmq_channel_key(channel_name), packed]))
+
+
 def handle_switch_channel(channel_name):
   # Update channel logged in user is subscribed to
-  g.user['last_selected_channel'] = channel_name
+  g.user["last_selected_channel"] = channel_name
   db.users.save(g.user)
 
 

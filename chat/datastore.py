@@ -83,5 +83,9 @@ def remove_user_from_channel(user, channel_name):
 
   return zmq_channel_key(channel_name)
 
+def set_user_active(user, channel_name):
+  channel_key = redis_channel_key(channel_name)
+  redis_db.hset(channel_key, user["email"], "active")
+
 db = LocalProxy(get_db)
 redis_db = LocalProxy(get_redis_connection)
