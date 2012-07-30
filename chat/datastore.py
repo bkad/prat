@@ -44,4 +44,13 @@ def message_dict_from_event_object(event_object):
            "message": markdown.render(event_object["message"] or " "),
          }
 
+def find_or_create_channel(channel_name):
+  channel = db.channels.find_one({ "name": channel_name })
+  if channel is None:
+    channel = { "name": channel_name,
+                "users": {},
+              }
+    db.channels.insert(channel)
+  return channel
+
 db = LocalProxy(get_db)

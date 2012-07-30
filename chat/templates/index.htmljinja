@@ -37,7 +37,7 @@
       dateTimeHelper = new DateTimeHelper()
       channelControls = new ChannelControls("{{ last_selected_channel }}", messageHub)
       chat = new Chat(messageHub, {{ time_window }}, channelControls, dateTimeHelper, "{{ username }}", sound)
-      chatControls = new ChatControls()
+      chatControls = new ChatControls(messageHub)
 
       chat.init()
       chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})

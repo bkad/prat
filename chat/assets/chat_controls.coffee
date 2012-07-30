@@ -1,11 +1,12 @@
 class window.ChatControls
-  constructor: ->
+  constructor: (@messageHub) ->
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
+    @messageHub.subscribe("force_refresh", @refreshPage)
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
@@ -38,3 +39,6 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  refreshPage: ->
+    window.location.reload()
