@@ -61,7 +61,7 @@ def zmq_channel_key(channel_name):
   return base64.b64encode(channel_name)
 
 def redis_channel_key(channel_name):
-  return "channel-" + channel_name
+  return "channel:" + channel_name
 
 def add_user_to_channel(user, channel_name):
   if channel_name not in user["channels"]:
@@ -87,7 +87,7 @@ def set_user_channel_status(user, channel_name, status):
   redis_db.hset(channel_key, user["email"], status)
 
 def user_clients_key(user):
-  return "user-clients-" + user["email"]
+  return "user-clients:" + user["email"]
 
 def add_to_user_clients(user, client_id):
   redis_key = user_clients_key(user)
