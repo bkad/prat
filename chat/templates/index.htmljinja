@@ -33,7 +33,7 @@
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
       messageHub.init()
 
-      sound = new Sound("/static/audio/blip.mp3")
+      sound = new Sound("/static/audio/ping.mp3")
       sound.init()
 
       dateTimeHelper = new DateTimeHelper()
