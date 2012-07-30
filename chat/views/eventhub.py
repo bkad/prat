@@ -58,7 +58,7 @@ def eventhub_client():
           websocket.send(json.dumps(unpacked))
         elif action in ["self_join_channel", "self_leave_channel"]:
           event_type = action.split("_")[1]
-          handle_self_channel_event(client_id, websocket, unpacked["data"], event_type)
+          handle_self_channel_event(client_id, websocket, subscribe_socket, unpacked["data"], event_type)
 
       # Client -> Server
       if websocket.socket.fileno() in events:
@@ -74,6 +74,8 @@ def eventhub_client():
           handle_publish_message(data, push_socket)
         elif action == "join_channel":
           handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
+        elif action == "leave_channel":
+          handle_leave_channel(data["channel"], subscribe_socket, push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -110,6 +112,8 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id)
       "action": "self_leave_channel",
       "data": {
         "client_id": client_id,
+        "channel": channel_name,
+        "channel_id": channel_id,
       },
   }
   packed_self_leave_channel = g.msg_packer.pack(self_join_channel_event)
@@ -137,6 +141,8 @@ def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
       "action": "self_join_channel",
       "data": {
         "client_id": client_id,
+        "channel": channel_name,
+        "channel_id": channel_id,
       },
   }
   packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
@@ -186,9 +192,16 @@ def handle_publish_message(data, push_socket):
 
 
 # event_type must be either "join" or "leave"
-def handle_self_channel_event(client_id, websocket, data, event_type):
+def handle_self_channel_event(client_id, websocket, subscribe_socket, data, event_type):
+  # if the client that triggered the update is yourself, then ignore it
   if client_id == data["client_id"]:
     return
+
+  channel_id = data["channel_id"]
+  if event_type == "join":
+    subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
+  elif event_type == "leave":
+    subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
 
   # force a refresh on all other clients
   # TODO(kle): live update the client's UI instead
