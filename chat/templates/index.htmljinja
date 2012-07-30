@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="/static/css/bootstrap.css"></link>
   <link rel="stylesheet" href="/assets/style.styl"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <script src="/assets/util.coffee"></script>
