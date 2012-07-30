@@ -28,7 +28,8 @@
   </script>
   <script charset="utf-8">
     $(document).ready(function() {
-      initialMessages = {{ initial_messages }}
+      initialMessages = {{ initial_messages|safe }}
+      initialUsers = {{ initial_users|safe }}
 
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
       messageHub.init()

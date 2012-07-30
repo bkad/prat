@@ -1,7 +1,7 @@
 from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
 from random import shuffle
-from chat.datastore import db, get_recent_messages, message_dict_from_event_object
+from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_user_statuses
 import json
 
 frontend = Blueprint("frontend", __name__)
@@ -13,11 +13,16 @@ def read_template(template_name):
 @frontend.route('/')
 def index():
   channels = g.user["channels"]
+
   message_dict = {}
+  user_dict = {}
   for channel in channels:
     messages = get_recent_messages(channel)
     message_dict[channel] = [message_dict_from_event_object(message) for message in messages]
+    user_dict[channel] = get_user_statuses(channel)
   initial_messages = json.dumps(message_dict)
+  inital_users = json.dumps(user_dict)
+
   last_selected_channel = g.user["last_selected_channel"]
   # maybe use backchat, flexjaxlot (it lines it up nicely)
   name_jumble = ["back", "flex", "jax", "chat", "lot"]
@@ -34,6 +39,7 @@ def index():
 
   return render_template('index.htmljinja',
                          initial_messages=initial_messages,
+                         initial_users = inital_users,
                          authed=g.authed,
                          name_jumble=name_jumble,
                          title=title,

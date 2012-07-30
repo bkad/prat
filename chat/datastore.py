@@ -55,6 +55,10 @@ def message_dict_from_event_object(event_object):
            "message": markdown.render(event_object["message"] or " "),
          }
 
+def get_user_statuses(channel):
+  return redis_db.hgetall(channel)
+
+
 
 # Helper function to translate channel name into a prefix for zmq messages (for pubsub)
 def zmq_channel_key(channel_name):
