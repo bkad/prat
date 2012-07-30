@@ -56,9 +56,9 @@ def configure_before_handlers(app):
     # Create anonymous handle for unauthed users
     if 'anon_uname' not in session:
       session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-    g.user = { "name": session['anon_uname'],
+    g.user = { "name": unicode(session['anon_uname']),
                "gravatar": "static/anon.jpg",
-               "email": session["anon_uname"],
+               "email": unicode(session["anon_uname"]),
                "channels": ["general"],
                "last_selected_channel": "general" }
 
@@ -74,6 +74,7 @@ def configure_before_handlers(app):
         record = db.channels.find_one({"name": channel})
         if record is None:
           db.channels.save({"name": channel, "users":[]})
+
       if "channels" not in g.user:
         g.user["channels"] = default_channels
         db.users.save(g.user)
