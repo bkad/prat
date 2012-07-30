@@ -20,4 +20,4 @@ running the servers:
 
 `python run_server.py`
 `python eventhub_server/event_server.py`
-and make sure mongod is running
+and make sure mongod and redis-server is running
