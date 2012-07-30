@@ -54,7 +54,7 @@ def eventhub_client():
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
         action = unpacked["action"]
-        if action in ["message", "join_channel", "leave_channel"]:
+        if action in ["publish_message", "join_channel", "leave_channel"]:
           websocket.send(json.dumps(unpacked))
         elif action in ["self_join_channel", "self_leave_channel"]:
           event_type = action.split("_")[1]
@@ -175,7 +175,7 @@ def handle_publish_message(data, push_socket):
                          "datetime": time_now }
   # db insertion adds an _id field
   db.events.insert(mongo_event_object)
-  msgpack_event_object = { "action":"message",
+  msgpack_event_object = { "action":"publish_message",
                            "data": message_dict_from_event_object(mongo_event_object),
                          }
   packed = g.msg_packer.pack(msgpack_event_object)

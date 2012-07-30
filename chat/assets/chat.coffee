@@ -6,7 +6,7 @@ class window.Chat
     @messagePartialTemplate = $("#message-partial-template").html()
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-text").on("keydown.return", @onChatSubmit)
-    @messageHub.subscribe("message", @onNewMessage)
+    @messageHub.subscribe("publish_message", @onNewMessage)
 
   onChatSubmit: (event) =>
     message = $(".chat-text").val()
@@ -20,7 +20,6 @@ class window.Chat
       @sound.playNewMessageAudio()
 
   onNewMessage: (messageObject) =>
-    return unless messageObject.action is "message"
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject.data)
     @checkAndNotify(messagePartial)
