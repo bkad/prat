@@ -60,25 +60,26 @@ def message_dict_from_event_object(event_object):
 def zmq_channel_key(channel_name):
   return base64.b64encode(channel_name)
 
+def redis_channel_key(channel_name):
+  return "channel-" + channel_name
+
 def add_user_to_channel(user, channel_name):
   if channel_name not in user["channels"]:
     user["channels"].append(channel_name)
     db.users.save(user)
 
-  redis_channel_key = "channel-" + channel_name
-  redis_db.hsetnx(redis_channel_key, user["email"], "active")
+  channel_key = redis_channel_key(channel_name)
+  redis_db.hsetnx(channel_key, user["email"], "active")
 
   return zmq_channel_key(channel_name)
 
 def remove_user_from_channel(user, channel_name):
-  channel = find_or_create_channel(channel_name)
-
   if channel_name in user["channels"]:
     user["channels"].remove(channel_name)
     db.users.save(user)
 
-  redis_channel_key = "channel-" + channel_name
-  redis_db.hdel(redis_channel_key, user["email"])
+  channel_key = redis_channel_key(channel_name)
+  redis_db.hdel(channel_key, user["email"])
 
   return zmq_channel_key(channel_name)
 
