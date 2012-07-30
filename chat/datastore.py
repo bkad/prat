@@ -68,8 +68,7 @@ def add_user_to_channel(user, channel_name):
     user["channels"].append(channel_name)
     db.users.save(user)
 
-  channel_key = redis_channel_key(channel_name)
-  redis_db.hsetnx(channel_key, user["email"], "active")
+  set_user_channel_status(user, channel_name, "active")
 
   return zmq_channel_key(channel_name)
 
@@ -83,9 +82,25 @@ def remove_user_from_channel(user, channel_name):
 
   return zmq_channel_key(channel_name)
 
-def set_user_active(user, channel_name):
+def set_user_channel_status(user, channel_name, status):
   channel_key = redis_channel_key(channel_name)
-  redis_db.hset(channel_key, user["email"], "active")
+  redis_db.hset(channel_key, user["email"], status)
+
+def user_clients_key(user):
+  return "user-clients-" + user["email"]
+
+def add_to_user_clients(user, client_id):
+  redis_key = user_clients_key(user)
+  redis_db.sadd(redis_key, client_id)
+
+def remove_from_user_clients(user, client_id):
+  redis_key = user_clients_key(user)
+  redis_db.srem(redis_key, client_id)
+
+def get_active_clients_count(user):
+  redis_key = user_clients_key(user)
+  return redis_db.scard(redis_key)
+
 
 db = LocalProxy(get_db)
 redis_db = LocalProxy(get_redis_connection)

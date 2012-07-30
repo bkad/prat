@@ -4,7 +4,8 @@ import geventwebsocket
 from gevent_zeromq import zmq
 import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
-                            add_user_to_channel, zmq_channel_key, set_user_active)
+                            add_user_to_channel, zmq_channel_key, set_user_channel_status,
+                            add_to_user_clients, remove_from_user_clients, get_active_clients_count)
 from chat.zmq_context import zmq_context
 import uuid
 
@@ -22,12 +23,15 @@ def eventhub_client():
 
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
+  # add yourself to your current pool of open clients
+  add_to_user_clients(g.user, client_id)
+
   # listen for messages that happen on channels the user is subscribed to
   for channel in g.user["channels"]:
     channel_id = zmq_channel_key(channel)
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
-    set_user_active(g.user, channel)
-    send_user_active_update(g.user, channel, push_socket)
+    set_user_channel_status(g.user, channel, "active")
+    send_user_status_update(g.user, channel, push_socket, "active")
 
   # subscribe to events the user triggered that could affect the user's other open clients
   subscribe_socket.setsockopt_string(zmq.SUBSCRIBE, g.user["email"])
@@ -72,6 +76,12 @@ def eventhub_client():
           handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
+
+  remove_from_user_clients(g.user, client_id)
+  if get_active_clients_count(g.user) == 0:
+    for channel in g.user["channels"]:
+      set_user_channel_status(g.user, channel, "offline")
+      send_user_status_update(g.user, channel, push_socket, "offline")
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
   push_socket.close()
@@ -132,10 +142,9 @@ def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
   packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
   push_socket.send(" ".join(g.user["email"], packed_self_join_channel))
 
-
-def send_user_active_update(user, channel_name, push_socket):
+def send_user_status_update(user, channel_name, push_socket, status):
   event_object = {
-      "action": "user_active",
+      "action": "user_" + status,
       "data": {
         "email": user["email"],
       },
