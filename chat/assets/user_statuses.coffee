@@ -15,7 +15,7 @@ class window.ChannelUsers
     usersCollection = new UserStatusCollection(users)
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
-    usersCollection.on("change add remove", usersView.render)
+    usersCollection.on("change add remove reset", usersView.render)
     usersView.render()
     @views[channel] = usersView
   removeUsersStatuses: (channel) =>
@@ -31,7 +31,10 @@ class window.ChannelUsers
     newStatus = event.action.split("_")[1]
     email = event.data.email
     for channel, view of @views
-      view.collection.get(email)?.set(status: newStatus)
+      model = view.collection.get(email)
+      if model?
+        model.set(status: newStatus)
+        view.collection.sort()
   joinChannel: (event) =>
     channel = event.data.channel
     user = event.data.user
