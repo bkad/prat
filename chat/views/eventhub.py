@@ -102,6 +102,7 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
       "action": "leave_channel",
       "data": {
         "email": g.user["email"],
+        "channel": channel,
       },
   }
   # alert channel subscribers to user leaving
@@ -129,6 +130,7 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
   join_channel_event = {
       "action": "join_channel",
       "data": {
+        "channel": channel,
         "email": g.user["email"],
         "gravatar": g.user["gravatar"],
         "name": g.user["name"],
