@@ -9,16 +9,7 @@ class window.ChannelUsers
       @displayUserStatuses(channel) if channel is currentChannel
   addUserStatuses: (users, channel) =>
     return if @views[channel]?
-    usersList = []
-    for userInfo in users
-      usersList.push(
-        new UserStatus
-          email: userInfo.email
-          status: userInfo.status
-          name: userInfo.name
-          username: userInfo.username
-      )
-    usersCollection = new UserStatusCollection(usersList)
+    usersCollection = new UserStatusCollection(users)
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
     usersCollection.on("change", usersView.render)
