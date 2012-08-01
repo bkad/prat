@@ -108,7 +108,7 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id)
   packed_leave_channel = g.msg_packer.pack(leave_channel_event)
   push_socket.send(" ".join(channel_id, packed_leave_channel))
 
-  self_join_channel_event = {
+  self_leave_channel_event = {
       "action": "self_leave_channel",
       "data": {
         "client_id": client_id,
@@ -116,7 +116,7 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id)
         "channel_id": channel_id,
       },
   }
-  packed_self_leave_channel = g.msg_packer.pack(self_join_channel_event)
+  packed_self_leave_channel = g.msg_packer.pack(self_leave_channel_event)
   push_socket.send(" ".join(g.user["email"], packed_self_leave_channel))
 
 
