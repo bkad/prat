@@ -1,5 +1,5 @@
 class window.ChannelControls
-  constructor: (@currentChannel, @messageHub) ->
+  constructor: (@currentChannel, @messageHub, @channelUsers) ->
 
   init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)
@@ -17,6 +17,7 @@ class window.ChannelControls
     $(".chat-messages-container.current").removeClass("current")
     target.addClass("current").off("mouseup")
     $(".chat-messages-container[data-channel='#{@currentChannel}']").addClass("current")
+    @channelUsers.displayUserStatuses(@currentChannel)
     @messageHub.switchChannel(@currentChannel)
     Util.scrollToBottom("noAnimate")
 
