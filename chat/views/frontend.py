@@ -1,8 +1,7 @@
 from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
 from random import shuffle
-from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_user_statuses
-import json
+from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_channel_users
 
 frontend = Blueprint("frontend", __name__)
 
@@ -14,14 +13,12 @@ def read_template(template_name):
 def index():
   channels = g.user["channels"]
 
-  message_dict = {}
-  user_dict = {}
+  initial_messages = {}
+  initial_users = {}
   for channel in channels:
     messages = get_recent_messages(channel)
-    message_dict[channel] = [message_dict_from_event_object(message) for message in messages]
-    user_dict[channel] = get_user_statuses(channel)
-  initial_messages = json.dumps(message_dict)
-  inital_users = json.dumps(user_dict)
+    initial_messages[channel] = [message_dict_from_event_object(message) for message in messages]
+    initial_users[channel] = get_channel_users(channel)
 
   last_selected_channel = g.user["last_selected_channel"]
   # maybe use backchat, flexjaxlot (it lines it up nicely)
@@ -36,10 +33,11 @@ def index():
   message_container_template = read_template("message_container.mustache")
   message_partial_template = read_template("message_partial.mustache")
   alert_template = read_template("alert.mustache")
+  user_status_template = read_template("user_status.mustache")
 
   return render_template('index.htmljinja',
                          initial_messages=initial_messages,
-                         initial_users = inital_users,
+                         initial_users=initial_users,
                          authed=g.authed,
                          name_jumble=name_jumble,
                          title=title,
@@ -54,4 +52,5 @@ def index():
                          message_container_template=message_container_template,
                          message_partial_template=message_partial_template,
                          alert_template=alert_template,
+                         user_status_template=user_status_template,
                         )

@@ -120,6 +120,19 @@ button
         absolute: top right
       a.logout
         absolute: top right
+  .channel-users
+    &:not(.current) { display: none }
+    absolute: top 30px left
+    .user-status
+      font-family: arial
+      font-size: 15px
+    .ss-icon
+      font-size: 10px
+      &.active
+        color: green
+      &.offline
+        color: silver
+
 .chat-column
   absolute: top left
   min-width: 300px

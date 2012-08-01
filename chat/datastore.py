@@ -55,10 +55,26 @@ def message_dict_from_event_object(event_object):
            "message": markdown.render(event_object["message"] or " "),
          }
 
-def get_user_statuses(channel):
-  return redis_db.hgetall(channel)
+def get_channel_users(channel):
+  user_statuses = redis_db.hgetall(redis_channel_key(channel))
+  user_list = []
+  for email, status in user_statuses.iteritems():
+    mongo_user = db.users.find_one({ "email": email })
+    if mongo_user is None:
+      mongo_user = {
+        "name": "Not Found",
+        "gravatar": "static/anon.jpg",
+      }
 
+    user_list.append({
+      "email": email,
+      "status": status,
+      "name": mongo_user["name"],
+      "gravatar": mongo_user["gravatar"],
+      "username": email.split("@")[0],
+    })
 
+  return user_list
 
 # Helper function to translate channel name into a prefix for zmq messages (for pubsub)
 def zmq_channel_key(channel_name):
