@@ -132,6 +132,7 @@ def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
         "email": g.user["email"],
         "gravatar": g.user["gravatar"],
         "name": g.user["name"],
+        "username": g.user["email"].split("@")[0],
       },
   }
   # alert channel subscribers to new user
