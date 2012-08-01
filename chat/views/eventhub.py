@@ -200,10 +200,15 @@ def handle_self_channel_event(client_id, websocket, subscribe_socket, data, even
     return
 
   channel_id = data["channel_id"]
+  channel = data["channel"]
   if event_type == "join":
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
+    if channel not in g.user["channels"]:
+      g.user["channels"].append(channel)
   elif event_type == "leave":
     subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
+    if channel in g.user["channels"]:
+      g.user["channels"].remove(channel)
 
   # force a refresh on all other clients
   # TODO(kle): live update the client's UI instead
