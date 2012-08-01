@@ -13,10 +13,10 @@ gevent.monkey.patch_all()
 
 DEFAULT_APP = "chat"
 DEFAULT_BLUEPRINTS = (
-    (views.frontend, "/"),
-    (views.assets, "/assets"),
-    (views.eventhub, "/eventhub"),
-    (views.auth, None),
+    (views.frontend, "/", "login_required"),
+    (views.assets, "/assets", "login_required"),
+    (views.eventhub, "/eventhub", "login_required"),
+    (views.auth, "/auth", None),
 )
 
 oid = OpenID()
@@ -42,7 +42,7 @@ def create_app(config=None, app_name=None, blueprints=None):
   return app
 
 def configure_blueprints(app, blueprints):
-  for blueprint, url_prefix in blueprints:
+  for blueprint, url_prefix, login_required in blueprints:
     app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 def configure_before_handlers(app):

@@ -116,9 +116,9 @@
           <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">
           <div class="full-name">{{ full_name }}</div>
           {% if authed %}
-          <a href="/logout"><button class="logout">Logout</button></a>
+          <a href="{{ url_for("auth.logout") }}"><button class="logout">Logout</button></a>
           {% else %}
-          <a href="/login"><button class="login">Login</button></a>
+          <a href="{{ url_for("auth.login") }}"><button class="login">Login</button></a>
           {% endif %}
         </div>
       </div>

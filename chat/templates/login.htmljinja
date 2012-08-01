@@ -22,7 +22,7 @@
 <p>Select your OpenID provider.</p>
 <br/>
 {% if error %}<p class=error><strong>Error:</strong> {{ error }}</p>{% endif %}
-<form action="/login" method="post" id="openid_form">
+<form action="{{ url_for("auth.login") }}" method="post" id="openid_form">
   <input type="hidden" name="action" value="verify" />
   <fieldset>
     <legend>Sign-in or Create New Account</legend>
