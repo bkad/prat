@@ -54,7 +54,7 @@ def eventhub_client():
         g.msg_unpacker.feed(packed)
         unpacked = g.msg_unpacker.unpack()
         action = unpacked["action"]
-        if action in ["publish_message", "join_channel", "leave_channel"]:
+        if action in ["publish_message", "join_channel", "leave_channel", "user_active", "user_offline"]:
           websocket.send(json.dumps(unpacked))
         elif action in ["self_join_channel", "self_leave_channel"]:
           event_type = action.split("_")[1]
@@ -121,8 +121,30 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
   push_socket.send(" ".join(g.user["email"], packed_self_leave_channel))
 
 
+def send_join_channel(channel, user, push_socket):
+  channel_id = zmq_channel_key(channel)
+  join_channel_event = {
+      "action": "join_channel",
+      "data": {
+        "channel": channel,
+        "user": {
+          "email": user["email"],
+          "gravatar": user["gravatar"],
+          "name": user["name"],
+          "username": user["email"].split("@")[0],
+          "status": "active",
+        },
+      },
+  }
+  # alert channel subscribers to new user
+  packed_join_channel = g.msg_packer.pack(join_channel_event)
+  push_socket.send(" ".join([channel_id, packed_join_channel]))
+
+
 def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
   channel_id = add_user_to_channel(g.user, channel)
+
+  send_join_channel(channel, g.user, push_socket)
 
   # subscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
@@ -131,15 +153,18 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
       "action": "join_channel",
       "data": {
         "channel": channel,
-        "email": g.user["email"],
-        "gravatar": g.user["gravatar"],
-        "name": g.user["name"],
-        "username": g.user["email"].split("@")[0],
+        "user": {
+          "email": g.user["email"],
+          "gravatar": g.user["gravatar"],
+          "name": g.user["name"],
+          "username": g.user["email"].split("@")[0],
+          "status": "active",
+        },
       },
   }
   # alert channel subscribers to new user
   packed_join_channel = g.msg_packer.pack(join_channel_event)
-  push_socket.send(" ".join(channel_id, packed_join_channel))
+  push_socket.send(" ".join([channel_id, packed_join_channel]))
 
   # alert the user's other open clients of the change
   self_join_channel_event = {
@@ -151,7 +176,7 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
       },
   }
   packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
-  push_socket.send(" ".join(g.user["email"], packed_self_join_channel))
+  push_socket.send(" ".join([g.user["email"], packed_self_join_channel]))
 
 def send_user_status_update(user, channel, push_socket, status):
   event_object = {

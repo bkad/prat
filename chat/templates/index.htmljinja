@@ -39,11 +39,11 @@
       initialUsers = {{ initial_users|tojson|safe }}
       initialChannel = {{ last_selected_channel|tojson|safe }}
 
-      channelUsers = new ChannelUsers()
-      channelUsers.init(initialUsers, initialChannel)
-
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
       messageHub.init()
+
+      channelUsers = new ChannelUsers(messageHub)
+      channelUsers.init(initialUsers, initialChannel)
 
       sound = new Sound("/static/audio/ping.mp3")
       sound.init()
