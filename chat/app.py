@@ -1,6 +1,6 @@
 from . import views
 from .config import DefaultConfig
-from flask import Flask, g, jsonify, request, render_template, session
+from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
 from flaskext.openid import OpenID
 from random import randint
 from gevent_zeromq import zmq
@@ -41,8 +41,16 @@ def create_app(config=None, app_name=None, blueprints=None):
   oid.init_app(app)
   return app
 
+
+def check_login():
+  if getattr(g, "user", None) is None:
+    return redirect(url_for("auth.login"))
+
+
 def configure_blueprints(app, blueprints):
   for blueprint, url_prefix, login_required in blueprints:
+    if login_required:
+      blueprint.before_request(check_login)
     app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 def configure_before_handlers(app):
@@ -52,15 +60,6 @@ def configure_before_handlers(app):
     g.msg_unpacker = msgpack.Unpacker()
 
     g.authed = False
-
-    # Create anonymous handle for unauthed users
-    if 'anon_uname' not in session:
-      session['anon_uname'] = "Anon{0}".format(randint(1000,9999))
-    g.user = { "name": unicode(session['anon_uname']),
-               "gravatar": "static/anon.jpg",
-               "email": unicode(session["anon_uname"]),
-               "channels": ["general"],
-               "last_selected_channel": "general" }
 
     # Catch logged in users
     if "email" in session:
