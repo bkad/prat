@@ -78,7 +78,7 @@ def get_channel_users(channel):
 
 # Helper function to translate channel name into a prefix for zmq messages (for pubsub)
 def zmq_channel_key(channel_name):
-  return base64.b64encode(channel_name)
+  return base64.b64encode(channel_name.encode("utf-8"))
 
 def redis_channel_key(channel_name):
   return "channel:" + channel_name
