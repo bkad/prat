@@ -92,11 +92,11 @@ def eventhub_client():
   return ""
 
 
-def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id):
+def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
   # unsubscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
 
-  channel_id = remove_user_from_channel(g.user, channel_name)
+  channel_id = remove_user_from_channel(g.user, channel)
 
   leave_channel_event = {
       "action": "leave_channel",
@@ -112,7 +112,7 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id)
       "action": "self_leave_channel",
       "data": {
         "client_id": client_id,
-        "channel": channel_name,
+        "channel": channel,
         "channel_id": channel_id,
       },
   }
@@ -120,8 +120,8 @@ def handle_leave_channel(channel_name, subscribe_socket, push_socket, client_id)
   push_socket.send(" ".join(g.user["email"], packed_self_leave_channel))
 
 
-def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
-  channel_id = add_user_to_channel(g.user, channel_name)
+def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
+  channel_id = add_user_to_channel(g.user, channel)
 
   # subscribe to events happening on this channel
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
@@ -144,14 +144,14 @@ def handle_join_channel(channel_name, subscribe_socket, push_socket, client_id):
       "action": "self_join_channel",
       "data": {
         "client_id": client_id,
-        "channel": channel_name,
+        "channel": channel,
         "channel_id": channel_id,
       },
   }
   packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
   push_socket.send(" ".join(g.user["email"], packed_self_join_channel))
 
-def send_user_status_update(user, channel_name, push_socket, status):
+def send_user_status_update(user, channel, push_socket, status):
   event_object = {
       "action": "user_" + status,
       "data": {
@@ -159,12 +159,12 @@ def send_user_status_update(user, channel_name, push_socket, status):
       },
   }
   packed = g.msg_packer.pack(event_object)
-  push_socket.send(" ".join([zmq_channel_key(channel_name), packed]))
+  push_socket.send(" ".join([zmq_channel_key(channel), packed]))
 
 
-def handle_switch_channel(channel_name):
+def handle_switch_channel(channel):
   # Update channel logged in user is subscribed to
-  g.user["last_selected_channel"] = channel_name
+  g.user["last_selected_channel"] = channel
   db.users.save(g.user)
 
 
