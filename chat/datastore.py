@@ -45,6 +45,7 @@ def get_recent_messages(channel):
   return reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
 
 def message_dict_from_event_object(event_object):
+  message = event_object["message"] or " "
   return { "message_id": str(event_object["_id"]),
            "author": event_object["author"],
            "channel": event_object["channel"],
@@ -52,7 +53,8 @@ def message_dict_from_event_object(event_object):
            "username": event_object["email"].split("@")[0],
            "datetime": datetime_to_unix(event_object["datetime"]),
            "email": event_object["email"],
-           "message": markdown.render(event_object["message"] or " "),
+           "rendered_message": markdown.render(message),
+           "message": message,
          }
 
 def get_channel_users(channel):
