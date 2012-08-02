@@ -1,8 +1,9 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub) ->
+  constructor: (@messageHub, initialUsers, currentChannel) ->
     @views = {}
+    @init(initialUsers, currentChannel)
   init: (initialUsers, currentChannel) ->
     for channel, users of initialUsers
       view = @addUserStatuses(users, channel)

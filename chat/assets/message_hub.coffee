@@ -2,8 +2,6 @@ class window.MessageHub
   _.extend @::, Backbone.Events
 
   constructor: (@address, @reconnectTimeout, @alertHelper) ->
-
-  init: ->
     @createSocket()
 
   createSocket: =>

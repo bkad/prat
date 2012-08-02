@@ -1,5 +1,6 @@
 class window.ChannelControls
   constructor: (@currentChannel, @messageHub, @channelUsers) ->
+    @init()
 
   init: =>
     $(".channel:not(.active)").mouseup(@onSelectActiveChannel)

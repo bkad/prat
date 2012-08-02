@@ -1,5 +1,6 @@
 class window.ChatControls
-  constructor: (@messageHub) ->
+  constructor: (@messageHub, leftClosed, rightClosed) ->
+    @init(leftClosed, rightClosed)
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar

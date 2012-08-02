@@ -40,13 +40,10 @@
       initialChannel = {{ last_selected_channel|tojson|safe }}
 
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
-      messageHub.init()
 
-      channelUsers = new ChannelUsers(messageHub)
-      channelUsers.init(initialUsers, initialChannel)
+      channelUsers = new ChannelUsers(messageHub, initialUsers, initialChannel)
 
       sound = new Sound("/static/audio/ping.mp3")
-      sound.init()
 
       dateTimeHelper = new DateTimeHelper()
       channelControls = new ChannelControls({{ last_selected_channel|tojson|safe }}, messageHub, channelUsers)
@@ -56,12 +53,9 @@
                       dateTimeHelper,
                       {{ username|tojson|safe }},
                       sound)
-      chatControls = new ChatControls(messageHub)
-
-      chat.init()
-      chatControls.init({{ left_sidebar_closed|lower }}, {{ right_sidebar_closed|lower }})
-      channelControls.init()
-      dateTimeHelper.init()
+      chatControls = new ChatControls(messageHub,
+                                      {{ left_sidebar_closed|lower }},
+                                      {{ right_sidebar_closed|lower }})
 
       chat.appendInitialMessages(initialMessages)
     })

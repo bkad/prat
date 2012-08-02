@@ -45,13 +45,11 @@ class window.DateTime
     else "#{@date} #{@month} #{time}"
 
 class window.DateTimeHelper
-  init: ->
-    @bindAll()
-    @updateTimestamps()
-    @setUpdateTimestampsInterval(60000)
+  constructor: ->
+    @init()
 
-  bindAll: =>
-    $(".author-container .time").each((index, timeContainer) => @bindOne($(timeContainer)))
+  init: ->
+    @setUpdateTimestampsInterval(60000)
 
   bindOne: (timeContainer) ->
     timeContainer.data("datetime", new DateTime(parseInt(timeContainer.attr("data-time"))))

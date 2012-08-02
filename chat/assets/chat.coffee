@@ -1,5 +1,6 @@
 class window.Chat
   constructor: (@messageHub, @collapseTimeWindow, @channelControls, @dateTimeHelper, @username, @sound) ->
+    @init()
 
   init: ->
     @messageContainerTemplate = $("#message-container-template").html()

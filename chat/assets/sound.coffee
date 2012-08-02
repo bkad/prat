@@ -3,6 +3,7 @@
 class window.Sound
   constructor: (@newMessageAudioLocation1, @newMessageAudioLocation2) ->
     @first = true
+    @init()
 
   init: ->
     @context = new webkitAudioContext()
