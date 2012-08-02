@@ -98,34 +98,11 @@ button
   height: 100%
   width: 200px
   &.closed { display: none }
-  .user-container
-    absolute: top left
-    right: 0px;
-    height: 29px;
-    background: light-grey
-    border-right: border-grey
-    border-bottom: border-grey
-    border-left: border-grey
-    border-radius: 2px
-    .user-data
-      absolute: top left
-      margin: 5px
-      .gravatar
-        display: inline-block
-      .full-name
-        display: inline
-        font-size: 12px
-        font-weight: bold
-        color: #333
-      a.login
-        absolute: top right
-      a.logout
-        absolute: top right
   .channel-users
     &:not(.current) { display: none }
     width: 100%
     line-height: 25px
-    absolute: top 30px left
+    overflow-y: auto
     .user-status
       padding-left: 5px
       font-size: 15px
@@ -181,12 +158,12 @@ button
   border-radius: bottom 2px
   button
     height: 20px
-    width: 25px
   .toggle-left-sidebar
     absolute: top left
   .toggle-right-sidebar
     absolute: top right
   .toggle-right-sidebar, .toggle-left-sidebar
+    button { width: 25px }
     margin: 5px
     font-size: 12px
     .ss-icon
@@ -199,6 +176,10 @@ button
     margin-top: 5px
     margin-bottom: 5px
     text-align: center
+  .control-button-container
+    absolute: right 50px
+    margin: 5px
+
 .chat-messages-container
   &:not(.current) { display: none }
   absolute: top 30px left

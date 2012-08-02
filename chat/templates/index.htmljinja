@@ -86,6 +86,13 @@
         <button class="toggle-left-sidebar">
           <span class="ss-icon">{{"right" if left_sidebar_closed else "left"}}</span>
         </button>
+        <div class="control-button-container">
+          {% if authed %}
+          <a href="{{ url_for("auth.logout") }}"><button class="logout">Logout</button></a>
+          {% else %}
+          <a href="{{ url_for("auth.login") }}"><button class="login">Login</button></a>
+          {% endif %}
+        </div>
         <button class="toggle-right-sidebar">
           <span class="ss-icon">{{ "left" if right_sidebar_closed else "right" }}</span>
         </button>
@@ -105,17 +112,6 @@
       </div>
     </div>
     <div class="right-sidebar {{ "closed" if right_sidebar_closed else "" }}">
-      <div class="user-container">
-        <div class="user-data">
-          <img height="18" width="18" class="gravatar" src="{{ avatar_url }}">
-          <div class="full-name">{{ full_name }}</div>
-          {% if authed %}
-          <a href="{{ url_for("auth.logout") }}"><button class="logout">Logout</button></a>
-          {% else %}
-          <a href="{{ url_for("auth.login") }}"><button class="login">Login</button></a>
-          {% endif %}
-        </div>
-      </div>
     </div>
   </div>
 </body>
