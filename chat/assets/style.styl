@@ -9,9 +9,11 @@ dark-hover-grey = #B3B3B3
 dark-active-grey = #DDD
 border-grey = 1px solid dark-grey
 accent-red = #D25030
+sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
+mono-font-family = 'Bitstream Vera Sans Mono','Courier', monospace
 
 body
-  font-family: arial, sans-serif
+  font-family: sans-font-family
   width: 100%
   height: 100%
   overflow: hidden
@@ -21,7 +23,7 @@ a
   color: #D20000
 
 button
-  font-family: "Lucida Grande"
+  font-family: sans-font-family
   font-size: 12px
   font-weight: bold
   color: #444
@@ -61,7 +63,6 @@ button
       background: accent-red
       color: white
     div.add-channel-container
-      font-family: "Lucida Grande"
       font-size: 14px
       font-weight: bold
       color: #444
@@ -124,7 +125,6 @@ button
     &:not(.current) { display: none }
     absolute: top 30px left
     .user-status
-      font-family: arial
       font-size: 15px
     .ss-icon
       font-size: 10px
@@ -206,7 +206,6 @@ button
   overflow-x: hidden
   padding-top: 5px
   .message-container
-    font-family: arial, sans-serif
     font-size: 14px
     color: #333
     margin: 8px
@@ -234,13 +233,13 @@ button
     code
       padding: 0px 2px
       font-size: 12px
-      font-family: 'Bitstream Vera Sans Mono','Courier',monospace
+      font-family: mono-font-family
       background: #F0EEEA
     .highlight
       white-space: pre
       padding: 5px
       font-size: 12px
-      font-family: 'Bitstream Vera Sans Mono','Courier',monospace
+      font-family: mono-font-family
       background: #F0EEEA
       border: 1px solid #D0CABD
       border-radius: 2px
