@@ -1,3 +1,5 @@
+from chat import string_filters
+
 class DefaultConfig(object):
   """Default configuration for chat app"""
   DEBUG = True
@@ -15,3 +17,4 @@ class DefaultConfig(object):
   PUSH_ADDRESS = "tcp://localhost:5555"
   SUBSCRIBE_ADDRESS = "tcp://localhost:5556"
   DEFAULT_CHANNELS = ["general", "Backlot", "OOSL"]
+  STRING_FILTERS = [string_filters.replace_shas_with_links, string_filters.replace_jira_links]

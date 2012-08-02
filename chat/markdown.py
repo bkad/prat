@@ -1,3 +1,4 @@
+from flask import current_app
 from misaka import (Markdown, HtmlRenderer, EXT_NO_INTRA_EMPHASIS, EXT_AUTOLINK, EXT_TABLES, EXT_FENCED_CODE,
     EXT_STRIKETHROUGH, EXT_LAX_HTML_BLOCKS, EXT_SPACE_HEADERS, HTML_HARD_WRAP, HTML_SKIP_HTML,
     HTML_NEW_TAB_LINKS)
@@ -16,6 +17,8 @@ class HtmlPygmentsRenderer(HtmlRenderer):
     escaped_text = re.sub(r'(@)([a-zA-Z0-9_.-]+)',
                           r'<span class="user-mention" data-username="\2">\1\2</span>',
                           escaped_text)
+    for string_filter in current_app.config["STRING_FILTERS"]:
+      escaped_text = string_filter(escaped_text)
     return escaped_text
   def block_code(self, code, language):
     language = language or "text"
