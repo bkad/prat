@@ -2,9 +2,12 @@ import re
 
 # replace repo-sha with a link to barkeep
 def replace_shas_with_links(word):
-  return re.sub(r"([a-zA-Z0-9_-]+)-([a-zA-Z0-9]{40})",
-                r"<a href='http://barkeep/commits/\1/\2' target='blank'>\1-\2</a>",
-                word)
+  def linkify_commit(match):
+    replacements = match.groupdict()
+    replacements["short_sha"] = replacements["sha"][:8]
+    result = "<a href='http://barkeep/commits/{repo}/{sha}' target='blank'>{repo}/{short_sha}</a>"
+    return result.format(**replacements)
+  return re.sub(r"(?P<repo>[a-zA-Z0-9_-]+)/(?P<sha>[a-zA-Z0-9]{40})", linkify_commit, word)
 
 # list generated from https://jira.corp.ooyala.com/secure/BrowseProjects.jspa#all
 PROJECTS = set(['ANA', 'APP', 'AUTO', 'BL', 'BRB', 'CCC', 'CINE', 'CST', 'DOC', 'DS', 'FAC', 'HELP', 'INTL',
