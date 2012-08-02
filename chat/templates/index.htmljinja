@@ -59,6 +59,13 @@
                                       {{ right_sidebar_closed|lower }})
 
       chat.appendInitialMessages(initialMessages)
+
+      // Load up tipsy tooltips
+      var default_tipsy_options = { opacity: 0.95, live: true };
+      $(".north[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "n"}));
+      $(".south[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "s"}));
+      $(".east[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "e"}));
+      $(".west[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "w"}));
     })
     $(window).load(function() { Util.scrollToBottom("noAnimate") })
   </script>

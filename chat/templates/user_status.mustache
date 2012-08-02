@@ -1,4 +1,4 @@
-<div class="user-status">
-  <span title='{{ username }}'>{{ name }}</span>
-  <span class="ss-icon {{ status }}">record</span>
+<div class="user-status {{ status }}" style="background-image: url({{ gravatar }})">
+  <span class="north" rel="tipsy" title="{{ username }}">{{ name }}</span>
+  <div class="overlay"></div>
 </div>
