@@ -5,6 +5,7 @@ class window.MessageHub
     @createSocket()
 
   createSocket: =>
+    @socket?.close()
     @timeoutID = setTimeout(@createSocket, @reconnectTimeout)
     console.log "Connecting to #{@address}"
     @socket = new WebSocket(@address)
