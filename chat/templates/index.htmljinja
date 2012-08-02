@@ -112,8 +112,8 @@
         </div>
       </div>
     </div>
-    <div class="right-sidebar {{ "closed" if right_sidebar_closed else "" }}">
-    </div>
+  </div>
+  <div class="right-sidebar {{ "closed" if right_sidebar_closed else "" }}">
   </div>
 </body>
 </html>
