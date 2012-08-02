@@ -7,9 +7,9 @@ class window.ChannelUsers
     for channel, users of initialUsers
       view = @addUserStatuses(users, channel)
       @displayUserStatuses(channel) if channel is currentChannel
-    @messageHub.subscribe(["user_active", "user_offline"], @updateUserStatus)
-    @messageHub.subscribe("join_channel", @joinChannel)
-    @messageHub.subscribe("leave_channel", @leaveChannel)
+    @messageHub.on("user_active user_offline", @updateUserStatus)
+    @messageHub.on("join_channel", @joinChannel)
+    @messageHub.on("leave_channel", @leaveChannel)
   addUserStatuses: (users, channel) =>
     return if @views[channel]?
     usersCollection = new UserStatusCollection(users)
@@ -27,25 +27,20 @@ class window.ChannelUsers
     return unless @views[channel]
     $(".channel-users.current").removeClass("current")
     @views[channel].$el.addClass("current")
-  updateUserStatus: (event) =>
-    newStatus = event.action.split("_")[1]
-    email = event.data.email
+  updateUserStatus: (event, data) =>
+    newStatus = event.split("_")[1]
     for channel, view of @views
-      model = view.collection.get(email)
+      model = view.collection.get(data.email)
       if model?
         model.set(status: newStatus)
         view.collection.sort()
-  joinChannel: (event) =>
-    channel = event.data.channel
-    user = event.data.user
-    collection = @views[channel].collection
-    return if collection.get(user.email)?
-    collection.add(user)
-  leaveChannel: (event) =>
-    channel = event.data.channel
-    email = event.data.email
-    collection = @views[channel].collection
-    collection.remove(email)
+  joinChannel: (event, data) =>
+    collection = @views[data.channel].collection
+    return if collection.get(data.user.email)?
+    collection.add(data.user)
+  leaveChannel: (event, data) =>
+    collection = @views[data.channel].collection
+    collection.remove(data.email)
 
 # attributes: name, email, gravatar, status
 class window.UserStatus extends Backbone.Model

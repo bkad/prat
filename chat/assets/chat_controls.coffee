@@ -6,7 +6,7 @@ class window.ChatControls
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
-    @messageHub.subscribe("force_refresh", @refreshPage)
+    @messageHub.on("force_refresh", @refreshPage)
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")

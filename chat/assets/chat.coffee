@@ -6,7 +6,7 @@ class window.Chat
     @messagePartialTemplate = $("#message-partial-template").html()
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-text").on("keydown.return", @onChatSubmit)
-    @messageHub.subscribe("publish_message", @onNewMessage)
+    @messageHub.on("publish_message", @onNewMessage)
 
   onChatSubmit: (event) =>
     message = $(".chat-text").val()
@@ -19,11 +19,11 @@ class window.Chat
     if message.find(".its-you").length > 0 and (!document.hasFocus() or document.webkitHidden)
       @sound.playNewMessageAudio()
 
-  onNewMessage: (messageObject) =>
+  onNewMessage: (event, messageObject) =>
     bottom = Util.scrolledToBottom()
-    messagePartial = @renderMessagePartial(messageObject.data)
+    messagePartial = @renderMessagePartial(messageObject)
     @checkAndNotify(messagePartial)
-    @appendMessage(messageObject.data, messagePartial)
+    @appendMessage(messageObject, messagePartial)
     Util.scrollToBottom("animate") if bottom
 
   appendInitialMessages: (messageDict) =>

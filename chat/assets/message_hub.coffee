@@ -1,6 +1,7 @@
 class window.MessageHub
+  _.extend @::, Backbone.Events
+
   constructor: (@address, @reconnectTimeout, @alertHelper) ->
-    @eventListeners = {}
 
   init: ->
     @createSocket()
@@ -13,16 +14,9 @@ class window.MessageHub
     @socket.onclose = @onConnectionFailed
     @socket.onopen = @onConnectionOpened
 
-  subscribe: (eventTypes, callback) ->
-    eventTypes = [eventTypes] unless eventTypes instanceof Array
-    for eventType in eventTypes
-      @eventListeners[eventType] ?= []
-      @eventListeners[eventType].push(callback)
-
   onMessage: (message) =>
     messageObject = JSON.parse(message.data)
-    for callback in @eventListeners[messageObject.action] ? []
-      callback(messageObject)
+    @trigger(messageObject.action, messageObject.action, messageObject.data)
 
   sendJSON: (messageObject) => @socket.send(JSON.stringify(messageObject))
 
