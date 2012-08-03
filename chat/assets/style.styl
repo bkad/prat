@@ -9,9 +9,13 @@ med-grey = #C9C9C9
 dark-hover-grey = #B3B3B3
 dark-active-grey = #DDD
 border-grey = 1px solid med-grey
-accent-red = #D25030
+accent-blue = #4782B4
 sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
 mono-font-family = "Cousine", monospace
+
+// Unfortunately nib has no selection mixin
+::selection { background: lighten(accent-blue, 80%) }
+::-moz-selection { background: lighten(accent-blue, 80%) }
 
 body
   font: 14px/18px sans-font-family
@@ -21,7 +25,8 @@ body
 
 a
   text-decoration: none
-  color: #D20000
+  color: accent-blue
+  &:hover { color: lighten(accent-blue, 20%) }
 
 button
   font-family: sans-font-family
@@ -58,7 +63,7 @@ button
       font-size: 14px
       overflow: ellipsis
     .current
-      background: accent-red
+      background: accent-blue
       color: white
     div.add-channel-container
       font-size: 14px
@@ -203,7 +208,7 @@ button
     .user-mention
       font-weight: bold
     .its-you
-      color: accent-red
+      color: accent-blue
     .author
       display: inline-block
       font-size: 12px
