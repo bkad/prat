@@ -70,6 +70,15 @@
       $(".south[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "s"}));
       $(".east[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "e"}));
       $(".west[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "w"}));
+
+      setInterval(function() {
+        var thatsyou = $(".thatsyou")
+        if (thatsyou.is(":visible")) {
+          thatsyou.hide()
+        } else {
+          thatsyou.show()
+        }
+      }, 200);
     })
     $(window).load(function() { Util.scrollToBottom("noAnimate") })
   </script>
@@ -92,6 +101,7 @@
   </div>
   <div class="main-content {{ "collapse-left" if left_sidebar_closed else "" }}">
     <div class="chat-column {{ "collapse-right" if right_sidebar_closed else "" }}">
+      <img class="thatsyou" src="/assets/thatsyou.png" />
       <div class="alert-container"></div>
       <div class="chat-controls">
         <button class="toggle-left-sidebar">
