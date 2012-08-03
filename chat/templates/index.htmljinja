@@ -59,8 +59,8 @@
                       {{ username|tojson|safe }},
                       sound)
       chatControls = new ChatControls(messageHub,
-                                      {{ left_sidebar_closed|lower }},
-                                      {{ right_sidebar_closed|lower }})
+                                      {{ left_sidebar_closed|tojson }},
+                                      {{ right_sidebar_closed|tojson }})
 
       chat.appendInitialMessages(initialMessages)
 
