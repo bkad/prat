@@ -96,6 +96,7 @@ button
   height: 100%
   &:not(.collapse-left)
     left: 200px
+    .message-container { margin-left: 0px }
     .chat-controls
       border-radius: bottom left 2px
       border-left: border-grey
@@ -138,6 +139,7 @@ button
   &.collapse-right { right: 0px }
   &:not(.collapse-right)
     right: 200px
+    .message-container { margin-right: 0px }
     .chat-controls
       border-radius: bottom right 2px
       border-right: border-grey
@@ -215,7 +217,7 @@ button
   .message-container
     font-size: 14px
     color: #333
-    margin: 8px 0
+    margin: 8px
     position: relative
     .user-mention
       font-weight: bold
