@@ -94,7 +94,14 @@ button
   background: white
   absolute: top right
   height: 100%
-  &:not(.collapse-left) { left: 200px }
+  &:not(.collapse-left)
+    left: 200px
+    .chat-controls
+      border-radius: bottom left 2px
+      border-left: border-grey
+    .input-container
+      border-radius: top left 2px
+      border-left: border-grey
   &.collapse-left { left: 0px }
 .right-sidebar
   absolute: top right
@@ -129,7 +136,14 @@ button
   min-width: 300px
   height: 100%
   &.collapse-right { right: 0px }
-  &:not(.collapse-right) { right: 200px }
+  &:not(.collapse-right)
+    right: 200px
+    .chat-controls
+      border-radius: bottom right 2px
+      border-right: border-grey
+    .input-container
+      border-radius: top right 2px
+      border-right: border-grey
 .alert-container
   relative: top
   margin-top: 32px
@@ -164,9 +178,7 @@ button
   right: 0px
   height: 29px
   background: light-grey
-  border: border-grey
-  border-top: none
-  border-radius: bottom 2px
+  border-bottom: border-grey
   button
     height: 20px
   .toggle-left-sidebar
@@ -263,9 +275,6 @@ button
   height: 80px
   background: light-grey
   border-top: border-grey
-  border-left: border-grey
-  border-right: border-grey
-  border-radius: top 2px
 .chat-text-wrapper
   absolute: top left
   right: 85px
