@@ -21,10 +21,6 @@ def index():
     initial_users[channel] = get_channel_users(channel)
 
   last_selected_channel = g.user["last_selected_channel"]
-  # maybe use backchat, flexjaxlot (it lines it up nicely)
-  name_jumble = ["back", "flex", "jax", "chat", "lot"]
-  shuffle(name_jumble)
-  title = "".join(name_jumble)
   username = g.user["email"].split("@")[0]
 
   right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
@@ -39,8 +35,6 @@ def index():
                          initial_messages=initial_messages,
                          initial_users=initial_users,
                          authed=g.authed,
-                         name_jumble=name_jumble,
-                         title=title,
                          full_name=g.user['name'],
                          username=username,
                          avatar_url=g.user["gravatar"],
