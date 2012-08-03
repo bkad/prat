@@ -31,12 +31,13 @@ def index():
   alert_template = read_template("alert.mustache")
   user_status_template = read_template("user_status.mustache")
 
-  return render_template('index.htmljinja',
+  return render_template("index.htmljinja",
                          initial_messages=initial_messages,
                          initial_users=initial_users,
                          authed=g.authed,
-                         full_name=g.user['name'],
+                         full_name=g.user["name"],
                          username=username,
+                         email=g.user["email"],
                          avatar_url=g.user["gravatar"],
                          channels=channels,
                          last_selected_channel=last_selected_channel,

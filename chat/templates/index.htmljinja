@@ -39,6 +39,7 @@
   </script>
   <script charset="utf-8">
     $(document).ready(function() {
+      CurrentUserEmail = {{ email|tojson|safe }}
       initialMessages = {{ initial_messages|tojson|safe }}
       initialUsers = {{ initial_users|tojson|safe }}
       initialChannel = {{ last_selected_channel|tojson|safe }}
