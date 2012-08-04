@@ -281,31 +281,34 @@ button
   border-bottom: 1px solid lighten(med-grey, 60%)
 
 .input-container
+  padding-amount = 10px
+  input-controls-width = 75px
+  container-height = 80px
   absolute: bottom left
   right: 0px
-  height: 80px
+  height: container-height
   background: light-grey
   border-top: border-grey
-.chat-text-wrapper
-  absolute: top left
-  right: 85px
-  bottom: 0px
-  padding: 10px
-  textarea
-    font-family: sans-font-family
-    border-radius: 2px
-    border: border-grey
-    width: 100%
-    height: 100%
-    font-size: 14px
-    resize: none
-.input-controls
-  absolute: top right
-  bottom: 0px
-  padding: 10px 0px
-  width: 75px
-  button
-    height: 30px
-    width: 65px
-    &.chat-submit
-      margin-bottom: 5px
+  .chat-text-wrapper
+    absolute: top padding-amount left padding-amount
+    right: input-controls-width + padding-amount
+    height: container-height - (2 * padding-amount)
+    textarea
+      box-sizing: border-box
+      font-family: sans-font-family
+      border-radius: 2px
+      border: border-grey
+      width: 100%
+      height: 100%
+      font-size: 14px
+      resize: none
+  .input-controls
+    absolute: top right
+    bottom: 0px
+    padding: padding-amount 0
+    width: input-controls-width
+    button
+      button-margin = 6px
+      height: ((container-height - (2 * padding-amount) - button-margin) / 2)
+      width: input-controls-width - padding-amount
+      margin-bottom: button-margin
