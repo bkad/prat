@@ -14,6 +14,11 @@ accent-blue = #4782B4
 sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
 mono-font-family = "Cousine", monospace
 
+* {
+  margin: 0
+  padding: 0
+}
+
 // Unfortunately nib has no selection mixin
 ::selection { background: lighten(accent-blue, 80%) }
 ::-moz-selection { background: lighten(accent-blue, 80%) }
@@ -193,6 +198,7 @@ button
     margin: 5px
     font-size: 12px
     .ss-icon
+      padding: 0 5px
       color: #888
   .channel-name
     position: relative
@@ -205,6 +211,7 @@ button
   .control-button-container
     absolute: right 50px
     margin: 5px
+    button { padding: 0 5px }
 
 .chat-messages-container
   &:not(.current) { display: none }
