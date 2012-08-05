@@ -1,9 +1,14 @@
+# coding=utf-8
+
 from chat import string_filters
 
 class DefaultConfig(object):
   """Default configuration for chat app"""
   DEBUG = True
   SECRET_KEY = "secret"
+
+  APP_NAME = u"riposte"
+
   MONGO_HOST = "127.0.0.1"
   MONGO_PORT = 27017
   MONGO_DB_NAME = "oochat"

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>nüchat</title>
+  <title>{{ title }}</title>
   <link rel="stylesheet" href="/assets/style.styl"></link>
   <link rel="stylesheet" href="/static/css/ss-standard.css"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -78,9 +78,9 @@
 <body>
   <div class="left-sidebar {{ "closed" if left_sidebar_closed else "" }}">
     <div class="logo-title">
-      <div>nüchat</div>
+      <div>{{ title }}</div>
     </div>
-    <div class="channel-list-container">
+    <div class="channel-controls-container">
       {% for channel in channels %}
         <button class="channel {{ "current" if channel == last_selected_channel else "" }}"
           data-channel-name="{{ channel }}">{{ channel }}</button>

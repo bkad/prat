@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
 from random import shuffle
@@ -48,4 +50,5 @@ def index():
                          message_partial_template=message_partial_template,
                          alert_template=alert_template,
                          user_status_template=user_status_template,
+                         title=current_app.config["APP_NAME"],
                         )
