@@ -6,15 +6,17 @@ class window.Chat
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
     $(".chat-submit").click(@onChatSubmit)
-    $(".chat-text").on("keydown.return", @onChatSubmit)
+    $(".chat-text").bind("keydown.return", @onChatSubmit)
+    $(".chat-text").bind("keydown.meta_return", @onChatSubmit)
     @messageHub.on("publish_message", @onNewMessage)
 
   onChatSubmit: (event) =>
-    message = $(".chat-text").val()
-    if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendChat(message, @channelControls.currentChannel)
-    $(".chat-text").val("").focus()
-    event.preventDefault()
+    if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
+      message = $(".chat-text").val()
+      if message.replace(/\s*$/, "") isnt ""
+        @messageHub.sendChat(message, @channelControls.currentChannel)
+      $(".chat-text").val("").focus()
+      event.preventDefault()
 
   checkAndNotify: (message) =>
     if message.find(".its-you").length > 0 and (!document.hasFocus() or document.webkitHidden)

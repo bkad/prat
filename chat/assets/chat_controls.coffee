@@ -7,6 +7,17 @@ class window.ChatControls
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
+    $("#auto-send-toggle").on("mousedown", @onAutoSendToggle)
+    if $.cookie("autoSend") == null
+      document.cookie = "autoSend=false"
+    if $.cookie("autoSend") == "true"
+      autoSendSlider = $("#auto-send-container")
+      autoSendSlider.removeClass("toggleoff")
+      autoSendSlider.addClass("toggleon")
+    else
+      autoSendSlider = $("#auto-send-container")
+      autoSendSlider.removeClass("toggleon")
+      autoSendSlider.addClass("toggleoff")
     @messageHub.on("force_refresh", @refreshPage)
 
   onExpandRightSidebar: (event) =>
@@ -40,6 +51,18 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  onAutoSendToggle: (event) =>
+    autoSendSlider = $("#auto-send-container")
+    event.preventDefault()
+    if autoSendSlider.hasClass("toggleoff")
+      autoSendSlider.removeClass("toggleoff")
+      autoSendSlider.addClass("toggleon")
+      document.cookie = "autoSend=true"
+    else
+      autoSendSlider.removeClass("toggleon")
+      autoSendSlider.addClass("toggleoff")
+      document.cookie = "autoSend=false"
 
   refreshPage: ->
     window.location.reload()

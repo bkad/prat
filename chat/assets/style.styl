@@ -36,7 +36,20 @@ a
   color: accent-blue
   &:hover { color: lighten(accent-blue, 20%) }
 
-button
+div#auto-send-container
+  font-family: sans-font-family
+  font-size: 12px
+  font-weight: bold
+  color: #444
+  border: border-grey
+  border-radius: 2px
+  &:hover
+    box-shadow: 0px 1px 1px rgba(0,0,0,.1)
+    border: 1px solid dark-hover-grey
+  &:active
+    background: dark-active-grey
+
+button, select
   font-family: sans-font-family
   font-size: 12px
   font-weight: bold
@@ -286,8 +299,8 @@ button
 
 .input-container
   padding-amount = 10px
-  input-controls-width = 75px
-  container-height = 80px
+  input-controls-width = 87px
+  container-height = 90px
   absolute: bottom left
   right: 0px
   height: container-height
@@ -313,6 +326,34 @@ button
     width: input-controls-width
     button
       button-margin = 6px
-      height: ((container-height - (2 * padding-amount) - button-margin) / 2)
+      height: ((container-height - (3 * padding-amount) - button-margin) / 3)
       width: input-controls-width - padding-amount
       margin-bottom: button-margin
+    div#auto-send-container
+      overflow: hidden
+      border: border-grey
+      border-radius: 2px
+      border-style: solid
+      border-width: 1px
+      &:hover
+        box-shadow: 0px 1px 1px rgba(0,0,0,.1)
+        border: 1px solid dark-hover-grey
+      -webkit-transition: padding-left 250ms ease-out, padding-right 250ms ease-out
+      button-margin = 6px
+      height: ((container-height - (3 * padding-amount) - button-margin) / 3)
+      width: input-controls-width - padding-amount*3
+      select
+        -webkit-appearance: push-button
+        text-align: center
+        height: ((container-height - (3 * padding-amount) - button-margin) / 3)
+        width: ((input-controls-width - padding-amount) / 4) * 3
+        border-style: solid
+        border-width: 1px
+    .toggleoff
+      padding-left: ((input-controls-width - padding-amount) / 4)
+      padding-right: 0px
+      background-image: -webkit-linear-gradient(#CEADB3, #DFBAC0)
+    .toggleon
+      padding-left: 0px
+      padding-right: ((input-controls-width - padding-amount) / 4)
+      background-image:-webkit-linear-gradient(#bccead, #cbdfba)
