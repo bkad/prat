@@ -7,6 +7,7 @@ from chat.datastore import (db, message_dict_from_event_object, remove_user_from
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count)
 from chat.zmq_context import zmq_context
+from chat import markdown
 import uuid
 
 eventhub = Blueprint("eventhub", __name__)
@@ -72,6 +73,8 @@ def eventhub_client():
           handle_switch_channel(data["channel"])
         elif action == "publish_message":
           handle_publish_message(data, push_socket)
+        elif action == "preview_message":
+          handle_preview_message(data, websocket)
         elif action == "join_channel":
           handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
         elif action == "leave_channel":
@@ -219,6 +222,27 @@ def handle_publish_message(data, push_socket):
   # -> Everyone
   # prepend an identifier showing which channel the event happened on for PUB/SUB
   push_socket.send(" ".join([zmq_channel_key(channel), packed]))
+
+def handle_preview_message(data, websocket):
+  message = data["message"]
+  channel = data["channel"]
+  author = g.user["name"]
+  email = g.user["email"]
+  gravatar = g.user["gravatar"]
+  # we use isoformat in msgpack because it cant handle datetime objects
+  time_now = datetime.datetime.utcnow()
+  preview_event_object = { "message_id": "0000",
+                           "message": message,
+                           "rendered_message": markdown.render(message)
+                         }
+
+  msgpack_event_object = { "action":"preview_message",
+                           "data": preview_event_object,
+                         }
+  #packed = g.msg_packer.pack(msgpack_event_object)
+
+  # -> Self
+  websocket.send(json.dumps(msgpack_event_object))
 
 
 # event_type must be either "join" or "leave"

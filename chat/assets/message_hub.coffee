@@ -25,6 +25,13 @@ class window.MessageHub
       data:
         channel: channel
 
+  sendPreview: (message, channel) =>
+    @sendJSON
+      action: "preview_message"
+      data:
+        message: message
+        channel: channel
+
   sendChat: (message, channel) =>
     @sendJSON
       action: "publish_message"

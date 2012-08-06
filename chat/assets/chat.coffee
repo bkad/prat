@@ -6,9 +6,36 @@ class window.Chat
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
     $(".chat-submit").click(@onChatSubmit)
+    $(".chat-preview").click(@onPreviewSubmit)
+    $(".chat-edit").click(@onEditSubmit)
     $(".chat-text").bind("keydown.return", @onChatSubmit)
     $(".chat-text").bind("keydown.meta_return", @onChatSubmit)
     @messageHub.on("publish_message", @onNewMessage)
+    @messageHub.on("preview_message", @onPreviewMessage)
+
+  onPreviewSubmit: (event) =>
+    message = $(".chat-text").val()
+    if message.replace(/\s*$/, "") isnt ""
+      @messageHub.sendPreview(message, @channelControls.currentChannel)
+
+    previewContainer = $(".preview-wrapper")
+    previewButton = $(".chat-preview")
+    editButton = $(".chat-edit")
+    chatTextContainer = $(".chat-text-wrapper")
+    previewButton.hide()
+    editButton.show()
+    chatTextContainer.hide()
+    previewContainer.show()
+
+  onEditSubmit: (event) =>
+    previewContainer = $(".preview-wrapper")
+    previewButton = $(".chat-preview")
+    editButton = $(".chat-edit")
+    chatTextContainer = $(".chat-text-wrapper")
+    previewButton.show()
+    editButton.hide()
+    chatTextContainer.show()
+    previewContainer.hide()
 
   onChatSubmit: (event) =>
     if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
@@ -28,6 +55,11 @@ class window.Chat
     @checkAndNotify(messagePartial)
     @appendMessage(messageObject, messagePartial)
     Util.scrollToBottom("animate") if bottom
+
+  onPreviewMessage: (event, messageObject) =>
+    messagePreviewDiv = $(".preview-wrapper .message")
+    $messageContainer = $(Mustache.render(@messagePartialTemplate, messageObject))
+    messagePreviewDiv.replaceWith($messageContainer)
 
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict

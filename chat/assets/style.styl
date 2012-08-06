@@ -234,63 +234,63 @@ button, select
 .chat-messages-container
   &:not(.current) { display: none }
   absolute: top 30px left
-  bottom: 81px
+  bottom: 91px
   width: 100%
   background: white
   overflow-y: auto
   overflow-x: hidden
   padding-top: 5px
-  .message-container
-    font-size: 14px
-    margin: 8px
-    position: relative
-    .user-mention
-      font-weight: bold
-    .its-you
-      color: accent-blue
-    .author
-      display: inline-block
-      font-size: 12px
-      line-height: 0
-      font-weight: bold
-      absolute: top 9px left 18px + 3px
-    .email
-      display: none
-    .gravatar
-      display: inline-block
-    .time
-      display: inline-block
-      float: right
-      font-size: 9px
-    p, ol, div, ul
-      margin-bottom: 5px
-    code
-      padding: 0px 2px
-      font: 12px/16px mono-font-family
-      background: lighten(accent-blue, 85%)
-    .highlight
-      white-space: pre
-      padding: 5px
-      font: 12px/16px mono-font-family
-      background: lighten(accent-blue, 93%)
-      border: border-grey
-      border-radius: 2px
+.message-container
+  font-size: 14px
+  margin: 8px
+  position: relative
+  .author
+    display: inline-block
+    font-size: 12px
+    line-height: 0
+    font-weight: bold
+    absolute: top 9px left 18px + 3px
+  .email
+    display: none
+  .gravatar
+    display: inline-block
+  .time
+    display: inline-block
+    float: right
+    font-size: 9px
 
-  .message
-    img
-      max-width: 300px
-    strong
-      font-weight: bold
-    em
-      font-style: italic
-    blockquote
-      border-left: 5px solid lighten(accent-blue, 60%)
-      padding-left: 4px
-      color: lighten(dark-grey, 15%)
-    display: inline
-    &:last-child
-      p, ol, div, ul
-        margin-bottom: 0
+.message
+  img
+    max-width: 300px
+  strong
+    font-weight: bold
+  em
+    font-style: italic
+  blockquote
+    border-left: 5px solid lighten(accent-blue, 60%)
+    padding-left: 4px
+    color: lighten(dark-grey, 15%)
+  p, ol, div, ul
+    margin-bottom: 5px
+  code
+    padding: 0px 2px
+    font: 12px/16px mono-font-family
+    background: lighten(accent-blue, 85%)
+  .highlight
+    white-space: pre
+    padding: 5px
+    font: 12px/16px mono-font-family
+    background: lighten(accent-blue, 93%)
+    border: border-grey
+    border-radius: 2px
+  .user-mention
+    font-weight: bold
+  .its-you
+    color: accent-blue
+  display: inline
+  &:last-child
+    p, ol, div, ul
+      margin-bottom: 0
 
 .message-separator
   &:first-child
@@ -306,19 +306,23 @@ button, select
   height: container-height
   background: light-grey
   border-top: border-grey
-  .chat-text-wrapper
+  .chat-text-wrapper, .preview-wrapper
     absolute: top padding-amount left padding-amount
     right: input-controls-width + padding-amount
     height: container-height - (2 * padding-amount)
+    background: white
+    border-radius: 2px
+    border: border-grey
     textarea
       box-sizing: border-box
       font-family: sans-font-family
-      border-radius: 2px
-      border: border-grey
+      border: none
       width: 100%
       height: 100%
       font-size: 14px
       resize: none
+  .preview-wrapper
+    overflow-y: auto
   .input-controls
     absolute: top right
     bottom: 0px
