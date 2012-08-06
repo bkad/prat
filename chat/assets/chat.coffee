@@ -18,24 +18,16 @@ class window.Chat
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendPreview(message, @channelControls.currentChannel)
 
-    previewContainer = $(".preview-wrapper")
-    previewButton = $(".chat-preview")
-    editButton = $(".chat-edit")
-    chatTextContainer = $(".chat-text-wrapper")
-    previewButton.hide()
-    editButton.show()
-    chatTextContainer.hide()
-    previewContainer.show()
+    $(".preview-wrapper").show()
+    $(".chat-preview").hide()
+    $(".chat-edit").show()
+    $(".chat-text-wrapper").hide()
 
   onEditSubmit: (event) =>
-    previewContainer = $(".preview-wrapper")
-    previewButton = $(".chat-preview")
-    editButton = $(".chat-edit")
-    chatTextContainer = $(".chat-text-wrapper")
-    previewButton.show()
-    editButton.hide()
-    chatTextContainer.show()
-    previewContainer.hide()
+    $(".preview-wrapper").hide()
+    $(".chat-preview").show()
+    $(".chat-edit").hide()
+    $(".chat-text-wrapper").show()
 
   onChatSubmit: (event) =>
     if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
