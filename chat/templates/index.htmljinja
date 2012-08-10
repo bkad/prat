@@ -3,6 +3,8 @@
 <head>
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/assets/style.styl"></link>
+  <link rel="stylesheet" href="/assets/pygments.styl"></link>
+  <link rel="stylesheet" href="/assets/tipsy_styles.styl"></link>
   <link rel="stylesheet" href="/static/css/ss-standard.css"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='http://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic'
