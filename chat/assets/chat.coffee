@@ -1,41 +1,37 @@
-class window.Chat
-  constructor: (@messageHub, @collapseTimeWindow, @channelControls, @dateTimeHelper, @username, @sound) ->
-    @init()
+class window.MessagesView extends Backbone.View
+  tagName: "div"
+  className: "chat-messages"
 
-  init: ->
+class window.MessagesViewCollection extends Backbone.View
+  tagName: "div"
+  className: "chat-messages-container"
+  initialize: (options) ->
+    @channelHash = {}
+    @channels = options.channels
+    @collapseTimeWindow = options.collapseTimeWindow
+    @dateTimeHelper = options.dateTimeHelper
+    @username = options.username
+    @sound = options.sound
+    $(".input-container").before(@$el)
+    options.messageHub.on("publish_message", @onNewMessage)
+    options.messageHub.on("preview_message", @onPreviewMessage)
+    options.channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
+    for channel in options.channels
+      view = @channelHash[channel] = new MessagesView()
+      if channel is channelViewCollection.currentChannel
+        view.$el.addClass("current")
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
-    $(".chat-submit").click(@onChatSubmit)
-    $(".chat-preview").click(@onPreviewSubmit)
-    $(".chat-edit").click(@onEditSubmit)
-    $(".chat-text").bind("keydown.return", @onChatSubmit)
-    $(".chat-text").bind("keydown.meta_return", @onChatSubmit)
-    @messageHub.on("publish_message", @onNewMessage)
-    @messageHub.on("preview_message", @onPreviewMessage)
+    @render()
 
-  onPreviewSubmit: (event) =>
-    message = $(".chat-text").val()
-    if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendPreview(message, @channelControls.currentChannel)
+  render: =>
+    @$el.children().detach()
+    @$el.append(@channelHash[channel].$el) for channel in @channels
 
-    $(".preview-wrapper").show()
-    $(".chat-preview").hide()
-    $(".chat-edit").show()
-    $(".chat-text-wrapper").hide()
-
-  onEditSubmit: (event) =>
-    $(".preview-wrapper").hide()
-    $(".chat-preview").show()
-    $(".chat-edit").hide()
-    $(".chat-text-wrapper").show()
-
-  onChatSubmit: (event) =>
-    if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
-      message = $(".chat-text").val()
-      if message.replace(/\s*$/, "") isnt ""
-        @messageHub.sendChat(message, @channelControls.currentChannel)
-      $(".chat-text").val("").focus()
-      event.preventDefault()
+  changeCurrentChannel: (newChannel) =>
+    view.$el.removeClass("current") for channel, view of @channelHash
+    @channelHash[newChannel].$el.addClass("current")
+    Util.scrollToBottom("noAnimate")
 
   checkAndNotify: (message) =>
     if message.find(".its-you").length > 0 and (!document.hasFocus() or document.webkitHidden)
@@ -73,7 +69,7 @@ class window.Chat
     mustached
 
   appendMessage: (message, messagePartial) =>
-    messagesList = $(".chat-messages-container[data-channel='#{message["channel"]}']")
+    messagesList = @channelHash[message.channel].$el
     lastMessage = messagesList.find(".message-container").last()
 
     # if the author of consecutive messages are the same, collapse them

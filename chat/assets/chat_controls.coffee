@@ -1,5 +1,5 @@
 class window.ChatControls
-  constructor: (@messageHub, leftClosed, rightClosed) ->
+  constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
@@ -19,6 +19,35 @@ class window.ChatControls
       autoSendSlider.removeClass("toggleon")
       autoSendSlider.addClass("toggleoff")
     @messageHub.on("force_refresh", @refreshPage)
+    $(".chat-submit").click(@onChatSubmit)
+    $(".chat-preview").click(@onPreviewSubmit)
+    $(".chat-edit").click(@onEditSubmit)
+    $(".chat-text").bind("keydown.return", @onChatSubmit)
+    $(".chat-text").bind("keydown.ctrl_return", @onChatSubmit)
+
+  onPreviewSubmit: (event) =>
+    message = $(".chat-text").val()
+    if message.replace(/\s*$/, "") isnt ""
+      @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
+
+    $(".preview-wrapper").show()
+    $(".chat-preview").hide()
+    $(".chat-edit").show()
+    $(".chat-text-wrapper").hide()
+
+  onEditSubmit: (event) =>
+    $(".preview-wrapper").hide()
+    $(".chat-preview").show()
+    $(".chat-edit").hide()
+    $(".chat-text-wrapper").show()
+
+  onChatSubmit: (event) =>
+    if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
+      message = $(".chat-text").val()
+      if message.replace(/\s*$/, "") isnt ""
+        @messageHub.sendChat(message, @channelViewCollection.currentChannel)
+      $(".chat-text").val("").focus()
+      event.preventDefault()
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")

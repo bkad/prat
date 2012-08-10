@@ -41,29 +41,34 @@
   <script charset="utf-8">
     $(document).ready(function() {
       CurrentUserEmail = {{ email|tojson|safe }}
-      initialMessages = {{ initial_messages|tojson|safe }}
-      initialUsers = {{ initial_users|tojson|safe }}
-      initialChannel = {{ last_selected_channel|tojson|safe }}
+      var initialMessages = {{ initial_messages|tojson|safe }}
+      var initialUsers = {{ initial_users|tojson|safe }}
+      var initialChannel = {{ last_selected_channel|tojson|safe }}
+      var initialChannels = {{ channels|tojson|safe }}
 
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
 
       channelUsers = new ChannelUsers(messageHub, initialUsers, initialChannel)
+      channelViewCollection = new ChannelViewCollection({ currentChannel: initialChannel,
+        messageHub: messageHub, channelUsers: channelUsers, channels: initialChannels })
+      chatControls = new ChatControls(messageHub,
+                                      channelViewCollection,
+                                      {{ left_sidebar_closed|tojson }},
+                                      {{ right_sidebar_closed|tojson }})
 
       sound = new Sound("/static/audio/ping.mp3")
 
       dateTimeHelper = new DateTimeHelper()
-      channelControls = new ChannelControls({{ last_selected_channel|tojson|safe }}, messageHub, channelUsers)
-      chat = new Chat(messageHub,
-                      {{ time_window }},
-                      channelControls,
-                      dateTimeHelper,
-                      {{ username|tojson|safe }},
-                      sound)
-      chatControls = new ChatControls(messageHub,
-                                      {{ left_sidebar_closed|tojson }},
-                                      {{ right_sidebar_closed|tojson }})
 
-      chat.appendInitialMessages(initialMessages)
+      messagesViewCollection = new MessagesViewCollection({ messageHub: messageHub,
+                                                            sound: sound,
+                                                            channels: initialChannels,
+                                                            channelViewCollection: channelViewCollection,
+                                                            username: {{ username|tojson|safe }},
+                                                            dateTimeHelper: dateTimeHelper,
+                                                            collapseTimeWindow: {{ time_window }} })
+
+      messagesViewCollection.appendInitialMessages(initialMessages)
 
       // Load up tipsy tooltips
       var default_tipsy_options = { opacity: 0.95, live: true };
@@ -81,10 +86,6 @@
       <div>{{ title }}</div>
     </div>
     <div class="channel-controls-container">
-      {% for channel in channels %}
-        <button class="channel {{ "current" if channel == last_selected_channel else "" }}"
-          data-channel-name="{{ channel }}">{{ channel }}</button>
-      {% endfor %}
       <div class="add-channel-container">
         <div class="plus-label">+</div>
         <input type="text" size="17" class="new-channel-name" />
@@ -110,11 +111,6 @@
         </button>
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
-      {% for channel in channels %}
-        <div class="chat-messages-container {{ "current" if channel == last_selected_channel else "" }}"
-          data-channel="{{ channel }}">
-        </div>
-      {% endfor %}
       <div class="input-container">
         <div class="chat-text-wrapper"><textarea class="chat-text"></textarea></div>
         <div class="preview-wrapper" style="display:none"><div class="message"></div></div>
