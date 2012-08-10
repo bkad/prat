@@ -34,11 +34,11 @@ class window.ChannelUsers
 
   updateUserStatus: (event, data) =>
     newStatus = event.split("_")[1]
-    for channel, view of @views
-      model = view.collection.get(data.email)
-      if model?
-        model.set(status: newStatus)
-        view.collection.sort()
+    view = @views[data.channel]
+    model = view.collection.get(data.email)
+    if model?
+      model.set(status: newStatus)
+      view.collection.sort()
 
   joinChannel: (event, data) =>
     collection = @views[data.channel].collection

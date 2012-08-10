@@ -185,6 +185,7 @@ def send_user_status_update(user, channel, push_socket, status):
   event_object = {
       "action": "user_" + status,
       "data": {
+        "channel": channel,
         "email": user["email"],
       },
   }
