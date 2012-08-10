@@ -5,7 +5,8 @@ from gevent_zeromq import zmq
 import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
-                            add_to_user_clients, remove_from_user_clients, get_active_clients_count)
+                            add_to_user_clients, remove_from_user_clients, get_active_clients_count,
+                            get_user_channel_status)
 from chat.zmq_context import zmq_context
 from chat import markdown
 import uuid
@@ -31,6 +32,13 @@ def eventhub_client():
   for channel in g.user["channels"]:
     channel_id = zmq_channel_key(channel)
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
+
+    # if redis was cleared, we'll need to resend the join channel event to populate the user status of open
+    # clients
+    channel_status = get_user_channel_status(g.user, channel)
+    if channel_status is None:
+      send_join_channel(channel, g.user, push_socket)
+
     set_user_channel_status(g.user, channel, "active")
     send_user_status_update(g.user, channel, push_socket, "active")
 
