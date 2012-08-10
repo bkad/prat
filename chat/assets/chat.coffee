@@ -42,7 +42,7 @@ class window.MessagesViewCollection extends Backbone.View
     messagePartial = @renderMessagePartial(messageObject)
     @checkAndNotify(messagePartial)
     @appendMessage(messageObject, messagePartial)
-    Util.scrollToBottom("animate") if bottom
+    Util.scrollToBottom("noAnimate") if bottom
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $(".preview-wrapper .message")
