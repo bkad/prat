@@ -7,7 +7,7 @@ class DefaultConfig(object):
   DEBUG = True
   SECRET_KEY = "secret"
 
-  APP_NAME = u"riposte"
+  APP_NAME = u"prat"
 
   MONGO_HOST = "127.0.0.1"
   MONGO_PORT = 27017
