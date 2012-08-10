@@ -51,4 +51,5 @@ def index():
                          alert_template=alert_template,
                          user_status_template=user_status_template,
                          title=current_app.config["APP_NAME"],
+                         debug=current_app.config["DEBUG"],
                         )
