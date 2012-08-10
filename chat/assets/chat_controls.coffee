@@ -8,9 +8,11 @@ class window.ChatControls
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
     $("#auto-send-toggle").on("mousedown", @onAutoSendToggle)
-    if $.cookie("autoSend") == null
-      document.cookie = "autoSend=false"
-    if $.cookie("autoSend") == "true"
+    $(".chat-text").on("keydown.ctrl_return", @onChatSubmit)
+    unless localStorage.autoSend?
+      localStorage.autoSend = "false"
+    if localStorage.autoSend == "true"
+      $(".chat-text").on("keydown.return", @onChatSubmit)
       autoSendSlider = $("#auto-send-container")
       autoSendSlider.removeClass("toggleoff")
       autoSendSlider.addClass("toggleon")
@@ -22,8 +24,6 @@ class window.ChatControls
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $(".chat-edit").click(@onEditSubmit)
-    $(".chat-text").bind("keydown.return", @onChatSubmit)
-    $(".chat-text").bind("keydown.ctrl_return", @onChatSubmit)
 
   onPreviewSubmit: (event) =>
     message = $(".chat-text").val()
@@ -42,12 +42,11 @@ class window.ChatControls
     $(".chat-text-wrapper").show()
 
   onChatSubmit: (event) =>
-    if event.type == "click" || $.cookie("autoSend") == "true" || ($.cookie("autoSend") == "false" && event.metaKey)
-      message = $(".chat-text").val()
-      if message.replace(/\s*$/, "") isnt ""
-        @messageHub.sendChat(message, @channelViewCollection.currentChannel)
-      $(".chat-text").val("").focus()
-      event.preventDefault()
+    message = $(".chat-text").val()
+    if message.replace(/\s*$/, "") isnt ""
+      @messageHub.sendChat(message, @channelViewCollection.currentChannel)
+    $(".chat-text").val("").focus()
+    event.preventDefault()
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
@@ -87,11 +86,13 @@ class window.ChatControls
     if autoSendSlider.hasClass("toggleoff")
       autoSendSlider.removeClass("toggleoff")
       autoSendSlider.addClass("toggleon")
-      document.cookie = "autoSend=true"
+      localStorage.autoSend = "true"
+      $(".chat-text").on("keydown.return", @onChatSubmit)
     else
       autoSendSlider.removeClass("toggleon")
       autoSendSlider.addClass("toggleoff")
-      document.cookie = "autoSend=false"
+      localStorage.autoSend = "false"
+      $(".chat-text").off("keydown.return", @onChatSubmit)
 
   refreshPage: ->
     window.location.reload()
