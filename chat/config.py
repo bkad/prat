@@ -19,7 +19,7 @@ class DefaultConfig(object):
   COMPILED_ASSET_PATH = "assets"
   COLLAPSED_MESSAGE_TIME_WINDOW = 5 * 60 # seconds
 
-  PUSH_ADDRESS = "tcp://localhost:5555"
-  SUBSCRIBE_ADDRESS = "tcp://localhost:5556"
+  PUSH_ADDRESS = "tcp://localhost:5666"
+  SUBSCRIBE_ADDRESS = "tcp://localhost:5667"
   DEFAULT_CHANNELS = ["general", "Backlot", "OOSL"]
   STRING_FILTERS = [string_filters.replace_shas_with_links, string_filters.replace_jira_links]
