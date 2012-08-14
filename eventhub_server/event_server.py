@@ -8,8 +8,6 @@ publish_socket = context.socket(zmq.PUB)
 # publish_socket.bind("epgm://eth0;239.192.1.1:5555")
 publish_socket.bind("tcp://*:5667")
 
-
 while True:
   new_message = pull_socket.recv()
-  print "received new message: {0}".format(new_message)
   publish_socket.send(new_message)
