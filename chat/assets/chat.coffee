@@ -12,6 +12,7 @@ class window.MessagesViewCollection extends Backbone.View
     @dateTimeHelper = options.dateTimeHelper
     @username = options.username
     @sound = options.sound
+    @title = options.title
     @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
     options.messageHub.on("publish_message", @onNewMessage)
@@ -34,16 +35,31 @@ class window.MessagesViewCollection extends Backbone.View
     @channelHash[newChannel].$el.addClass("current")
     Util.scrollToBottom("noAnimate")
 
-  checkAndNotify: (message) =>
-    if message.find(".its-you").length > 0 and (!document.hasFocus() or document.webkitHidden)
-      @sound.playNewMessageAudio()
+  checkAndNotify: (message, author) =>
+    if !document.hasFocus() or document.webkitHidden
+      @lastAuthor = author
+      @toggleTitleInterval = setInterval(@toggleTitle, 1500)
+      window.onfocus = @clearToggleTitleInterval
+      if message.find(".its-you").length > 0
+        @sound.playNewMessageAudio()
+
+  clearToggleTitleInterval: =>
+    window.onfocus = null
+    clearInterval(@toggleTitleInterval)
+    $("title").html(@title)
+    @showingTitle = true
+
+  toggleTitle: =>
+    newTitle = if @showingTitle then "#{@lastAuthor} says..." else @title
+    $("title").html(newTitle)
+    @showingTitle = not @showingTitle
 
   onNewMessage: (event, messageObject) =>
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject)
     if messageObject.channel isnt @channelViewCollection.currentChannel
       @channelViewCollection.highlightChannel(messageObject.channel)
-    @checkAndNotify(messagePartial)
+    @checkAndNotify(messagePartial, messageObject.author)
     @appendMessage(messageObject, messagePartial)
     Util.scrollToBottom("noAnimate") if bottom
 

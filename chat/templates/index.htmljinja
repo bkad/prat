@@ -69,7 +69,9 @@
                                                             channelViewCollection: channelViewCollection,
                                                             username: {{ username|tojson|safe }},
                                                             dateTimeHelper: dateTimeHelper,
-                                                            collapseTimeWindow: {{ time_window }} })
+                                                            collapseTimeWindow: {{ time_window }},
+                                                            title: {{ title|tojson|safe }},
+                                                          })
 
       messagesViewCollection.appendInitialMessages(initialMessages)
 
