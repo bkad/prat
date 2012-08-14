@@ -1,23 +1,24 @@
 class window.ChannelView extends Backbone.View
   _.extend @::, Backbone.Events
 
-  tagName: "button"
-  className: "channel"
+  tagName: "div"
+  className: "channel-button-container"
 
   initialize: (options) =>
     @name = options.name
     @render()
+    @channelButton = @$el.find(".channel")
 
   render: =>
-    @$el.html(@name)
+    @$el.html("<button class='channel'>#{@name}</button>")
 
   onClick: =>
     $(".chat-controls .channel-name").html(@name)
-    @$el.addClass("current").off("mouseup")
+    @channelButton.addClass("current").off("mouseup")
     @trigger("changeCurrentChannel", @name)
 
   setInactive: =>
-    @$el.removeClass("current").mouseup(@onClick)
+    @channelButton.removeClass("current").mouseup(@onClick)
 
 
 class window.ChannelViewCollection extends Backbone.View
@@ -49,7 +50,7 @@ class window.ChannelViewCollection extends Backbone.View
       if channel isnt @currentChannel
         view.setInactive()
       else
-        view.$el.addClass("current")
+        view.channelButton.addClass("current")
 
       view.on("changeCurrentChannel", @onChannelChange)
       @$el.append(view.$el)
