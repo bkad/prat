@@ -12,13 +12,14 @@ class window.MessagesViewCollection extends Backbone.View
     @dateTimeHelper = options.dateTimeHelper
     @username = options.username
     @sound = options.sound
+    @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
     options.messageHub.on("publish_message", @onNewMessage)
     options.messageHub.on("preview_message", @onPreviewMessage)
-    options.channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
+    @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
-      if channel is channelViewCollection.currentChannel
+      if channel is @channelViewCollection.currentChannel
         view.$el.addClass("current")
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
@@ -40,6 +41,8 @@ class window.MessagesViewCollection extends Backbone.View
   onNewMessage: (event, messageObject) =>
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject)
+    if messageObject.channel isnt @channelViewCollection.currentChannel
+      @channelViewCollection.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial)
     @appendMessage(messageObject, messagePartial)
     Util.scrollToBottom("noAnimate") if bottom

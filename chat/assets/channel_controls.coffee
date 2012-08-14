@@ -14,11 +14,15 @@ class window.ChannelView extends Backbone.View
 
   onClick: =>
     $(".chat-controls .channel-name").html(@name)
+    @channelButton.removeClass("unread")
     @channelButton.addClass("current").off("mouseup")
     @trigger("changeCurrentChannel", @name)
 
   setInactive: =>
     @channelButton.removeClass("current").mouseup(@onClick)
+
+  highlight: =>
+    @channelButton.addClass("unread")
 
 
 class window.ChannelViewCollection extends Backbone.View
@@ -67,3 +71,6 @@ class window.ChannelViewCollection extends Backbone.View
     newChannelName.val('')
     newChannelName.hide()
     $('.add-channel-container').stop(true).animate(width: "15px", 500, -> newChannelName.hide())
+
+  highlightChannel: (channel) ->
+    @channelsHash[channel].highlight()
