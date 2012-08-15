@@ -10,7 +10,7 @@ class window.ChatControls
     $("#auto-send-toggle").on("mousedown", @onAutoSendToggle)
     $(".chat-text").on("keydown.ctrl_return", @onChatSubmit)
     unless localStorage.autoSend?
-      localStorage.autoSend = "false"
+      localStorage.autoSend = "true"
     if localStorage.autoSend == "true"
       $(".chat-text").on("keydown.return", @onChatSubmit)
       autoSendSlider = $("#auto-send-container")
