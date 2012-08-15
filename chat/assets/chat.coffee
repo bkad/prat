@@ -38,7 +38,8 @@ class window.MessagesViewCollection extends Backbone.View
   checkAndNotify: (message, author) =>
     if !document.hasFocus() or document.webkitHidden
       @lastAuthor = author
-      @toggleTitleInterval = setInterval(@toggleTitle, 1500)
+      unless @toggleTitleInterval?
+        @toggleTitleInterval = setInterval(@toggleTitle, 1500)
       window.onfocus = @clearToggleTitleInterval
       if message.find(".its-you").length > 0
         @sound.playNewMessageAudio()
@@ -46,6 +47,7 @@ class window.MessagesViewCollection extends Backbone.View
   clearToggleTitleInterval: =>
     window.onfocus = null
     clearInterval(@toggleTitleInterval)
+    @toggleTitleInterval = null
     $("title").html(@title)
     @showingTitle = true
 
