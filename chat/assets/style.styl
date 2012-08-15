@@ -210,14 +210,18 @@ button, select
   .toggle-right-sidebar
     absolute: top right
   .toggle-right-sidebar, .toggle-left-sidebar
-    button { width: 25px }
-    margin: 5px
+    height: 25px
+    width: 25px
+    margin: 2px 0
     font-size: 13px
     // padding dependent on font-size
-    padding-top: 1px
-    .ss-icon
-      padding: 0 5px
-      color: #888
+    padding-top: 2px
+    color: #888
+    background: none
+    border: none
+    &:hover
+      box-shadow: none
+      color: accent-blue
   .channel-name
     position: relative
     width: 80%
