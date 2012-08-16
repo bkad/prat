@@ -7,19 +7,11 @@ class window.ChatControls
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
-    $("#auto-send-toggle").on("mousedown", @onAutoSendToggle)
     $(".chat-text").on("keydown.ctrl_return", @onChatSubmit)
-    unless localStorage.autoSend?
-      localStorage.autoSend = "true"
-    if localStorage.autoSend == "true"
-      $(".chat-text").on("keydown.return", @onChatSubmit)
-      autoSendSlider = $("#auto-send-container")
-      autoSendSlider.removeClass("toggleoff")
-      autoSendSlider.addClass("toggleon")
-    else
-      autoSendSlider = $("#auto-send-container")
-      autoSendSlider.removeClass("toggleon")
-      autoSendSlider.addClass("toggleoff")
+    unless localStorage.quickSend?
+      localStorage.quickSend = "true"
+    @quickSendButton = $("#quicksend")
+    if localStorage.quickSend == "true" then @quickSendOn() else @quickSendOff()
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
@@ -80,19 +72,21 @@ class window.ChatControls
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
 
-  onAutoSendToggle: (event) =>
-    autoSendSlider = $("#auto-send-container")
-    event.preventDefault()
-    if autoSendSlider.hasClass("toggleoff")
-      autoSendSlider.removeClass("toggleoff")
-      autoSendSlider.addClass("toggleon")
-      localStorage.autoSend = "true"
-      $(".chat-text").on("keydown.return", @onChatSubmit)
-    else
-      autoSendSlider.removeClass("toggleon")
-      autoSendSlider.addClass("toggleoff")
-      localStorage.autoSend = "false"
-      $(".chat-text").off("keydown.return", @onChatSubmit)
+  quickSendOn: =>
+    @quickSendButton.addClass("active")
+                    .one("click", @quickSendOff)
+                    .attr("title", "Turn quick send off")
+                    .trigger("mouseleave") # refresh tipsy
+                    .trigger("mouseenter")
+    localStorage.quickSend = "true"
+    $(".chat-text").on("keydown.return", @onChatSubmit)
+    @quickSendButton
 
-  refreshPage: ->
-    window.location.reload()
+  quickSendOff: =>
+    @quickSendButton.removeClass("active")
+                    .one("click", @quickSendOn)
+                    .attr("title", "Turn quick send on")
+                    .trigger("mouseleave") # refresh tipsy
+                    .trigger("mouseenter")
+    localStorage.quickSend = "false"
+    $(".chat-text").off("keydown.return", @onChatSubmit)

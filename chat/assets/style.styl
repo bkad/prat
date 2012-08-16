@@ -34,19 +34,6 @@ a
   color: accent-blue
   &:hover { color: lighten(accent-blue, 20%) }
 
-div#auto-send-container
-  font-family: sans-font-family
-  font-size: 12px
-  font-weight: bold
-  color: #444
-  border: border-grey
-  border-radius: 2px
-  &:hover
-    box-shadow: 0px 1px 1px rgba(0,0,0,.1)
-    border: 1px solid dark-hover-grey
-  &:active
-    background: dark-active-grey
-
 button, select
   font-family: sans-font-family
   font-size: 12px
@@ -204,36 +191,55 @@ button, select
   background: light-grey
   border-bottom: border-grey
   button
-    height: 20px
+    height: 25px
+    width: 25px
+    background: none
+    border: none
+    color: #888
+    &:hover
+      color: accent-blue
+      box-shadow: none
   .toggle-left-sidebar
     absolute: top left
   .toggle-right-sidebar
     absolute: top right
   .toggle-right-sidebar, .toggle-left-sidebar
-    height: 25px
-    width: 25px
     margin: 2px 0
     font-size: 13px
     // padding dependent on font-size
     padding-top: 2px
-    color: #888
-    background: none
-    border: none
-    &:hover
-      box-shadow: none
-      color: accent-blue
   .channel-name
     position: relative
-    width: 80%
+    width: 30%
     margin-left: auto
     margin-right: auto
     margin-top: 5px
     margin-bottom: 5px
     text-align: center
   .control-button-container
-    absolute: right 50px
-    margin: 5px
-    button { padding: 0 5px }
+    absolute: right 100px
+    width: 100px;
+    height: 29px;
+    button
+      position: absolute
+      margin: 2px 0px
+      svg
+        height: 25px
+        width: 25px
+        stroke: #888
+        fill: #888
+      &:hover svg
+        stroke: accent-blue
+        fill: accent-blue
+      &.active svg
+        stroke: #555
+        fill: yellow
+    #quicksend
+      right: 25px
+    #logout
+      right: 0
+      font-size: 20px
+
 
 .chat-messages
   &:not(.current) { display: none }
@@ -305,8 +311,8 @@ button, select
 
 .input-container
   padding-amount = 10px
-  input-controls-width = 87px
-  container-height = 90px
+  input-controls-width = 75px
+  container-height = 80px
   absolute: bottom left
   right: 0px
   height: container-height
@@ -337,34 +343,6 @@ button, select
     width: input-controls-width
     button
       button-margin = 6px
-      height: ((container-height - (3 * padding-amount) - button-margin) / 3)
+      height: ((container-height - (2 * padding-amount) - button-margin) / 2)
       width: input-controls-width - padding-amount
       margin-bottom: button-margin
-    div#auto-send-container
-      overflow: hidden
-      border: border-grey
-      border-radius: 2px
-      border-style: solid
-      border-width: 1px
-      &:hover
-        box-shadow: 0px 1px 1px rgba(0,0,0,.1)
-        border: 1px solid dark-hover-grey
-      -webkit-transition: padding-left 250ms ease-out, padding-right 250ms ease-out
-      button-margin = 6px
-      height: ((container-height - (3 * padding-amount) - button-margin) / 3)
-      width: input-controls-width - padding-amount*3
-      select
-        -webkit-appearance: push-button
-        text-align: center
-        height: ((container-height - (3 * padding-amount) - button-margin) / 3)
-        width: ((input-controls-width - padding-amount) / 4) * 3
-        border-style: solid
-        border-width: 1px
-    .toggleoff
-      padding-left: ((input-controls-width - padding-amount) / 4)
-      padding-right: 0px
-      background-image: -webkit-linear-gradient(#CEADB3, #DFBAC0)
-    .toggleon
-      padding-left: 0px
-      padding-right: ((input-controls-width - padding-amount) / 4)
-      background-image:-webkit-linear-gradient(#bccead, #cbdfba)
