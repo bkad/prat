@@ -6,11 +6,14 @@ class window.ChannelView extends Backbone.View
 
   initialize: (options) =>
     @name = options.name
+    @template = $("#channel-button-template").html()
     @render()
     @channelButton = @$el.find(".channel")
 
   render: =>
-    @$el.html("<button class='channel'>#{@name}</button>")
+    @$el.html(Mustache.render(@template, name: @name))
+    @$el.find(".leave").click(=> @trigger("leaveChannel", @name))
+    @$el.hover((=> @$el.addClass("hover")), => @$el.removeClass("hover"))
 
   onClick: =>
     $(".chat-controls .channel-name").html(@name)
@@ -57,10 +60,11 @@ class window.ChannelViewCollection extends Backbone.View
         view.channelButton.addClass("current")
 
       view.on("changeCurrentChannel", @onChannelChange)
+      view.on("leaveChannel", @leaveChannel)
       @$el.append(view.$el)
 
   onChannelChange: (nextCurrentChannel) =>
-    @channelsHash[@currentChannel].setInactive()
+    @channelsHash[@currentChannel]?.setInactive()
     @currentChannel = nextCurrentChannel
     @trigger("changeCurrentChannel", nextCurrentChannel)
     @channelUsers.displayUserStatuses(@currentChannel)
@@ -74,3 +78,11 @@ class window.ChannelViewCollection extends Backbone.View
 
   highlightChannel: (channel) ->
     @channelsHash[channel].highlight()
+
+  leaveChannel: (channel) =>
+    @channels = _.without(@channels, channel)
+    @channelsHash[channel].$el.remove()
+    delete @channelsHash[channel]
+    @messageHub.leaveChannel(channel)
+    @trigger("leaveChannel", channel)
+    @onChannelChange(@channels[0]) if channel is @currentChannel and @channels.length > 0

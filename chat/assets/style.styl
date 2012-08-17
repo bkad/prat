@@ -60,6 +60,17 @@ button, select
   .channel-controls-container
     margin-left: -3px
     width: 150px
+    .channel-button-container
+      height: 43px
+      width: 175px
+      .leave
+        display: none
+        color: #888
+        cursor: default
+      &.hover .leave
+        display: inline
+        &:hover
+          color: red
     button
       width: 150px
       height: 35px

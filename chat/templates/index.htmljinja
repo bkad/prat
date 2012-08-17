@@ -41,6 +41,9 @@
   <script id="user-status-template" type="text/x-mustache-template">
     {{ user_status_template|safe }}
   </script>
+  <script id="channel-button-template" type="text/x-mustache-template">
+    {{ channel_button_template|safe }}
+  </script>
   <script charset="utf-8">
     $(document).ready(function() {
       CurrentUserEmail = {{ email|tojson|safe }}

@@ -32,6 +32,7 @@ def index():
   message_partial_template = read_template("message_partial.mustache")
   alert_template = read_template("alert.mustache")
   user_status_template = read_template("user_status.mustache")
+  channel_button_template = read_template("channel_button.mustache")
 
   return render_template("index.htmljinja",
                          initial_messages=initial_messages,
@@ -50,6 +51,7 @@ def index():
                          message_partial_template=message_partial_template,
                          alert_template=alert_template,
                          user_status_template=user_status_template,
+                         channel_button_template=channel_button_template,
                          title=current_app.config["APP_NAME"],
                          debug=current_app.config["DEBUG"],
                         )
