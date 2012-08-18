@@ -83,6 +83,7 @@ class window.ChannelViewCollection extends Backbone.View
     @channels = _.without(@channels, channel)
     @channelsHash[channel].$el.remove()
     delete @channelsHash[channel]
+    Util.cleanupTipsy()
     @messageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
     @onChannelChange(@channels[0]) if channel is @currentChannel and @channels.length > 0

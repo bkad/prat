@@ -8,3 +8,5 @@ window.Util =
     messages = $(".chat-messages.current")
     method = if animate is "animate" then "animate" else "prop"
     messages[method](scrollTop: messages[0].scrollHeight - messages.outerHeight() - 1)
+
+  cleanupTipsy: -> $(".tipsy").remove()

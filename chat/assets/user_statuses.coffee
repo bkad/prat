@@ -94,6 +94,6 @@ class window.UserStatusView extends Backbone.View
     @collection.map(@renderUserStatus).join("")
 
   render: =>
-    $(".tipsy").remove()
+    Util.cleanupTipsy()
     @$el.html(@renderUserStatusCollection())
     @
