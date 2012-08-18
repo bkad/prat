@@ -45,6 +45,12 @@ class window.MessageHub
       data:
         channel: channel
 
+  joinChannel: (channel) =>
+    @sendJSON
+      action: "join_channel"
+      data:
+        channel: channel
+
   onConnectionFailed: =>
     clearTimeout(@timeoutID)
     @alertHelper.newAlert("alert-error", "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds")

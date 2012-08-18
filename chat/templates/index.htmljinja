@@ -54,9 +54,9 @@
 
       messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
 
-      channelUsers = new ChannelUsers(messageHub, initialUsers, initialChannel)
       channelViewCollection = new ChannelViewCollection({ currentChannel: initialChannel,
-        messageHub: messageHub, channelUsers: channelUsers, channels: initialChannels })
+        messageHub: messageHub, channels: initialChannels })
+      channelUsers = new ChannelUsers(messageHub, initialUsers, initialChannel, channelViewCollection)
       chatControls = new ChatControls(messageHub,
                                       channelViewCollection,
                                       {{ left_sidebar_closed|tojson }},

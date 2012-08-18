@@ -35,7 +35,6 @@ class window.ChannelViewCollection extends Backbone.View
   initialize: (options) =>
     @channelsHash = {}
     @currentChannel = options.currentChannel
-    @channelUsers = options.channelUsers
     @messageHub = options.messageHub
     @channels = options.channels
 
@@ -43,38 +42,38 @@ class window.ChannelViewCollection extends Backbone.View
       @channelsHash[channel] = new ChannelView(name: channel)
     $(".channel-controls-container").prepend(@$el)
 
-    $('.add-channel-container').toggle(
-      ((event) -> $('.add-channel-container').stop(true).animate(width: "133px", 500, ->
-        $('.new-channel-name').show())),
-      @hideNewChannel)
+    $('.add-channel-container').one("click", @showNewChannel)
     $('.new-channel-name').click((event) -> event.stopPropagation())
+    $(".new-channel-name").on("keydown.return", (event) =>
+      newChannel = event.target.value
+      if newChannel.replace(/\s*$/, "") isnt ""
+        @joinChannel(newChannel)
+      $(".add-channel-container").click()
+    )
     @render()
 
   render: =>
     @$el.children().detach()
-    for channel in @channels
-      view = @channelsHash[channel]
-      if channel isnt @currentChannel
-        view.setInactive()
-      else
-        view.channelButton.addClass("current")
-
-      view.on("changeCurrentChannel", @onChannelChange)
-      view.on("leaveChannel", @leaveChannel)
-      @$el.append(view.$el)
+    @addNewChannelView(@channelsHash[channel]) for channel in @channels
 
   onChannelChange: (nextCurrentChannel) =>
     @channelsHash[@currentChannel]?.setInactive()
     @currentChannel = nextCurrentChannel
     @trigger("changeCurrentChannel", nextCurrentChannel)
-    @channelUsers.displayUserStatuses(@currentChannel)
     @messageHub.switchChannel(@currentChannel)
 
-  hideNewChannel: (event) ->
+  showNewChannel: (event) =>
+    $(event.currentTarget).stop(true)
+                          .animate(width: "133px", 500, -> $('.new-channel-name').show())
+                          .one("click", @hideNewChannel)
+
+  hideNewChannel: (event) =>
     newChannelName = $('.new-channel-name')
     newChannelName.val('')
     newChannelName.hide()
-    $('.add-channel-container').stop(true).animate(width: "15px", 500, -> newChannelName.hide())
+    $(event.currentTarget).stop(true)
+                          .animate(width: "15px", 500, -> newChannelName.hide())
+                          .one("click", @showNewChannel)
 
   highlightChannel: (channel) ->
     @channelsHash[channel].highlight()
@@ -87,3 +86,21 @@ class window.ChannelViewCollection extends Backbone.View
     @messageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
     @onChannelChange(@channels[0]) if channel is @currentChannel and @channels.length > 0
+
+  addNewChannelView: (view) =>
+    if view.name isnt @currentChannel
+      view.setInactive()
+    else
+      view.channelButton.addClass("current")
+    view.on("changeCurrentChannel", @onChannelChange)
+    view.on("leaveChannel", @leaveChannel)
+    @$el.append(view.$el)
+
+
+  joinChannel: (channel) =>
+    return if _.include(@channels, channel)
+    @channels.push(channel)
+    view = @channelsHash[channel] = new ChannelView(name: channel)
+    @addNewChannelView(view)
+    @trigger("joinChannel", channel)
+    @messageHub.joinChannel(channel)

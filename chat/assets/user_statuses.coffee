@@ -1,17 +1,20 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub, initialUsers, currentChannel) ->
+  constructor: (@messageHub, initialUsers, currentChannel, channelViewCollection) ->
     @views = {}
-    @init(initialUsers, currentChannel)
+    @init(initialUsers, currentChannel, channelViewCollection)
 
-  init: (initialUsers, currentChannel) ->
+  init: (initialUsers, currentChannel, channelViewCollection) ->
     for channel, users of initialUsers
       view = @addUserStatuses(users, channel)
       @displayUserStatuses(channel) if channel is currentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
     @messageHub.on("join_channel", @joinChannel)
     @messageHub.on("leave_channel", @leaveChannel)
+    channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
+    channelViewCollection.on("leaveChannel", @removeUserStatuses)
+    channelViewCollection.on("joinChannel", @addBlankUserStatusesView)
 
   addUserStatuses: (users, channel) =>
     usersCollection = new UserStatusCollection(users)
@@ -21,7 +24,9 @@ class window.ChannelUsers
     usersView.render()
     @views[channel] = usersView
 
-  removeUsersStatuses: (channel) =>
+  addBlankUserStatusesView: (channel) => @addUserStatuses([], channel)
+
+  removeUserStatuses: (channel) =>
     return unless @views[channel]?
     usersView = @views[channel]
     delete @views[channel]
