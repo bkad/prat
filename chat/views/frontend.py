@@ -18,8 +18,7 @@ def index():
   initial_messages = {}
   initial_users = {}
   for channel in channels:
-    messages = get_recent_messages(channel)
-    initial_messages[channel] = [message_dict_from_event_object(message) for message in messages]
+    initial_messages[channel] = get_recent_messages(channel)
     initial_users[channel] = get_channel_users(channel)
 
   last_selected_channel = g.user["last_selected_channel"]

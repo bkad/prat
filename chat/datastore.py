@@ -42,7 +42,8 @@ def get_redis_connection():
   return connection
 
 def get_recent_messages(channel):
-  return reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
+  ascending = reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
+  return [message_dict_from_event_object(message) for message in ascending]
 
 def message_dict_from_event_object(event_object):
   message = event_object["message"] or " "
