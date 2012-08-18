@@ -43,7 +43,7 @@ def eventhub_client():
     send_user_status_update(g.user, channel, push_socket, "active")
 
   # subscribe to events the user triggered that could affect the user's other open clients
-  subscribe_socket.setsockopt_string(zmq.SUBSCRIBE, g.user["email"])
+  subscribe_socket.setsockopt(zmq.SUBSCRIBE, str(g.user["email"]))
 
   poller = zmq.Poller()
   poller.register(subscribe_socket, zmq.POLLIN)
@@ -105,9 +105,9 @@ def eventhub_client():
 
 def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
   # unsubscribe to events happening on this channel
-  subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
-
   channel_id = remove_user_from_channel(g.user, channel)
+
+  subscribe_socket.setsockopt(zmq.UNSUBSCRIBE, channel_id)
 
   leave_channel_event = {
       "action": "leave_channel",
@@ -118,7 +118,7 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
   }
   # alert channel subscribers to user leaving
   packed_leave_channel = g.msg_packer.pack(leave_channel_event)
-  push_socket.send(" ".join(channel_id, packed_leave_channel))
+  push_socket.send(" ".join([channel_id, packed_leave_channel]))
 
   self_leave_channel_event = {
       "action": "self_leave_channel",
@@ -129,7 +129,7 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
       },
   }
   packed_self_leave_channel = g.msg_packer.pack(self_leave_channel_event)
-  push_socket.send(" ".join(g.user["email"], packed_self_leave_channel))
+  push_socket.send(" ".join([str(g.user["email"]), packed_self_leave_channel]))
 
 
 def send_join_channel(channel, user, push_socket):
@@ -187,7 +187,7 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
       },
   }
   packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
-  push_socket.send(" ".join([g.user["email"], packed_self_join_channel]))
+  push_socket.send(" ".join([str(g.user["email"]), packed_self_join_channel]))
 
 def send_user_status_update(user, channel, push_socket, status):
   event_object = {
