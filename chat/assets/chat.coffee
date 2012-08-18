@@ -82,9 +82,13 @@ class window.MessagesViewCollection extends Backbone.View
 
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict
-      for message in messages
-        messagePartial = @renderMessagePartial(message)
-        @appendMessage(message, messagePartial)
+      @appendMessages(messages)
+
+  appendMessages: (messages) =>
+    for message in messages
+      messagePartial = @renderMessagePartial(message)
+      @appendMessage(message, messagePartial)
+
 
   # following three functions are helpers for @appendMessage
   findMessageEmail: (message) -> message.find(".email").text()
