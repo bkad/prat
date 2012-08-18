@@ -91,7 +91,7 @@ class window.ChannelViewCollection extends Backbone.View
     Util.cleanupTipsy()
     @messageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
-    @onChannelChange(@channels[0]) if channel is @currentChannel and @channels.length > 0
+    $("button.channel").first().mouseup() if channel is @currentChannel and @channels.length > 0
 
   addNewChannelView: (view) =>
     if view.name isnt @currentChannel
