@@ -44,13 +44,14 @@ class window.ChannelViewCollection extends Backbone.View
 
     $('.add-channel-container').one("click", @showNewChannel)
     $('.new-channel-name').click((event) -> event.stopPropagation())
-    $(".new-channel-name").on("keydown.return", (event) =>
-      newChannel = event.target.value
-      if newChannel.replace(/\s*$/, "") isnt ""
-        @joinChannel(newChannel)
-      $(".add-channel-container").click()
-    )
+    $(".new-channel-name").on("keydown.return", @onSubmitChannel)
     @render()
+
+  onSubmitChannel: (event) =>
+    newChannel = event.target.value
+    if newChannel.replace(/\s*$/, "") isnt ""
+      @joinChannel(newChannel)
+    @hideNewChannel(animate: false)
 
   render: =>
     @$el.children().detach()
@@ -62,18 +63,23 @@ class window.ChannelViewCollection extends Backbone.View
     @trigger("changeCurrentChannel", nextCurrentChannel)
     @messageHub.switchChannel(@currentChannel)
 
-  showNewChannel: (event) =>
-    $(event.currentTarget).stop(true)
-                          .animate(width: "133px", 500, -> $('.new-channel-name').show())
-                          .one("click", @hideNewChannel)
+  showNewChannel: =>
+    $(".add-channel-container").stop(true)
+                               .animate(width: "133px", 500, -> $('.new-channel-name').show())
+                               .one("click", => @hideNewChannel())
 
-  hideNewChannel: (event) =>
+  hideNewChannel: (options={ animate: true }) =>
     newChannelName = $('.new-channel-name')
     newChannelName.val('')
     newChannelName.hide()
-    $(event.currentTarget).stop(true)
-                          .animate(width: "15px", 500, -> newChannelName.hide())
-                          .one("click", @showNewChannel)
+    newChannelUI = $(".add-channel-container")
+    if options.animate
+      newChannelUI.stop(true)
+                  .animate(width: "15px", 500, -> newChannelName.hide())
+    else
+      newChannelName.hide()
+      newChannelUI.width(15)
+    newChannelUI.one("click", @showNewChannel)
 
   highlightChannel: (channel) ->
     @channelsHash[channel].highlight()
