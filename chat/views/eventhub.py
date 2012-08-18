@@ -21,7 +21,7 @@ def eventhub_client():
   push_socket = zmq_context.socket(zmq.PUSH)
   push_socket.connect(current_app.config["PUSH_ADDRESS"])
   subscribe_socket = zmq_context.socket(zmq.SUB)
-  client_id = uuid.uuid4()
+  client_id = str(uuid.uuid4())
 
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
