@@ -24,7 +24,14 @@ class window.ChannelUsers
     usersView.render()
     @views[channel] = usersView
 
-  addBlankUserStatusesView: (channel) => @addUserStatuses([], channel)
+  addBlankUserStatusesView: (channel) =>
+    @addUserStatuses([], channel)
+    $.ajax
+      url: "/api/user_status/#{encodeURIComponent(channel)}"
+      dataType: "json"
+      success: (data) =>
+        @views[channel].collection.reset(data)
+
 
   removeUserStatuses: (channel) =>
     return unless @views[channel]?
