@@ -16,6 +16,7 @@ DEFAULT_BLUEPRINTS = (
     (views.frontend, "/", "login_required"),
     (views.assets, "/assets", "login_required"),
     (views.eventhub, "/eventhub", "login_required"),
+    (views.api, "/api", "login_required"),
     (views.auth, "/auth", None),
 )
 
