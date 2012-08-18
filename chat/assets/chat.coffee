@@ -18,7 +18,8 @@ class window.MessagesViewCollection extends Backbone.View
     options.messageHub.on("publish_message", @onNewMessage)
     options.messageHub.on("preview_message", @onPreviewMessage)
     @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
-    @channelViewCollection.on("leaveChannel", @leaveChannel)
+    @channelViewCollection.on("leaveChannel", @removeChannel)
+    @channelViewCollection.on("joinChannel", @addChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
       if channel is @channelViewCollection.currentChannel
@@ -31,7 +32,11 @@ class window.MessagesViewCollection extends Backbone.View
     @$el.children().detach()
     @$el.append(@channelHash[channel].$el) for channel in @channels
 
-  leaveChannel: (channel) =>
+  addChannel: (channel) =>
+    @channelHash[channel] = new MessagesView()
+    @$el.append(@channelHash[channel].$el)
+
+  removeChannel: (channel) =>
     @channelHash[channel].$el.remove()
     delete @channelHash[channel]
 
