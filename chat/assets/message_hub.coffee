@@ -19,6 +19,12 @@ class window.MessageHub
 
   sendJSON: (messageObject) => @socket.send(JSON.stringify(messageObject))
 
+  reorderChannels: (channels) =>
+    @sendJSON
+      action: "reorder_channels"
+      data:
+        channels: channels
+
   switchChannel: (channel) =>
     @sendJSON
       action: "switch_channel"

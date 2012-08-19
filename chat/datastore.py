@@ -105,6 +105,10 @@ def remove_user_from_channel(user, channel_name):
 
   return zmq_channel_key(channel_name)
 
+def reorder_user_channels(user, channels):
+  user["channels"] = channels
+  db.users.save(user)
+
 def get_user_channel_status(user, channel_name):
   channel_key = redis_channel_key(channel_name)
   redis_db.hget(channel_key, user["email"])

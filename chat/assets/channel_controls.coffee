@@ -41,6 +41,7 @@ class window.ChannelViewCollection extends Backbone.View
     for channel in options.channels
       @channelsHash[channel] = new ChannelView(name: channel)
     $(".channel-controls-container").prepend(@$el)
+    @$el.disableSelection()
 
     $('.add-channel-container').one("click", @showNewChannel)
     $('.new-channel-name').click((event) -> event.stopPropagation())
@@ -56,6 +57,20 @@ class window.ChannelViewCollection extends Backbone.View
   render: =>
     @$el.children().detach()
     @addNewChannelView(@channelsHash[channel]) for channel in @channels
+    @$el.sortable
+      placeholder: "channel-button-placeholder"
+      handle: ".reorder"
+      axis: "y"
+      start: => $.fn.tipsy.disable()
+      stop: => $.fn.tipsy.enable()
+      update: @updateChannelOrder
+
+  updateChannelOrder: =>
+    @channels = new Array(@channels.length)
+    newDom = @$el.children()
+    for channel, view of @channelsHash
+      @channels[newDom.index(view.el)] = channel
+    @messageHub.reorderChannels(@channels)
 
   onChannelChange: (nextCurrentChannel) =>
     @channelsHash[@currentChannel]?.setInactive()

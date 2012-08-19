@@ -6,7 +6,7 @@ import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
-                            get_user_channel_status)
+                            get_user_channel_status, reorder_user_channels)
 from chat.zmq_context import zmq_context
 from chat import markdown
 import uuid
@@ -65,7 +65,7 @@ def eventhub_client():
         action = unpacked["action"]
         if action in ["publish_message", "join_channel", "leave_channel", "user_active", "user_offline"]:
           websocket.send(json.dumps(unpacked))
-        elif action in ["self_join_channel", "self_leave_channel"]:
+        elif action in ["self_join_channel", "self_leave_channel", "self_reorder_channels"]:
           event_type = action.split("_")[1]
           handle_self_channel_event(client_id, websocket, subscribe_socket, unpacked["data"], event_type)
 
@@ -87,6 +87,8 @@ def eventhub_client():
           handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
         elif action == "leave_channel":
           handle_leave_channel(data["channel"], subscribe_socket, push_socket, client_id)
+        elif action == "reorder_channels":
+          handle_reorder_channels(data["channels"], push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -101,6 +103,20 @@ def eventhub_client():
   subscribe_socket.close()
   websocket.close()
   return ""
+
+
+def handle_reorder_channels(channels, push_socket, client_id):
+  reorder_user_channels(g.user, channels)
+
+  self_reorder_channels_event = {
+      "action": "self_reorder_channels",
+      "data": {
+        "client_id": client_id,
+        "channels": channels,
+      },
+  }
+  packed_self_reorder_channels = g.msg_packer.pack(self_reorder_channels_event)
+  push_socket.send(" ".join([str(g.user["email"]), packed_self_reorder_channels]))
 
 
 def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
