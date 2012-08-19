@@ -6,6 +6,7 @@ from chat.zmq_context import zmq_context
 from gevent_zeromq import zmq
 from chat.views.eventhub import send_join_channel
 import urllib
+import uuid
 
 auth = Blueprint("auth", __name__)
 oid = OpenID()
@@ -42,6 +43,8 @@ def create_or_login(resp):
         "gravatar": gravatar_url,
         "last_selected_channel": default_channels[0],
         "channels": default_channels,
+        "api_key": str(uuid.uuid4()),
+        "secret": str(uuid.uuid4()),
     }
     db.users.save(user_object)
     push_socket = zmq_context.socket(zmq.PUSH)

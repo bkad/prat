@@ -8,6 +8,7 @@ import zmq_context
 import msgpack
 import datastore
 from chat.datastore import db
+from chat.crypto import check_request
 import gevent.monkey
 gevent.monkey.patch_all()
 
@@ -64,10 +65,21 @@ def configure_before_handlers(app):
 
     # Catch logged in users
     if "email" in session:
-      user = db.users.find_one({"email" : session["email"]})
+      user = db.users.find_one({"email": session["email"]})
       if user is not None:
         g.user =  user
         g.authed = True
+    elif("api_key" in request.args and
+         "signature" in request.args and
+         "expires" in request.args):
+      user = db.users.find_one({"api_key": request.args["api_key"]})
+      if user is None:
+        return
+      if check_request(request, user["secret"]):
+        g.user = user
+        g.authed = True
+        session["email"] = user["email"]
+
 
 def configure_error_handlers(app):
   @app.errorhandler(404)
