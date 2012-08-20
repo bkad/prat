@@ -97,7 +97,7 @@
     <div class="channel-controls-container">
       <div class="add-channel-container">
         <div class="plus-label">+</div>
-        <input type="text" size="17" class="new-channel-name" />
+        <input type="text" size="16" class="new-channel-name" />
       </div>
     </div>
   </div>
