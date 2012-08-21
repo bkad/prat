@@ -79,18 +79,25 @@ class window.ChannelViewCollection extends Backbone.View
     @messageHub.switchChannel(@currentChannel)
 
   showNewChannel: =>
-    $(".add-channel-container").stop(true)
-                               .animate(width: "133px", 500, -> $('.new-channel-name').show())
-                               .one("click", => @hideNewChannel())
+    $(".plus-label").removeClass("unrotated")
+    $(".plus-label").addClass("rotated")
+    $(".add-channel-container")
+      .stop(true)
+      .animate(width: "133px", 150, ->
+        $(".new-channel-name").show()
+        $(".new-channel-name").focus()
+      ).one("click", => @hideNewChannel())
 
   hideNewChannel: (options={ animate: true }) =>
     newChannelName = $('.new-channel-name')
     newChannelName.val('')
     newChannelName.hide()
     newChannelUI = $(".add-channel-container")
+    $(".plus-label").addClass("unrotated")
+    $(".plus-label").removeClass("rotated")
     if options.animate
       newChannelUI.stop(true)
-                  .animate(width: "15px", 500, -> newChannelName.hide())
+                  .animate(width: "15px", 150, -> newChannelName.hide())
     else
       newChannelName.hide()
       newChannelUI.width(15)
