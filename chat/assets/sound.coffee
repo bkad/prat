@@ -1,7 +1,7 @@
 # helper class for dealing with the HTML5 audio API
 
 class window.Sound
-  constructor: (@newMessageAudioLocation1, @newMessageAudioLocation2) ->
+  constructor: (@newMessageAudioLocation) ->
     @first = true
     @init()
 
@@ -11,7 +11,7 @@ class window.Sound
 
   loadNewMessageAudio: (location, buffer) ->
     request = new XMLHttpRequest()
-    request.open("GET", @newMessageAudioLocation1, true)
+    request.open("GET", @newMessageAudioLocation, true)
     request.responseType = "arraybuffer"
     request.onload = =>
       @context.decodeAudioData(request.response, ((buffer) => @newMessageAudio = buffer))
