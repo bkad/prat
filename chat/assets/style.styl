@@ -62,7 +62,7 @@ button, select
     width: 93%
     .channel-button-placeholder
       border: 3px dashed #ccc;
-      height: 35px;
+      height: 36px;
       margin: 1px 0
     .channel-button-container
       height: 43px
@@ -91,7 +91,7 @@ button, select
           color: red
     button
       width: 150px
-      height: 35px
+      height: 36px
       margin: 4px 0px
       padding: 0px 5px 0px 10px
       text-align: left
@@ -115,32 +115,31 @@ button, select
         border: 1px solid dark-hover-grey
       &:active
         background: dark-active-grey
-      height: 35px
       width: 15px
       margin: 4px 0px
       padding: 0px 5px 0px 10px
       text-align: left
       .plus-label
+        height: 36px
+        line-height: 36px
+        width: 10px
+        text-align: center
         font-size: 16px
         user-select: none
         cursor: pointer
-        margin-top: 8px
         display: inline-block
-        &.rotated
+        &.rotated, &.unrotated
           -webkit-transition: all 150ms linear
-          -webkit-transform: rotate(45deg)
-        &.unrotated
-          -webkit-transition: all 150ms linear
-          -webkit-transform: rotate(0deg)
+          -webkit-transform-origin: 5px 19px
+        &.rotated { -webkit-transform: rotate(45deg) }
+        &.unrotated { -webkit-transform: rotate(0deg) }
       .new-channel-name
         width: 85%
-        font-family: sans-font-family
+        font-family: inherit
         font-size: 14px
-        margin-top: 6px
-        margin-left: 0px
         display: none
         border: border-grey
-        height: 22px
+        height: 24px
         outline: none
         border-radius: 2px
         padding-left: 3px
