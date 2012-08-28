@@ -77,8 +77,10 @@ class window.MessagesViewCollection extends Backbone.View
     if messageObject.channel isnt @channelViewCollection.currentChannel
       @channelViewCollection.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial, messageObject.author)
-    @appendMessage(messageObject, messagePartial)
-    Util.scrollToBottom("noAnimate") if bottom
+    $message = @appendMessage(messageObject, messagePartial)
+    if bottom
+      Util.scrollToBottom("noAnimate")
+      $message.find("img").one("load", -> Util.scrollToBottom("noAnimate"))
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $(".preview-wrapper .message")
@@ -126,3 +128,4 @@ class window.MessagesViewCollection extends Backbone.View
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)
+    messagePartial
