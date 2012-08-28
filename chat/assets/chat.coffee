@@ -48,7 +48,7 @@ class window.MessagesViewCollection extends Backbone.View
   changeCurrentChannel: (newChannel) =>
     view.$el.removeClass("current") for channel, view of @channelHash
     @channelHash[newChannel].$el.addClass("current")
-    Util.scrollToBottom("noAnimate")
+    Util.scrollToBottom(animate: false)
 
   checkAndNotify: (message, author) =>
     if !document.hasFocus() or document.webkitHidden
@@ -79,8 +79,8 @@ class window.MessagesViewCollection extends Backbone.View
     @checkAndNotify(messagePartial, messageObject.author)
     $message = @appendMessage(messageObject, messagePartial)
     if bottom
-      Util.scrollToBottom("noAnimate")
-      $message.find("img").one("load", -> Util.scrollToBottom("noAnimate"))
+      Util.scrollToBottom(animate: false)
+      $message.find("img").one("load", -> Util.scrollToBottom(animate: false))
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $(".preview-wrapper .message")

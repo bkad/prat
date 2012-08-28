@@ -86,7 +86,7 @@
       $(".east[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "e"}));
       $(".west[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "w"}));
     })
-    $(window).load(function() { Util.scrollToBottom("noAnimate") })
+    $(window).load(function() { Util.scrollToBottom({ animate: false }) })
   </script>
 </head>
 <body>

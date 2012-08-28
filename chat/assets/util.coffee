@@ -4,9 +4,9 @@ window.Util =
     difference = (messages[0].scrollHeight - messages.scrollTop()) - messages.outerHeight()
     difference <= 1
 
-  scrollToBottom: (animate = "animate") ->
+  scrollToBottom: (options = animate: true) ->
     messages = $(".chat-messages.current")
-    method = if animate is "animate" then "animate" else "prop"
+    method = if options.animate then "animate" else "prop"
     messages[method](scrollTop: messages[0].scrollHeight - messages.outerHeight() - 1)
 
   cleanupTipsy: -> $(".tipsy").remove()
