@@ -6,8 +6,8 @@
 
 @font-face {
   font-family: "SSStandard";
-  src: url('/static/webfonts/ss-standard.woff') format('woff'),
-       url('/static/webfonts/ss-standard.ttf')  format('truetype');
+  src: url('/static/vendor/webfonts/ss-standard.woff') format('woff'),
+       url('/static/vendor/webfonts/ss-standard.ttf')  format('truetype');
   font-weight: normal;
   font-style: normal;
 }
