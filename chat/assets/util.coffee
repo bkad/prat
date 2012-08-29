@@ -6,7 +6,10 @@ window.Util =
 
   scrollToBottom: (options = animate: true) ->
     messages = $(".chat-messages.current")
-    method = if options.animate then "animate" else "prop"
-    messages[method](scrollTop: messages[0].scrollHeight - messages.outerHeight() - 1)
+    scrollTop = messages[0].scrollHeight - messages.outerHeight() - 1
+    if options.animate
+      messages.animate(scrollTop: scrollTop, 150)
+    else
+      messages.prop(scrollTop: scrollTop)
 
   cleanupTipsy: -> $(".tipsy").remove()
