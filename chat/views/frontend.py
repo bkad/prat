@@ -4,6 +4,7 @@ from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
 from random import shuffle
 from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_channel_users
+from chat.views.assets import asset_url
 
 frontend = Blueprint("frontend", __name__)
 
@@ -33,6 +34,11 @@ def index():
   user_status_template = read_template("user_status.mustache")
   channel_button_template = read_template("channel_button.mustache")
 
+  coffee_files = ["util", "message_hub", "chat", "chat_controls", "channel_controls", "datetime", "sound",
+      "alert", "user_statuses"]
+
+  stylus_files = ["style", "pygments", "tipsy_styles"]
+
   return render_template("index.htmljinja",
                          initial_messages=initial_messages,
                          initial_users=initial_users,
@@ -53,4 +59,7 @@ def index():
                          channel_button_template=channel_button_template,
                          title=current_app.config["APP_NAME"],
                          debug=current_app.config["DEBUG"],
+                         coffee_files=coffee_files,
+                         stylus_files=stylus_files,
+                         asset_url=asset_url,
                         )

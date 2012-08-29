@@ -2,9 +2,9 @@
 <html>
 <head>
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="/assets/style.styl"></link>
-  <link rel="stylesheet" href="/assets/pygments.styl"></link>
-  <link rel="stylesheet" href="/assets/tipsy_styles.styl"></link>
+  {% for stylus_file in stylus_files %}
+  <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
+  {% endfor %}
   <link rel="stylesheet" href="/static/vendor/css/ss-standard.css"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='http://fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic'
@@ -21,15 +21,9 @@
   {% if debug %}
   <script src="/static/vendor/js/livecss.js"></script>
   {% endif %}
-  <script src="/assets/util.coffee"></script>
-  <script src="/assets/message_hub.coffee"></script>
-  <script src="/assets/chat.coffee"></script>
-  <script src="/assets/chat_controls.coffee"></script>
-  <script src="/assets/channel_controls.coffee"></script>
-  <script src="/assets/datetime.coffee"></script>
-  <script src="/assets/sound.coffee"></script>
-  <script src="/assets/alert.coffee"></script>
-  <script src="/assets/user_statuses.coffee"></script>
+  {% for coffee_file in coffee_files %}
+  <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
+  {% endfor %}
   <script id="message-container-template" type="text/x-mustache-template">
     {{ message_container_template|safe }}
   </script>
