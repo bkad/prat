@@ -24,21 +24,11 @@
   {% for coffee_file in coffee_files %}
   <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
   {% endfor %}
-  <script id="message-container-template" type="text/x-mustache-template">
-    {{ message_container_template|safe }}
+  {% for template_id, template_content in mustache_templates %}
+  <script id="{{ template_id }}" type="text/x-mustache-template">
+    {{ template_content|safe }}
   </script>
-  <script id="message-partial-template" type="text/x-mustache-template">
-    {{ message_partial_template|safe }}
-  </script>
-  <script id="alert-template" type="text/x-mustache-template">
-    {{ alert_template|safe }}
-  </script>
-  <script id="user-status-template" type="text/x-mustache-template">
-    {{ user_status_template|safe }}
-  </script>
-  <script id="channel-button-template" type="text/x-mustache-template">
-    {{ channel_button_template|safe }}
-  </script>
+  {% endfor %}
   <script charset="utf-8">
     $(document).ready(function() {
       CurrentUserEmail = {{ email|tojson|safe }}

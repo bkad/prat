@@ -28,11 +28,11 @@ def index():
   right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
 
-  message_container_template = read_template("message_container.mustache")
-  message_partial_template = read_template("message_partial.mustache")
-  alert_template = read_template("alert.mustache")
-  user_status_template = read_template("user_status.mustache")
-  channel_button_template = read_template("channel_button.mustache")
+  mustache_templates = []
+  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button"]:
+    template_id = template.replace("_", "-") + "-template"
+    template_content = read_template(template + ".mustache")
+    mustache_templates.append((template_id, template_content))
 
   coffee_files = ["util", "message_hub", "chat", "chat_controls", "channel_controls", "datetime", "sound",
       "alert", "user_statuses"]
@@ -52,11 +52,7 @@ def index():
                          right_sidebar_closed=right_sidebar_closed,
                          left_sidebar_closed=left_sidebar_closed,
                          time_window=current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
-                         message_container_template=message_container_template,
-                         message_partial_template=message_partial_template,
-                         alert_template=alert_template,
-                         user_status_template=user_status_template,
-                         channel_button_template=channel_button_template,
+                         mustache_templates=mustache_templates,
                          title=current_app.config["APP_NAME"],
                          debug=current_app.config["DEBUG"],
                          coffee_files=coffee_files,
