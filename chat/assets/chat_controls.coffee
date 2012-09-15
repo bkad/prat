@@ -7,14 +7,15 @@ class window.ChatControls
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
-    $(".chat-text").on("keydown.return", @onChatSubmit)
+    @chatText = $("#chat-text")
+    @chatText.on("keydown.return", @onChatSubmit)
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $(".chat-edit").click(@onEditSubmit)
 
   onPreviewSubmit: (event) =>
-    message = $(".chat-text").val()
+    message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
 
@@ -30,10 +31,10 @@ class window.ChatControls
     $(".chat-text-wrapper").show()
 
   onChatSubmit: (event) =>
-    message = $(".chat-text").val()
+    message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendChat(message, @channelViewCollection.currentChannel)
-    $(".chat-text").val("").focus()
+    @chatText.val("").focus()
     event.preventDefault()
 
   onExpandRightSidebar: (event) =>

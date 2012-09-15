@@ -105,7 +105,7 @@
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
       <div class="input-container">
-        <div class="chat-text-wrapper"><textarea class="chat-text"></textarea></div>
+        <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
         <div class="preview-wrapper" style="display:none"><div class="message"></div></div>
         <div class="input-controls">
           <button class="chat-submit">Send</button>
