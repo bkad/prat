@@ -29,6 +29,7 @@ class window.ChatControls
     $(".chat-preview").show()
     $(".chat-edit").hide()
     $(".chat-text-wrapper").show()
+    @chatText.focus()
 
   onChatSubmit: (event) =>
     message = @chatText.val()
