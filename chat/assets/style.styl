@@ -345,10 +345,7 @@ button, select
   height: container-height
   background: light-grey
   border-top: border-grey
-  .chat-text-wrapper, .preview-wrapper
-    absolute: top padding-amount left padding-amount
-    right: input-controls-width + padding-amount
-    height: container-height - (2 * padding-amount)
+  .chat-text-wrapper
     background: white
     border-radius: 2px
     border: border-grey
@@ -361,6 +358,14 @@ button, select
       height: 100%
       font-size: 14px
       resize: none
+  .preview-wrapper .message
+    padding: 5px
+    width: 100%
+    height: 100%
+  .chat-text-wrapper, .preview-wrapper
+    absolute: top padding-amount left padding-amount
+    right: input-controls-width + padding-amount
+    height: container-height - (2 * padding-amount)
   .preview-wrapper
     overflow-y: auto
   .input-controls
