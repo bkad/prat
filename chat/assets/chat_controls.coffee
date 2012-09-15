@@ -13,16 +13,16 @@ class window.ChatControls
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $(".chat-edit").click(@onEditSubmit)
+    @previewVisible = false
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
-    if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
-
+    @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
     $(".preview-wrapper").show()
     $(".chat-preview").hide()
     $(".chat-edit").show()
     $(".chat-text-wrapper").hide()
+    @previewVisible = true
 
   onEditSubmit: (event) =>
     $(".preview-wrapper").hide()
@@ -30,11 +30,13 @@ class window.ChatControls
     $(".chat-edit").hide()
     $(".chat-text-wrapper").show()
     @chatText.focus()
+    @previewVisible = false
 
   onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendChat(message, @channelViewCollection.currentChannel)
+      @onEditSubmit() if @previewVisible
     @chatText.val("").focus()
     event.preventDefault()
 
