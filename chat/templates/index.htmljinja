@@ -93,13 +93,6 @@
           <span class="ss-icon">{{"right" if left_sidebar_closed else "left"}}</span>
         </button>
         <div class="control-button-container">
-          <button id="quicksend" class="active north" rel="tipsy">
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 30 30" preserveAspectRatio="xMinYMin meet">
-              <g id="lightning">
-	              <path d="m 13.72,20.5 c 0.055,-0.27 -0.127,-0.49 -0.402,-0.49 h -1.477 c -0.275,0 -0.438,-0.216 -0.359,-0.479 l 1.295,-5.047 c 0.076,-0.264 -0.084,-0.479 -0.359,-0.479 h -2.529 c -0.275,0 -0.43,-0.214 -0.346,-0.476 l 3.348,-10.049 c 0.086,-0.262 0.381,-0.476 0.654,-0.476 h 6.607 c 0.275,0 0.402,0.203 0.283,0.45 l -4.08,7.131 c -0.119,0.248 0.008,0.448 0.283,0.445 l 2.529,-0.026 c 0.275,0 0.398,0.195 0.275,0.441 l -2.426,6.143 c -0.123,0.246 0.002,0.447 0.277,0.447 h 1.498 c 0.273,0 0.361,0.178 0.191,0.395 l -6.379,8.436 c -0.168,0.217 -0.264,0.174 -0.209,-0.096 l 1.326,-6.27 z"/>
-              </g>
-            </svg>
-          </button>
           <a href="{{ url_for("auth.logout") }}">
             <button id="logout" class="north" rel="tipsy" title="Logout">
               <span class="ss-icon">logout</span>
