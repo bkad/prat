@@ -79,8 +79,8 @@ class window.MessagesViewCollection extends Backbone.View
     @checkAndNotify(messagePartial, messageObject.author)
     $message = @appendMessage(messageObject, messagePartial)
     if bottom
-      Util.scrollToBottom(animate: false)
-      $message.find("img").one("load", -> Util.scrollToBottom(animate: false))
+      Util.scrollToBottom(animate: true)
+      $message.find("img").one("load", -> Util.scrollToBottom(animate: true))
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $(".preview-wrapper .message")
