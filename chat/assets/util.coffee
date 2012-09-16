@@ -15,7 +15,6 @@ window.Util =
       @scrolling += 1
       messages.animate({ scrollTop: scrollTop }, duration: 150, complete: -> Util.scrolling -= 1)
     else
-      @scrolling = 0
       messages.prop(scrollTop: scrollTop)
 
   cleanupTipsy: -> $(".tipsy").remove()
