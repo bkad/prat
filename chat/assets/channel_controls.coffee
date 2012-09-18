@@ -18,11 +18,11 @@ class window.ChannelView extends Backbone.View
   onClick: =>
     $(".chat-controls .channel-name").html(@name)
     @channelButton.removeClass("unread")
-    @channelButton.addClass("current").off("mouseup")
+    @channelButton.addClass("current").off("click")
     @trigger("changeCurrentChannel", @name)
 
   setInactive: =>
-    @channelButton.removeClass("current").mouseup(@onClick)
+    @channelButton.removeClass("current").click(@onClick)
 
   highlight: =>
     @channelButton.addClass("unread")
@@ -113,7 +113,7 @@ class window.ChannelViewCollection extends Backbone.View
     Util.cleanupTipsy()
     @messageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
-    $("button.channel").first().mouseup() if channel is @currentChannel and @channels.length > 0
+    $("button.channel").first().click() if channel is @currentChannel and @channels.length > 0
 
   addNewChannelView: (view) =>
     if view.name isnt @currentChannel
