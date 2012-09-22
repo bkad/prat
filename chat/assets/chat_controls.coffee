@@ -9,11 +9,15 @@ class window.ChatControls
     $(".toggle-left-sidebar").one("click", leftToggle)
     @chatText = $("#chat-text")
     @chatText.on("keydown.return", @onChatSubmit)
+    @chatText.on("keydown.up", @onPreviousChatHistory)
+    @chatText.on("keydown.down", @onNextChatHistory)
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $(".chat-edit").click(@onEditSubmit)
     @previewVisible = false
+    @currentMessage = ""
+    @chatHistoryOffset = -1
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
@@ -37,6 +41,7 @@ class window.ChatControls
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendChat(message, @channelViewCollection.currentChannel)
       @onEditSubmit() if @previewVisible
+      @addToChatHistory(message)
     @chatText.val("").focus()
     event.preventDefault()
 
@@ -71,3 +76,38 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  onNextChatHistory: =>
+    if @chatText.caret() == @chatText.val().length
+      history = JSON.parse(localStorage.getItem("chat_history"))
+      if history != null && history.length > 0
+        if @chatHistoryOffset == -1
+          @chatText.val(@currentMessage)
+        else
+          @chatHistoryOffset = @chatHistoryOffset - 1
+          if @chatHistoryOffset == -1
+            @chatText.val(@currentMessage)
+          else
+            @chatText.val(history[history.length-@chatHistoryOffset-1])
+
+  onPreviousChatHistory: =>
+    if @chatText.caret() == 0
+      if @chatHistoryOffset == -1
+        @currentMessage = @chatText.val()
+      history = JSON.parse(localStorage.getItem("chat_history"))
+      if history!= null && history.length > 0
+        if @chatHistoryOffset == history.length-1
+          @chatText.val(history[0])
+        else
+          @chatHistoryOffset = @chatHistoryOffset + 1
+          @chatText.val(history[history.length-@chatHistoryOffset-1])
+
+  addToChatHistory: (message) =>
+    history = JSON.parse(localStorage.getItem("chat_history"))
+    if history == null
+      history = new Array()
+    history.push(message)
+    localStorage.setItem("chat_history", JSON.stringify(history))
+    @chatHistoryOffset = -1
+    @currentMessage = ""
+
