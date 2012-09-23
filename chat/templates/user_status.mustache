@@ -2,15 +2,17 @@
     title="{{ username }}">
   <span>{{ name }}</span>
   {{ #isActive }}
-  <button id="private_chat" class="west">
+  {{ #isNotCurrentUser }}
+  <button id="private-chat" class="west">
     <span class="ss-icon">chat</span>
   </button>
-  <button id="voice_chat" class="west">
+  <button id="voice-chat" class="west">
     <span class="ss-icon">phone</span>
   </button>
-  <button id="video_chat" class="west">
+  <button id="video-chat" class="west">
     <span class="ss-icon">video</span>
   </button>
+  {{ /isNotCurrentUser }}
   {{ /isActive }}
   <div class="overlay"></div>
 </div>
