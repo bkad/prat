@@ -1,6 +1,7 @@
 <div class="user-status {{ status }} east" style="background-image: url({{ gravatar }})" rel="tipsy"
     title="{{ username }}">
   <span>{{ name }}</span>
+  {{ #isActive }}
   <button id="private_chat" class="west">
     <span class="ss-icon">chat</span>
   </button>
@@ -10,5 +11,6 @@
   <button id="video_chat" class="west">
     <span class="ss-icon">video</span>
   </button>
+  {{ /isActive }}
   <div class="overlay"></div>
 </div>

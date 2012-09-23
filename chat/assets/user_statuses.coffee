@@ -66,6 +66,11 @@ class window.ChannelUsers
 class window.UserStatus extends Backbone.Model
   initialize: (arguments) ->
     @attributes.isCurrentUser = @attributes.email is CurrentUserEmail
+    @updateActive()
+    this.on("change:status", @updateActive, this)
+
+  updateActive: ->
+    @attributes.isActive = @attributes.status is "active"
 
   idAttribute: "email"
 
