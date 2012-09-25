@@ -107,6 +107,9 @@ class window.ChatControls
     if history == null
       history = new Array()
     history.push(message)
+    while history.length > 50
+      history.shift()
+      
     localStorage.setItem("chat_history", JSON.stringify(history))
     @chatHistoryOffset = -1
     @currentMessage = ""
