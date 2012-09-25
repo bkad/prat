@@ -22,4 +22,4 @@ class DefaultConfig(object):
   PUSH_ADDRESS = "tcp://localhost:5666"
   SUBSCRIBE_ADDRESS = "tcp://localhost:5667"
   DEFAULT_CHANNELS = ["general", "Backlot", "OOSL"]
-  STRING_FILTERS = [string_filters.replace_shas_with_links, string_filters.replace_jira_links]
+  STRING_FILTERS = [string_filters.replace_shas_with_barkeep_links, string_filters.replace_jira_links]
