@@ -7,7 +7,7 @@ class window.ChannelUsers
 
   init: (initialUsers, currentChannel, channelViewCollection) ->
     for channel, users of initialUsers
-      view = @addUserStatuses(users, channel)
+      view = @addUserStatuses(users, channel, channelViewCollection)
       @displayUserStatuses(channel) if channel is currentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
     @messageHub.on("join_channel", @joinChannel)
@@ -15,8 +15,15 @@ class window.ChannelUsers
     channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
     channelViewCollection.on("leaveChannel", @removeUserStatuses)
     channelViewCollection.on("joinChannel", @addBlankUserStatusesView)
+    console.log($(".private-chat"))
+    $(".private-chat").one("click", @createPrivateChat)
+      #channelViewCollection.joinChannel("@" + event.data.username)
+      #$("#" + event.data.username + " > #private-chat").addClass("visited")
 
-  addUserStatuses: (users, channel) =>
+  createPrivateChat: (event) =>
+    alert(event)
+
+  addUserStatuses: (users, channel, channelViewCollection) =>
     usersCollection = new UserStatusCollection(users)
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
@@ -31,7 +38,6 @@ class window.ChannelUsers
       dataType: "json"
       success: (data) =>
         @views[channel].collection.reset(data)
-
 
   removeUserStatuses: (channel) =>
     return unless @views[channel]?

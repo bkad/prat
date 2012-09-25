@@ -1,18 +1,16 @@
-<div class="user-status {{ status }} east" style="background-image: url({{ gravatar }})" rel="tipsy"
+<div id={{ username }} class="user-status {{ status }} east" style="background-image: url({{ gravatar }})" rel="tipsy"
     title="{{ username }}">
   <span>{{ name }}</span>
-  {{ #isActive }}
   {{ #isNotCurrentUser }}
-  <button id="private-chat" class="west">
+  <button class="private-chat {{ status }} west" title="{{ username }}">
     <span class="ss-icon">chat</span>
   </button>
-  <button id="voice-chat" class="west">
+  <button class="{{ status }} west">
     <span class="ss-icon">phone</span>
   </button>
-  <button id="video-chat" class="west">
+  <button class="{{ status }} west">
     <span class="ss-icon">video</span>
   </button>
   {{ /isNotCurrentUser }}
-  {{ /isActive }}
   <div class="overlay"></div>
 </div>
