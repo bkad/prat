@@ -95,7 +95,7 @@ class window.ChatControls
       if @chatHistoryOffset == -1
         @currentMessage = @chatText.val()
       history = JSON.parse(localStorage.getItem("chat_history"))
-      if history != null && history.length > 0
+      if history!= null && history.length > 0
         if @chatHistoryOffset == history.length-1
           @chatText.val(history[0])
         else
