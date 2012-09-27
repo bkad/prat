@@ -5,7 +5,7 @@ def replace_shas_with_barkeep_links(word):
   def linkify_commit(match):
     replacements = match.groupdict()
     replacements["short_sha"] = replacements["sha"][:8]
-    result = "<a href='http://barkeep.sv2/commits/{repo}/{sha}' target='blank'>{repo}/{short_sha}</a>"
+    result = "<a href='http://barkeep.sv2/commits/{repo}/{sha}' target='_blank'>{repo}/{short_sha}</a>"
     return result.format(**replacements)
   return re.sub(r"(?P<repo>[a-zA-Z0-9_-]+)/(?P<sha>[a-zA-Z0-9]{40})", linkify_commit, word)
 
