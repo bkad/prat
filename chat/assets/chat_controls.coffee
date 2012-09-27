@@ -89,12 +89,9 @@ class window.ChatControls
   onNextChatHistory: =>
     return unless @chatText.caret() is @chatText.val().length
     history = @getChatHistory()
-    return unless history?.length > 0
-    if @chatHistoryOffset is -1
-      newValue = @currentMessage
-    else
-      @chatHistoryOffset--
-      newValue = if @chatHistoryOffset is -1 then @currentMessage else @getChatFromHistory(history)
+    return unless history?.length > 0 and @chatHistoryOffset isnt -1
+    @chatHistoryOffset--
+    newValue = if @chatHistoryOffset is -1 then @currentMessage else @getChatFromHistory(history)
     @chatText.val(newValue)
 
   onPreviousChatHistory: =>
