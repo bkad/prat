@@ -1,6 +1,6 @@
 from flask import current_app
 from misaka import (Markdown, HtmlRenderer, EXT_NO_INTRA_EMPHASIS, EXT_AUTOLINK, EXT_TABLES, EXT_FENCED_CODE,
-    EXT_STRIKETHROUGH, EXT_LAX_HTML_BLOCKS, EXT_SPACE_HEADERS, HTML_HARD_WRAP, HTML_SKIP_HTML,
+    EXT_STRIKETHROUGH, EXT_LAX_HTML_BLOCKS, EXT_SPACE_HEADERS, HTML_HARD_WRAP, HTML_ESCAPE,
     HTML_NEW_TAB_LINKS)
 import pygments
 from pygments.lexers import get_lexer_by_name
@@ -31,7 +31,7 @@ class HtmlPygmentsRenderer(HtmlRenderer):
     rendered_code = pygments.highlight(code, lexer, formatter)
     return "<div class=\"highlight\">{0}</div>".format(rendered_code)
 
-pygments_renderer = HtmlPygmentsRenderer(HTML_HARD_WRAP | HTML_SKIP_HTML | HTML_NEW_TAB_LINKS)
+pygments_renderer = HtmlPygmentsRenderer(HTML_HARD_WRAP | HTML_ESCAPE | HTML_NEW_TAB_LINKS)
 markdown_renderer = Markdown(pygments_renderer, EXT_NO_INTRA_EMPHASIS | EXT_AUTOLINK | EXT_TABLES | EXT_FENCED_CODE |
     EXT_STRIKETHROUGH | EXT_LAX_HTML_BLOCKS | EXT_SPACE_HEADERS)
 
