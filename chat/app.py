@@ -3,7 +3,7 @@ from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
 from flaskext.openid import OpenID
 from random import randint
-from gevent_zeromq import zmq
+import zmq.green as zmq
 import zmq_context
 import msgpack
 import datastore

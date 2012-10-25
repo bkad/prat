@@ -3,7 +3,7 @@ from flaskext.openid import OpenID
 from hashlib import md5
 from chat.datastore import db, add_user_to_channel
 from chat.zmq_context import zmq_context
-from gevent_zeromq import zmq
+import zmq.green as zmq
 from chat.views.eventhub import send_join_channel
 import urllib
 import uuid

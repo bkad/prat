@@ -1,5 +1,5 @@
 from flask import _app_ctx_stack, current_app
-from gevent_zeromq import zmq
+import zmq.green as zmq
 from werkzeug.local import LocalProxy
 
 def init_app(app):

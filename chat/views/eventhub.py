@@ -1,7 +1,7 @@
 from flask import Blueprint, request, g, current_app, render_template
 import datetime
 import geventwebsocket
-from gevent_zeromq import zmq
+import zmq.green as zmq
 import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
