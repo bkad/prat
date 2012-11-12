@@ -31,7 +31,7 @@
   </script>
   {% endfor %}
   <script charset="utf-8">
-    $(document).ready(function() {
+    $(function() {
       CurrentUserEmail = {{ email|tojson|safe }}
       var initialMessages = {{ initial_messages|tojson|safe }}
       var initialUsers = {{ initial_users|tojson|safe }}
