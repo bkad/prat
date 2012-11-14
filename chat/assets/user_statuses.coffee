@@ -64,7 +64,7 @@ class window.ChannelUsers
 
 # attributes: name, email, gravatar, status
 class window.UserStatus extends Backbone.Model
-  initialize: (arguments) ->
+  initialize: (options) ->
     @attributes.isCurrentUser = @attributes.email is CurrentUserEmail
 
   idAttribute: "email"
