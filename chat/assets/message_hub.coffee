@@ -67,10 +67,3 @@ class window.MessageHub
     @alertHelper.delAlert()
     clearTimeout(@timeoutID)
     console.log "Connection successful"
-
-  onConnectionTimedOut: =>
-    @alertHelper.newAlert("alert-error", "Connection timed out")
-    console.log "Connection timed out"
-    @socket.close()
-
-
