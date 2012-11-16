@@ -7,12 +7,12 @@ PyExecJS==1.0.4
 Pygments==1.5
 Werkzeug==0.8.3
 bpython==0.10.1
--e git+git@github.com:bkad/gevent.git@16fb81f69237624e0efb4c13f8db56b820231533#egg=gevent-dev
--e git+git@github.com:bkad/gevent-websocket.git@03e7c266acb6488a58517dd0feaa458104fc52e6#egg=gevent_websocket-dev
 greenlet==0.3.4
 gunicorn==0.14.2
--e git+git@github.com:bkad/misaka.git@a090c0b74e8b1a48ac34b1ea5556118bd538546b#egg=misaka-dev
 msgpack-python==0.1.12
+prat-gevent==0.13.6
+prat-geventwebsocket==0.3.7
+prat-misaka==1.0.3
 pymongo==2.1.1
 python-openid==2.2.5
 pyzmq==2.2.0.1
