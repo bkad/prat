@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "stylus": "0.24.x",
-    "nib": "0.4.x",
+    "nib": "0.4.x"
   }
 }
 
