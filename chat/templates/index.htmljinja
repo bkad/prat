@@ -38,7 +38,10 @@
       var initialChannel = {{ last_selected_channel|tojson|safe }}
       var initialChannels = {{ channels|tojson|safe }}
 
-      messageHub = new MessageHub("ws://" + document.location.host + "/eventhub", 4000, new AlertHelper())
+      messageHub = new MessageHub("ws://" + document.location.host + "/eventhub",
+                                  4000,
+                                  {{ keep_alive_interval }},
+                                  new AlertHelper())
 
       channelViewCollection = new ChannelViewCollection({ currentChannel: initialChannel,
         messageHub: messageHub, channels: initialChannels })

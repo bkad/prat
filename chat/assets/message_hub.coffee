@@ -1,12 +1,13 @@
 class window.MessageHub
   _.extend @::, Backbone.Events
 
-  constructor: (@address, @reconnectTimeout, @alertHelper) ->
+  constructor: (@address, @reconnectTimeout, @pingInterval, @alertHelper) ->
     @createSocket()
 
   createSocket: =>
     @socket?.close()
     @timeoutID = setTimeout(@createSocket, @reconnectTimeout)
+    @pingID = setInterval(@keepAlive, @pingInterval)
     console.log "Connecting to #{@address}"
     @socket = new WebSocket(@address)
     @socket.onmessage = @onMessage
@@ -67,3 +68,9 @@ class window.MessageHub
     @alertHelper.delAlert()
     clearTimeout(@timeoutID)
     console.log "Connection successful"
+
+  keepAlive: =>
+    @sendJSON
+      action: "ping"
+      data:
+        message: "PING"

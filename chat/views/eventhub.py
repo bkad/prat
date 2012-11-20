@@ -89,6 +89,8 @@ def eventhub_client():
           handle_leave_channel(data["channel"], subscribe_socket, push_socket, client_id)
         elif action == "reorder_channels":
           handle_reorder_channels(data["channels"], push_socket, client_id)
+        elif action == "ping":
+          handle_ping(websocket)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -290,3 +292,6 @@ def handle_self_channel_event(client_id, websocket, subscribe_socket, data, even
   # force a refresh on all other clients
   # TODO(kle): live update the client's UI instead
   websocket.send(json.dumps({ "action": "force_refresh", "data": {} }))
+
+def handle_ping(websocket):
+  websocket.send(json.dumps({ "action": "pong", "data": { "message": "PONG" } }))

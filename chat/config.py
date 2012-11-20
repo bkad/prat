@@ -23,3 +23,4 @@ class DefaultConfig(object):
   SUBSCRIBE_ADDRESS = "tcp://localhost:5667"
   DEFAULT_CHANNELS = ["general", "Backlot", "OOSL"]
   STRING_FILTERS = [string_filters.replace_shas_with_barkeep_links, string_filters.replace_jira_links]
+  KEEP_ALIVE_INTERVAL = 30000 # milliseconds
