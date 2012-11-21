@@ -9,6 +9,7 @@ import msgpack
 import datastore
 from chat.datastore import db
 from chat.crypto import check_request
+from flask_sslify import SSLify
 import gevent.monkey
 gevent.monkey.patch_all()
 
@@ -41,6 +42,7 @@ def create_app(config=None, app_name=None, blueprints=None):
   configure_before_handlers(app)
   configure_error_handlers(app)
   oid.init_app(app)
+  SSLify(app)
   return app
 
 
