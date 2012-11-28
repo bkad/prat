@@ -96,17 +96,17 @@
       <div class="alert-container"></div>
       <div class="chat-controls">
         <button class="toggle-left-sidebar">
-          <span class="ss-icon">{{"right" if left_sidebar_closed else "left"}}</span>
+          <span class="ss-standard">{{"right" if left_sidebar_closed else "left"}}</span>
         </button>
         <div class="control-button-container">
           <a href="{{ url_for("auth.logout") }}">
             <button id="logout" class="north" rel="tipsy" title="Logout">
-              <span class="ss-icon">logout</span>
+              <span class="ss-standard">logout</span>
             </button>
           </a>
         </div>
         <button class="toggle-right-sidebar">
-          <span class="ss-icon">{{ "left" if right_sidebar_closed else "right" }}</span>
+          <span class="ss-standard">{{ "left" if right_sidebar_closed else "right" }}</span>
         </button>
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>

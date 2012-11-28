@@ -47,7 +47,7 @@ class window.ChatControls
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find(".ss-icon").html("right")
+    rightSidebarButton.find(".ss-standard").html("right")
     $(".right-sidebar").removeClass("closed")
     $(".chat-column").removeClass("collapse-right")
     rightSidebarButton.one("click", @onCollapseRightSidebar)
@@ -55,7 +55,7 @@ class window.ChatControls
 
   onCollapseRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find(".ss-icon").html("left")
+    rightSidebarButton.find(".ss-standard").html("left")
     $(".right-sidebar").addClass("closed")
     $(".chat-column").addClass("collapse-right")
     rightSidebarButton.one("click", @onExpandRightSidebar)
@@ -63,7 +63,7 @@ class window.ChatControls
 
   onExpandLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find(".ss-icon").html("left")
+    leftSidebarButton.find(".ss-standard").html("left")
     $(".left-sidebar").removeClass("closed")
     $(".main-content").removeClass("collapse-left")
     leftSidebarButton.one("click", @onCollapseLeftSidebar)
@@ -71,7 +71,7 @@ class window.ChatControls
 
   onCollapseLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find(".ss-icon").html("right")
+    leftSidebarButton.find(".ss-standard").html("right")
     $(".left-sidebar").addClass("closed")
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
