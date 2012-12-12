@@ -33,7 +33,7 @@ def create_or_login(resp):
     g.user = user
   else:
     default_channels = current_app.config["DEFAULT_CHANNELS"]
-    gravatar_url = "http://www.gravatar.com/avatar/" + md5(resp.email.lower()).hexdigest() + "?"
+    gravatar_url = "https://www.gravatar.com/avatar/" + md5(resp.email.lower()).hexdigest() + "?"
     gravatar_url += urllib.urlencode({ 's':str(18) })
 
     user_object = {
