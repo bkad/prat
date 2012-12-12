@@ -60,11 +60,12 @@ def eventhub_client():
 
         # the message is prepended by the channel_id (for PUB/SUB reasons)
         channel_id, packed = message.split(" ", 1)
-        g.msg_unpacker.feed(packed)
-        unpacked = g.msg_unpacker.unpack()
+
+        unpacked = json.loads(packed)
+
         action = unpacked["action"]
         if action in ["publish_message", "join_channel", "leave_channel", "user_active", "user_offline"]:
-          websocket.send(json.dumps(unpacked))
+          websocket.send(packed)
         elif action in ["self_join_channel", "self_leave_channel", "self_reorder_channels"]:
           event_type = action.split("_")[1]
           handle_self_channel_event(client_id, websocket, subscribe_socket, unpacked["data"], event_type)
@@ -117,7 +118,7 @@ def handle_reorder_channels(channels, push_socket, client_id):
         "channels": channels,
       },
   }
-  packed_self_reorder_channels = g.msg_packer.pack(self_reorder_channels_event)
+  self_reorder_channels = json.dumps(self_reorder_channels_event)
   push_socket.send(" ".join([str(g.user["email"]), packed_self_reorder_channels]))
 
 
@@ -135,7 +136,7 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
       },
   }
   # alert channel subscribers to user leaving
-  packed_leave_channel = g.msg_packer.pack(leave_channel_event)
+  packed_leave_channel = json.dumps(leave_channel_event)
   push_socket.send(" ".join([channel_id, packed_leave_channel]))
 
   self_leave_channel_event = {
@@ -146,7 +147,7 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
         "channel_id": channel_id,
       },
   }
-  packed_self_leave_channel = g.msg_packer.pack(self_leave_channel_event)
+  packed_self_leave_channel = json.dumps(self_leave_channel_event)
   push_socket.send(" ".join([str(g.user["email"]), packed_self_leave_channel]))
 
 
@@ -166,7 +167,7 @@ def send_join_channel(channel, user, push_socket):
       },
   }
   # alert channel subscribers to new user
-  packed_join_channel = g.msg_packer.pack(join_channel_event)
+  packed_join_channel = json.dumps(join_channel_event)
   push_socket.send(" ".join([channel_id, packed_join_channel]))
 
 
@@ -192,7 +193,7 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
       },
   }
   # alert channel subscribers to new user
-  packed_join_channel = g.msg_packer.pack(join_channel_event)
+  packed_join_channel = json.dumps(join_channel_event)
   push_socket.send(" ".join([channel_id, packed_join_channel]))
 
   # alert the user's other open clients of the change
@@ -204,7 +205,7 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
         "channel_id": channel_id,
       },
   }
-  packed_self_join_channel = g.msg_packer.pack(self_join_channel_event)
+  packed_self_join_channel = json.dumps(self_join_channel_event)
   push_socket.send(" ".join([str(g.user["email"]), packed_self_join_channel]))
 
 def send_user_status_update(user, channel, push_socket, status):
@@ -215,7 +216,7 @@ def send_user_status_update(user, channel, push_socket, status):
         "email": user["email"],
       },
   }
-  packed = g.msg_packer.pack(event_object)
+  packed = json.dumps(event_object)
   push_socket.send(" ".join([zmq_channel_key(channel), packed]))
 
 
@@ -231,7 +232,7 @@ def handle_publish_message(data, push_socket):
   author = g.user["name"]
   email = g.user["email"]
   gravatar = g.user["gravatar"]
-  # we use isoformat in msgpack because it cant handle datetime objects
+  # we use isoformat in json because it cant handle datetime objects
   time_now = datetime.datetime.utcnow()
   mongo_event_object = { "author": author,
                          "message": message,
@@ -241,10 +242,10 @@ def handle_publish_message(data, push_socket):
                          "datetime": time_now }
   # db insertion adds an _id field
   db.events.insert(mongo_event_object)
-  msgpack_event_object = { "action":"publish_message",
-                           "data": message_dict_from_event_object(mongo_event_object),
-                         }
-  packed = g.msg_packer.pack(msgpack_event_object)
+  event_object = { "action":"publish_message",
+                   "data": message_dict_from_event_object(mongo_event_object),
+                 }
+  packed = json.dumps(event_object)
 
   # -> Everyone
   # prepend an identifier showing which channel the event happened on for PUB/SUB
@@ -256,20 +257,17 @@ def handle_preview_message(data, websocket):
   author = g.user["name"]
   email = g.user["email"]
   gravatar = g.user["gravatar"]
-  # we use isoformat in msgpack because it cant handle datetime objects
-  time_now = datetime.datetime.utcnow()
-  preview_event_object = { "message_id": "0000",
-                           "message": message,
-                           "rendered_message": markdown.render(message)
-                         }
 
-  msgpack_event_object = { "action":"preview_message",
-                           "data": preview_event_object,
-                         }
-  #packed = g.msg_packer.pack(msgpack_event_object)
+  event_object = { "action":"preview_message",
+                   "data": {
+                     "message_id": "0000",
+                     "message": message,
+                     "rendered_message": markdown.render(message),
+                   }
+                 }
 
   # -> Self
-  websocket.send(json.dumps(msgpack_event_object))
+  websocket.send(json.dumps(event_object))
 
 
 # event_type must be either "join" or "leave"

@@ -5,7 +5,6 @@ from flaskext.openid import OpenID
 from random import randint
 import zmq.green as zmq
 import zmq_context
-import msgpack
 import datastore
 from chat.datastore import db
 from chat.crypto import check_request
@@ -58,9 +57,6 @@ def configure_blueprints(app, blueprints):
 def configure_before_handlers(app):
   @app.before_request
   def setup():
-    g.msg_packer = msgpack.Packer()
-    g.msg_unpacker = msgpack.Unpacker()
-
     g.authed = False
 
     # Catch logged in users

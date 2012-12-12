@@ -9,7 +9,6 @@ Werkzeug==0.8.3
 bpython==0.10.1
 greenlet==0.3.4
 gunicorn==0.14.2
-msgpack-python==0.1.12
 prat-gevent==0.13.6
 prat-geventwebsocket==0.3.7
 prat-misaka==1.0.3
