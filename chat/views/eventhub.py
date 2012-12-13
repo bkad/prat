@@ -6,7 +6,7 @@ import json
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
-                            get_user_channel_status, reorder_user_channels)
+                            get_user_channel_status, reorder_user_channels, refresh_user_client)
 from chat.zmq_context import zmq_context
 from chat import markdown
 import uuid
@@ -91,7 +91,7 @@ def eventhub_client():
         elif action == "reorder_channels":
           handle_reorder_channels(data["channels"], push_socket, client_id)
         elif action == "ping":
-          handle_ping(websocket)
+          handle_ping(websocket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
 
@@ -291,5 +291,6 @@ def handle_self_channel_event(client_id, websocket, subscribe_socket, data, even
   # TODO(kle): live update the client's UI instead
   websocket.send(json.dumps({ "action": "force_refresh", "data": {} }))
 
-def handle_ping(websocket):
+def handle_ping(websocket, client_id):
+  refresh_user_client(g.user, client_id)
   websocket.send(json.dumps({ "action": "pong", "data": { "message": "PONG" } }))

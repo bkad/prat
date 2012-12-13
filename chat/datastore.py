@@ -118,19 +118,27 @@ def set_user_channel_status(user, channel_name, status):
   redis_db.hset(channel_key, user["email"], status)
 
 def user_clients_key(user):
-  return "user-clients:" + user["email"]
+  return "user-client:" + user["email"] + ":"
 
 def add_to_user_clients(user, client_id):
-  redis_key = user_clients_key(user)
-  redis_db.sadd(redis_key, client_id)
+  context = _app_ctx_stack.top
+  redis_key = user_clients_key(user) + client_id
+  timeout = context.app.config["REDIS_USER_CLIENT_TIMEOUT"]
+  redis_db.pipeline().set(redis_key, 1).expire(redis_key, timeout).execute()
 
 def remove_from_user_clients(user, client_id):
-  redis_key = user_clients_key(user)
-  redis_db.srem(redis_key, client_id)
+  redis_key = user_clients_key(user) + client_id
+  redis_db.delete(redis_key)
+
+def refresh_user_client(user, client_id):
+  redis_key = user_clients_key(user) + client_id
+  context = _app_ctx_stack.top
+  timeout = context.app.config["REDIS_USER_CLIENT_TIMEOUT"]
+  redis_db.expire(redis_key, timeout)
 
 def get_active_clients_count(user):
-  redis_key = user_clients_key(user)
-  return redis_db.scard(redis_key)
+  prefix = user_clients_key(user) + "*"
+  return len(redis_db.keys(prefix))
 
 
 db = LocalProxy(get_db)

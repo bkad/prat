@@ -55,7 +55,7 @@ def index():
                          mustache_templates=mustache_templates,
                          title=current_app.config["APP_NAME"],
                          debug=current_app.config["DEBUG"],
-                         keep_alive_interval=current_app.config["KEEP_ALIVE_INTERVAL"],
+                         keep_alive_interval=current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
                          coffee_files=coffee_files,
                          stylus_files=stylus_files,
                          asset_url=asset_url,
