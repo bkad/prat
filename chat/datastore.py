@@ -134,7 +134,10 @@ def refresh_user_client(user, client_id):
   redis_key = user_clients_key(user) + client_id
   context = _app_ctx_stack.top
   timeout = context.app.config["REDIS_USER_CLIENT_TIMEOUT"]
-  redis_db.expire(redis_key, timeout)
+  result = redis_db.expire(redis_key, timeout)
+  if result == 0:
+    add_to_user_clients(user, client_id)
+  return result
 
 def get_active_clients_count(user):
   prefix = user_clients_key(user) + "*"
