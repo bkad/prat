@@ -2,9 +2,13 @@
 <html>
 <head>
   <title>{{ title }}</title>
-  {% for stylus_file in stylus_files %}
-  <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
-  {% endfor %}
+  {% if compiled_css %}
+    <link rel="stylesheet" href="{{ compiled_css|safe }}"></link>
+  {% else %}
+    {% for stylus_file in stylus_files %}
+    <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
+    {% endfor %}
+  {% endif %}
   <link rel="stylesheet" href="/static/vendor/css/ss-standard.css"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='//fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic'
@@ -22,9 +26,13 @@
   {% if debug %}
   <script src="/static/vendor/js/livecss.js"></script>
   {% endif %}
-  {% for coffee_file in coffee_files %}
-  <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
-  {% endfor %}
+  {% if compiled_js %}
+    <script src="{{ compiled_js|safe }}"></script>
+  {% else %}
+    {% for coffee_file in coffee_files %}
+    <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
+    {% endfor %}
+  {% endif %}
   {% for template_id, template_content in mustache_templates %}
   <script id="{{ template_id }}" type="text/x-mustache-template">
     {{ template_content|safe }}

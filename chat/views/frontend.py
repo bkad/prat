@@ -59,4 +59,6 @@ def index():
                          coffee_files=coffee_files,
                          stylus_files=stylus_files,
                          asset_url=asset_url,
+                         compiled_js=current_app.config["COMPILED_JS"],
+                         compiled_css=current_app.config["COMPILED_CSS"],
                         )

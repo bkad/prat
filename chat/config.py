@@ -25,3 +25,7 @@ class DefaultConfig(object):
   STRING_FILTERS = [string_filters.replace_shas_with_barkeep_links, string_filters.replace_jira_links]
   WEBSOCKET_KEEP_ALIVE_INTERVAL = 30000 # milliseconds
   REDIS_USER_CLIENT_TIMEOUT = 40 # seconds
+
+  # in production, we concatenate our assets and minify them
+  COMPILED_JS = False
+  COMPILED_CSS = False
