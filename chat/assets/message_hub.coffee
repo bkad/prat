@@ -4,6 +4,8 @@ class window.MessageHub
   constructor: (@address, @reconnectTimeout, @pingInterval, @alertHelper) ->
     @timeoutIDs = []
     @pingIDs = []
+
+  init: =>
     @createSocket()
 
   createSocket: =>

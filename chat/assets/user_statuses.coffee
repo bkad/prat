@@ -1,37 +1,45 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub, initialUsers, currentChannel, channelViewCollection) ->
+  constructor: (@messageHub, @initialUsers, currentChannel, channelViewCollection) ->
     @views = {}
-    @init(initialUsers, currentChannel, channelViewCollection)
+    @init(currentChannel, channelViewCollection)
 
-  init: (initialUsers, currentChannel, channelViewCollection) ->
-    for channel, users of initialUsers
-      view = @addUserStatuses(users, channel)
+  init: (currentChannel, channelViewCollection) ->
+    for channel, users of @initialUsers
+      @addUserStatusesView(channel)
       @displayUserStatuses(channel) if channel is currentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
     @messageHub.on("join_channel", @joinChannel)
     @messageHub.on("leave_channel", @leaveChannel)
     channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
     channelViewCollection.on("leaveChannel", @removeUserStatuses)
-    channelViewCollection.on("joinChannel", @addBlankUserStatusesView)
+    channelViewCollection.on("joinChannel", @populateNewUserStatusesView)
 
-  addUserStatuses: (users, channel) =>
-    usersCollection = new UserStatusCollection(users)
+  addUserStatusesIfNecessary: (users, channel) =>
+    collection = @views[channel].collection
+    for user in users
+      collection.add(user) unless collection.get(user.email)
+
+  populateInitialUserStatuses: =>
+    for channel, users of @initialUsers
+      @addUserStatusesIfNecessary(users, channel)
+
+  addUserStatusesView: (channel) =>
+    usersCollection = new UserStatusCollection
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
-    usersCollection.on("change add remove reset", usersView.render)
+    usersCollection.on("change add remove", usersView.render)
     usersView.render()
     @views[channel] = usersView
 
-  addBlankUserStatusesView: (channel) =>
-    @addUserStatuses([], channel)
+  populateNewUserStatusesView: (channel) =>
+    @addUserStatusesView(channel)
     $.ajax
       url: "/api/user_status/#{encodeURIComponent(channel)}"
       dataType: "json"
       success: (data) =>
-        @views[channel].collection.reset(data)
-
+        @addUserStatusesIfNecessary(data, channel)
 
   removeUserStatuses: (channel) =>
     return unless @views[channel]?
@@ -47,10 +55,12 @@ class window.ChannelUsers
   updateUserStatus: (event, data) =>
     newStatus = event.split("_")[1]
     view = @views[data.channel]
-    model = view.collection.get(data.email)
+    model = view.collection.get(data.user.email)
     if model?
       model.set(status: newStatus)
       view.collection.sort()
+    else
+      view.collection.add(data.user)
 
   joinChannel: (event, data) =>
     collection = @views[data.channel].collection

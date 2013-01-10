@@ -213,7 +213,13 @@ def send_user_status_update(user, channel, push_socket, status):
       "action": "user_" + status,
       "data": {
         "channel": channel,
-        "email": user["email"],
+        "user": {
+          "email": g.user["email"],
+          "gravatar": g.user["gravatar"],
+          "name": g.user["name"],
+          "username": g.user["email"].split("@")[0],
+          "status": status,
+        }
       },
   }
   packed = json.dumps(event_object)
