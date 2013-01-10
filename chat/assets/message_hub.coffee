@@ -8,8 +8,9 @@ class window.MessageHub
 
   createSocket: =>
     @socket?.close()
+    @pingIDs = []
+    clearInterval(pingID) for pingID in @pingIDs
     @timeoutIDs.push(setTimeout(@createSocket, @reconnectTimeout))
-    @pingIDs.push(setInterval(@keepAlive, @pingInterval))
     console.log "Connecting to #{@address}"
     @socket = new WebSocket(@address)
     @socket.onmessage = @onMessage
@@ -70,8 +71,7 @@ class window.MessageHub
     @alertHelper.delAlert()
     clearTimeout(timeoutID) for timeoutID in @timeoutIDs
     @timeoutIDs = []
-    clearInterval(pingID) for pingID in @pingIDs
-    @pingIDs = []
+    @pingIDs.push(setInterval(@keepAlive, @pingInterval))
     console.log "Connection successful"
 
   keepAlive: =>
