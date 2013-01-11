@@ -16,10 +16,10 @@ class window.MessagesViewCollection extends Backbone.View
     @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
     options.messageHub.on("publish_message", @onNewMessage)
-    options.messageHub.on("preview_message", @onPreviewMessage)
+                      .on("preview_message", @onPreviewMessage)
     @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
-    @channelViewCollection.on("leaveChannel", @removeChannel)
-    @channelViewCollection.on("joinChannel", @addChannel)
+                          .on("leaveChannel", @removeChannel)
+                          .on("joinChannel", @addChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
       if channel is @channelViewCollection.currentChannel
