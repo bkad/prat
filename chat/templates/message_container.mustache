@@ -1,10 +1,10 @@
 <div class="message-separator"></div>
 <div class="message-container">
   <div class="author-container">
-    <img class="gravatar" height="18" width="18" src="{{{ gravatar }}}">
-    <div class="author">{{ author }} <span class="username">({{ username }})</span>
+    <img class="gravatar" height="18" width="18" src="{{{ user.gravatar }}}">
+    <div class="author">{{ user.name }} <span class="username">({{ user.username }})</span>
 </div>
-    <div class="email">{{ email }}</div>
+    <div class="email">{{ user.email }}</div>
     <div class="time" data-time="{{ datetime }}"></div>
   </div>
 </div>
