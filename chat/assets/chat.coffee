@@ -115,7 +115,7 @@ class window.MessagesViewCollection extends Backbone.View
     lastMessage = messagesList.find(".message-container").last()
 
     # if the author of consecutive messages are the same, collapse them
-    if @findMessageEmail(lastMessage) is message["email"] and @newMessageInTimeWindow(message, lastMessage)
+    if @findMessageEmail(lastMessage) is message.user.email and @newMessageInTimeWindow(message, lastMessage)
       messagePartial.appendTo(lastMessage)
       # remove the old time data binding and refresh the time attribute
       timeContainer = lastMessage.find(".time")
