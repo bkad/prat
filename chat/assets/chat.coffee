@@ -111,6 +111,7 @@ class window.MessagesViewCollection extends Backbone.View
     mustached
 
   appendMessage: (message, messagePartial) =>
+    return if $("#" + message.id).length > 0
     messagesList = @channelHash[message.channel].$el
     lastMessage = messagesList.find(".message-container").last()
 
