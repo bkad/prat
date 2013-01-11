@@ -131,7 +131,13 @@ def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
   leave_channel_event = {
       "action": "leave_channel",
       "data": {
-        "email": g.user["email"],
+        "user": {
+          "email": g.user["email"],
+          "gravatar": g.user["gravatar"],
+          "name": g.user["name"],
+          "username": g.user["email"].split("@")[0],
+          "status": "active",
+        },
         "channel": channel,
       },
   }

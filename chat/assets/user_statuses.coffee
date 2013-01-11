@@ -69,7 +69,7 @@ class window.ChannelUsers
 
   leaveChannel: (event, data) =>
     collection = @views[data.channel].collection
-    collection.remove(data.email)
+    collection.remove(data.user.email)
 
 
 # attributes: name, email, gravatar, status
