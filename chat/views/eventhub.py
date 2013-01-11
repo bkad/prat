@@ -288,7 +288,7 @@ def handle_self_channel_event(client_id, websocket, subscribe_socket, data, even
   if client_id == data["client_id"]:
     return
 
-  channel_id = data["channel_id"]
+  channel_id = str(data["channel_id"])
   channel = data["channel"]
   if event_type == "join":
     subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
