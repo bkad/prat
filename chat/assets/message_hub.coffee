@@ -64,15 +64,14 @@ class window.MessageHub
         channel: channel
 
   onConnectionFailed: =>
-    clearTimeout(@timeoutID)
+    @clearAllTimeoutIDs()
     @alertHelper.newAlert("alert-error", "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds")
     console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
-    setTimeout(@createSocket, @reconnectTimeout)
+    @timeoutIDs.push(setTimeout(@createSocket, @reconnectTimeout))
 
   onConnectionOpened: =>
     @alertHelper.delAlert()
-    clearTimeout(timeoutID) for timeoutID in @timeoutIDs
-    @timeoutIDs = []
+    @clearAllTimeoutIDs()
     @pingIDs.push(setInterval(@keepAlive, @pingInterval))
     console.log "Connection successful"
 
@@ -81,3 +80,7 @@ class window.MessageHub
       action: "ping"
       data:
         message: "PING"
+
+  clearAllTimeoutIDs: =>
+    clearTimeout(timeoutID) for timeoutID in @timeoutIDs
+    @timeoutIDs = []
