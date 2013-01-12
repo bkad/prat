@@ -1,6 +1,6 @@
 from flask import Blueprint, request, g
 import json
-from chat.datastore import get_channel_users, get_recent_messages
+from chat.datastore import get_channel_users, get_recent_messages, get_messages_since_id
 
 api = Blueprint("api", __name__)
 
@@ -11,6 +11,10 @@ def user_status(channel):
 @api.route("/messages/<path:channel>")
 def messages(channel):
   return json.dumps(get_recent_messages(channel))
+
+@api.route("/messages_since/<message_id>")
+def messages_since_id(message_id):
+  return json.dumps({ "messages": get_messages_since_id(message_id, g.user["channels"]) })
 
 @api.route("/whoami")
 def whoami():

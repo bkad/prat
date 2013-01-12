@@ -1,9 +1,10 @@
 import pymongo
 from chat import markdown
 from chat.tardis import datetime_to_unix
-from pymongo import DESCENDING
+from pymongo import DESCENDING, ASCENDING
 from flask import _app_ctx_stack
 from werkzeug.local import LocalProxy
+from bson.objectid import ObjectId
 import redis
 import base64
 
@@ -44,6 +45,11 @@ def get_redis_connection():
 def get_recent_messages(channel):
   ascending = reversed(list(db.events.find({"channel":channel}).sort("$natural", DESCENDING).limit(100)))
   return [message_dict_from_event_object(message) for message in ascending]
+
+def get_messages_since_id(message_id, channels):
+  find_args = {"_id": {"$gt": ObjectId(message_id)}, "channel": {"$in": channels}}
+  events = db.events.find(find_args).sort("$natural", ASCENDING)
+  return [message_dict_from_event_object(event) for event in events]
 
 def message_dict_from_event_object(event_object):
   message = event_object["message"] or " "
