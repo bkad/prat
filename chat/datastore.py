@@ -47,6 +47,7 @@ def get_recent_messages(channel):
   return [message_dict_from_event_object(message) for message in ascending]
 
 def get_messages_since_id(message_id, channels):
+  # TODO(kle): limit the max number of messages fetched
   find_args = {"_id": {"$gt": ObjectId(message_id)}, "channel": {"$in": channels}}
   events = db.events.find(find_args).sort("$natural", ASCENDING)
   return [message_dict_from_event_object(event) for event in events]
