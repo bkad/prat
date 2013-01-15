@@ -116,6 +116,7 @@ class window.MessagesViewCollection extends Backbone.View
   renderMessagePartial: (message) =>
     mustached = $(Mustache.render(@messagePartialTemplate, message))
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
+    mustached.find(".channel-mention").one("click", @ChannelViewCollection.joinChannelClick)
     mustached
 
   appendMessage: (message, messagePartial) =>
