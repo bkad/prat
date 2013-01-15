@@ -5,7 +5,7 @@ from chat.datastore import get_channel_users, get_recent_messages, get_messages_
 api = Blueprint("api", __name__)
 
 @api.route("/user_status/<path:channel>")
-def user_status(channel):
+def user_statuses_channel(channel):
   return json.dumps(get_channel_users(channel))
 
 @api.route("/user_status")
