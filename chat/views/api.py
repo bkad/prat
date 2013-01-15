@@ -8,6 +8,11 @@ api = Blueprint("api", __name__)
 def user_status(channel):
   return json.dumps(get_channel_users(channel))
 
+@api.route("/user_status")
+def user_status():
+  user_statuses = { channel: get_channel_users(channel) for channel in g.user["channels"] }
+  return json.dumps(user_statuses)
+
 @api.route("/messages/<path:channel>")
 def messages(channel):
   return json.dumps(get_recent_messages(channel))

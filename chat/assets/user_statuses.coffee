@@ -10,13 +10,31 @@ class window.ChannelUsers
       @addUserStatusesView(channel)
       @displayUserStatuses(channel) if channel is currentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
-    @messageHub.on("join_channel", @joinChannel)
-    @messageHub.on("leave_channel", @leaveChannel)
+               .on("join_channel", @joinChannel)
+               .on("leave_channel", @leaveChannel)
+               .on("reconnect", @updateAllChannels)
+    @messageHub.blockDequeue()
     channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
-    channelViewCollection.on("leaveChannel", @removeUserStatuses)
-    channelViewCollection.on("joinChannel", @populateNewUserStatusesView)
+                         .on("leaveChannel", @removeUserStatuses)
+                         .on("joinChannel", @populateNewUserStatusesView)
+
+  updateAllChannels: =>
+    $.ajax
+      url: "/api/user_status"
+      dataType: "json"
+      success: @resetUserStatuses
+      error: (xhr, textStatus, errorThrown) =>
+        console.log "Error updating channels: #{textStatus}, #{errorThrown}"
+      complete: =>
+        @messageHub.unblockDequeue()
+
+  resetUserStatuses: (channelsHash) =>
+    for channel, users of channelsHash
+      continue unless @views[channel]
+      @views[channel].collection.reset(users)
 
   addUserStatusesIfNecessary: (users, channel) =>
+    return unless @views[channel]?
     collection = @views[channel].collection
     for user in users
       collection.add(user) unless collection.get(user.email)
@@ -29,7 +47,7 @@ class window.ChannelUsers
     usersCollection = new UserStatusCollection
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
-    usersCollection.on("change add remove", usersView.render)
+    usersCollection.on("change add remove reset", usersView.render)
     usersView.render()
     @views[channel] = usersView
 
@@ -119,3 +137,5 @@ class window.UserStatusView extends Backbone.View
     Util.cleanupTipsy()
     @$el.html(@renderUserStatusCollection())
     @
+
+
