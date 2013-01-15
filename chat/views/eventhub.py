@@ -119,7 +119,7 @@ def handle_reorder_channels(channels, push_socket, client_id):
       },
   }
   self_reorder_channels = json.dumps(self_reorder_channels_event)
-  push_socket.send(" ".join([str(g.user["email"]), packed_self_reorder_channels]))
+  push_socket.send(" ".join([str(g.user["email"]), self_reorder_channels]))
 
 
 def handle_leave_channel(channel, subscribe_socket, push_socket, client_id):
