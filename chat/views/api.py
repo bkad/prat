@@ -14,7 +14,10 @@ def messages(channel):
 
 @api.route("/messages_since/<message_id>")
 def messages_since_id(message_id):
-  return json.dumps({ "messages": get_messages_since_id(message_id, g.user["channels"]) })
+  messages, errorString, errorCode = get_messages_since_id(message_id, g.user["channels"])
+  if errorString is not None:
+    return errorString, errorCode
+  return json.dumps(messages)
 
 @api.route("/whoami")
 def whoami():

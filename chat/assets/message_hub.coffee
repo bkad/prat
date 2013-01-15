@@ -4,6 +4,14 @@ class window.MessageHub
   constructor: (@address, @reconnectTimeout, @pingInterval, @alertHelper) ->
     @timeoutIDs = []
     @pingIDs = []
+    @queueing = false
+    @reconnect = false
+    @queue = []
+
+    # tracks the number of listeners who care about reconnect events and have to check in before a dequeue
+    # can happen
+    @blockingDequeue = 0
+    @currentlyBlockingDequeue = 0
 
   init: =>
     @createSocket()
@@ -21,7 +29,17 @@ class window.MessageHub
 
   onMessage: (message) =>
     messageObject = JSON.parse(message.data)
-    @trigger(messageObject.action, messageObject.action, messageObject.data)
+    if @queueing
+      @queue.push(messageObject)
+    else
+      @trigger(messageObject.action, messageObject.action, messageObject.data)
+
+  unblockDequeue: =>
+    @currentlyBlockingDequeue -= 1
+    if @currentlyBlockingDequeue <= 0
+      @trigger(message.action, message.action, message.data) for message in @queue
+      @queue = []
+      @queueing = false
 
   sendJSON: (messageObject) => @socket.send(JSON.stringify(messageObject))
 
@@ -64,6 +82,8 @@ class window.MessageHub
         channel: channel
 
   onConnectionFailed: =>
+    @reconnect = true
+    @currentlyBlockingDequeue = @blockingDequeue
     @clearAllTimeoutIDs()
     @alertHelper.newAlert("alert-error", "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds")
     console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
@@ -73,6 +93,8 @@ class window.MessageHub
     @alertHelper.delAlert()
     @clearAllTimeoutIDs()
     @pingIDs.push(setInterval(@keepAlive, @pingInterval))
+    @trigger("reconnect") if @reconnect
+    @reconnect = false
     console.log "Connection successful"
 
   keepAlive: =>
@@ -84,3 +106,6 @@ class window.MessageHub
   clearAllTimeoutIDs: =>
     clearTimeout(timeoutID) for timeoutID in @timeoutIDs
     @timeoutIDs = []
+
+  blockDequeue: =>
+    @blockingDequeue += 1

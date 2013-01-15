@@ -13,10 +13,15 @@ class window.MessagesViewCollection extends Backbone.View
     @username = options.username
     @sound = options.sound
     @title = options.title
+    @messageHub = options.messageHub
+    # latest in terms of date time stamp
+    @latestMessage = datetime: 0
     @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
-    options.messageHub.on("publish_message", @onNewMessage)
-                      .on("preview_message", @onPreviewMessage)
+    @messageHub.on("publish_message", @onNewMessage)
+               .on("preview_message", @onPreviewMessage)
+               .on("reconnect", @pullMissingMessages)
+    @messageHub.blockDequeue()
     @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
                           .on("leaveChannel", @removeChannel)
                           .on("joinChannel", @addChannel)
@@ -38,7 +43,8 @@ class window.MessagesViewCollection extends Backbone.View
     $.ajax
       url: "/api/messages/#{encodeURIComponent(channel)}"
       dataType: "json"
-      success: @appendMessages
+      success: (messages) =>
+        @appendMessages(messages, quiet: true)
 
 
   removeChannel: (channel) =>
@@ -89,13 +95,15 @@ class window.MessagesViewCollection extends Backbone.View
 
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict
-      @appendMessages(messages)
+      @appendMessages(messages, quiet: true)
 
-  appendMessages: (messages) =>
+  appendMessages: (messages, options) =>
     for message in messages
-      messagePartial = @renderMessagePartial(message)
-      @appendMessage(message, messagePartial)
-
+      if options.quiet
+        messagePartial = @renderMessagePartial(message)
+        @appendMessage(message, messagePartial)
+      else
+        @onNewMessage("publish_message", message)
 
   # following three functions are helpers for @appendMessage
   findMessageEmail: (message) -> message.find(".email").text()
@@ -112,6 +120,10 @@ class window.MessagesViewCollection extends Backbone.View
 
   appendMessage: (message, messagePartial) =>
     return if $("#" + message.id).length > 0
+
+    if message.datetime > @latestMessage.datetime
+      @latestMessage = message
+
     messagesList = @channelHash[message.channel].$el
     lastMessage = messagesList.find(".message-container").last()
 
@@ -130,3 +142,15 @@ class window.MessagesViewCollection extends Backbone.View
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)
     messagePartial
+
+  pullMissingMessages: =>
+    id = @latestMessage.message_id or "none"
+    $.ajax
+      url: "/api/messages_since/#{id}"
+      dataType: "json"
+      success: (messages) =>
+        @appendMessages(messages, quiet: false)
+      error: (xhr, textStatus, errorThrown) =>
+        console.log "Error updating messages: #{textStatus}, #{errorThrown}"
+      complete:
+        @messageHub.unblockDequeue()

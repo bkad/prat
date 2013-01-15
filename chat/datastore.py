@@ -4,7 +4,7 @@ from chat.tardis import datetime_to_unix
 from pymongo import DESCENDING, ASCENDING
 from flask import _app_ctx_stack
 from werkzeug.local import LocalProxy
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId, InvalidId
 import redis
 import base64
 
@@ -48,9 +48,14 @@ def get_recent_messages(channel):
 
 def get_messages_since_id(message_id, channels):
   # TODO(kle): limit the max number of messages fetched
-  find_args = {"_id": {"$gt": ObjectId(message_id)}, "channel": {"$in": channels}}
+  find_args = { "channel": { "$in": channels } }
+  if message_id is not "none":
+    try:
+      find_args["_id"] = { "$gt": ObjectId(message_id) }
+    except InvalidId:
+      return [], "Invalid message id", 400
   events = db.events.find(find_args).sort("$natural", ASCENDING)
-  return [message_dict_from_event_object(event) for event in events]
+  return [message_dict_from_event_object(event) for event in events], None, 200
 
 def message_dict_from_event_object(event_object):
   message = event_object["message"] or " "
