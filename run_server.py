@@ -1,3 +1,4 @@
+import sys
 import werkzeug.serving
 from geventwebsocket.handler import WebSocketHandler
 from gevent.pywsgi import WSGIServer
@@ -7,6 +8,8 @@ from chat import create_app
 def run_server():
   app = create_app()
   http_server = WSGIServer(('0.0.0.0',5000), app, handler_class=WebSocketHandler)
+  sys.stderr.write("Now serving on port 5000...\n")
+  sys.stderr.flush()
   http_server.serve_forever()
 
 if __name__ == "__main__":
