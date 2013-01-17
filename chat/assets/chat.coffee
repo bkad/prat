@@ -82,7 +82,7 @@ class window.MessagesViewCollection extends Backbone.View
     messagePartial = @renderMessagePartial(messageObject)
     if messageObject.channel isnt @channelViewCollection.currentChannel
       @channelViewCollection.highlightChannel(messageObject.channel)
-    @checkAndNotify(messagePartial, messageObject.author)
+    @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
     if bottom
       Util.scrollToBottom(animate: true)
