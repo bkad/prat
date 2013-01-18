@@ -4,12 +4,16 @@ from os import path
 import hashlib
 from fabric.operations import local
 from fabric.contrib.project import rsync_project
+from fabric.state import env
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
 import threading
 reload(select)
 reload(threading)
+
+env.use_ssh_config = True
+env.hosts = ["pratchat.com"]
 
 config_template = """
 from chat.config import DefaultConfig
