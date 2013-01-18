@@ -24,14 +24,14 @@ class Config(DefaultConfig):
 def compile_assets_file(command, extension):
   compiled = local(command, capture=True)
   fingerprint = hashlib.md5(compiled).hexdigest()
-  target_filename = "/static/app_{0}.{1}".format(fingerprint, extension)
+  target_filename = "/static/app_{1}_{0}.{1}".format(fingerprint, extension)
   with open("chat" + target_filename, "w") as target_file:
     target_file.write(compiled)
   return target_filename
 
 def cleanup():
-  local("rm -f chat/static/app_*")
-  local("rm -f config.py")
+  files = ["chat/static/app_js_*.js", "chat/static/vendor_*.js", "chat/static/app_css_*.css", "config.py"]
+  local("rm -f {0}".format(" ".join(files)))
 
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
