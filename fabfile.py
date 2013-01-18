@@ -3,6 +3,7 @@ import uuid
 from os import path
 import hashlib
 from fabric.operations import local
+from fabric.contrib.project import rsync_project
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
@@ -62,3 +63,6 @@ def write_config():
 
   with open("config.py", "w") as config_file:
     config_file.write(compiled_config)
+
+def rsync():
+  rsync_project(remote_dir="/home/ubuntu", exclude=".git")
