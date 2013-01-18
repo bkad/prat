@@ -12,6 +12,19 @@ def read_template(template_name):
   with current_app.open_resource("templates/" + template_name) as template:
     return template.read().decode("utf-8")
 
+vendor_js_files = [
+  "jquery-1.8.2.min.js",
+  "jquery-ui-1.8.23.min.js",
+  "jquery.hotkeys.js",
+  "jquery.caret.js",
+  "bootstrap-alert.js",
+  "bootstrap-modal.js",
+  "mustache.js",
+  "underscore-1.3.3-min.js",
+  "backbone-0.9.2-min.js",
+  "jquery.tipsy.js",
+]
+
 @frontend.route('/')
 def index():
   channels = g.user["channels"]
@@ -59,6 +72,7 @@ def index():
                          coffee_files=coffee_files,
                          stylus_files=stylus_files,
                          asset_url=asset_url,
+                         vendor_js_files=vendor_js_files,
                          compiled_js=current_app.config["COMPILED_JS"],
                          compiled_css=current_app.config["COMPILED_CSS"],
                         )

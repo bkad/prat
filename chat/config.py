@@ -29,3 +29,4 @@ class DefaultConfig(object):
   # in production, we concatenate our assets and minify them
   COMPILED_JS = False
   COMPILED_CSS = False
+  COMPILED_VENDOR_JS = False
