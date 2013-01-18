@@ -1,7 +1,14 @@
+from chat.views.frontend import vendor_js_files
 import uuid
 from os import path
 import hashlib
 from fabric.operations import local
+
+# bullshit where we need to unmonkey patch stuff gevent touched
+import select
+import threading
+reload(select)
+reload(threading)
 
 config_template = """
 from chat.config import DefaultConfig
@@ -11,6 +18,7 @@ class Config(DefaultConfig):
   SECRET_KEY = "{secret}"
   COMPILED_JS = "{compiled_coffee_assets}"
   COMPILED_CSS = "{compiled_stylus_assets}"
+  COMPILED_VENDOR_JS = "{compiled_vendor_js}"
 """
 
 def compile_assets_file(command, extension):
@@ -25,6 +33,15 @@ def cleanup():
   local("rm -f chat/static/app_*")
   local("rm -f config.py")
 
+def compile_vendor_js():
+  vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
+  minified = local("java -jar bin/compiler.jar --js {0}".format(" ".join(vendor_files)), capture=True)
+  fingerprint = hashlib.md5(minified).hexdigest()
+  target_filename = "/static/vendor_{0}.js".format(fingerprint)
+  with open("chat" + target_filename, "w") as target_file:
+    target_file.write(minified)
+  return target_filename
+
 def write_config():
   cleanup()
 
@@ -34,12 +51,14 @@ def write_config():
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
   stylus_command = "cat chat/assets/*.styl | stylus --use {0}".format(nib_path)
   css_filename = compile_assets_file(stylus_command, "css")
+  vendor_js_filename = compile_vendor_js()
 
   secret = str(uuid.uuid4())
 
   compiled_config = config_template.format(secret=secret,
                                            compiled_coffee_assets=js_filename,
-                                           compiled_stylus_assets=css_filename)
+                                           compiled_stylus_assets=css_filename,
+                                           compiled_vendor_js=vendor_js_filename)
 
   with open("config.py", "w") as config_file:
     config_file.write(compiled_config)
