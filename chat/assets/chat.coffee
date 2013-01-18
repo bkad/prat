@@ -89,9 +89,10 @@ class window.MessagesViewCollection extends Backbone.View
       $message.find("img").one("load", -> Util.scrollToBottom(animate: true))
 
   onPreviewMessage: (event, messageObject) =>
-    messagePreviewDiv = $(".preview-wrapper .message")
+    messagePreviewDiv = $("#message-preview .message")
     $messageContainer = $(Mustache.render(@messagePartialTemplate, messageObject))
     messagePreviewDiv.replaceWith($messageContainer)
+    $("#message-preview").modal("show")
 
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict

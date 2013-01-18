@@ -120,11 +120,22 @@
       </div>
       <div class="input-container">
         <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
-        <div class="preview-wrapper" style="display:none"><div class="message"></div></div>
+        <div id="message-preview" class="modal fade" style="display:none">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3 id="message-preview-header-label">Message Preview</h3>
+          </div>
+          <div class="modal-body">
+            <div class="message"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+            <button id="preview-submit" class="btn">Send</button>
+          </div>
+        </div>
         <div class="input-controls">
           <button class="chat-submit">Send</button>
           <button class="chat-preview">Preview</button>
-          <button class="chat-edit" style="display:none">Edit</button>
         </div>
       </div>
     </div>

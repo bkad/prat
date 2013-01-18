@@ -14,36 +14,25 @@ class window.ChatControls
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
-    $(".chat-edit").click(@onEditSubmit)
-    @previewVisible = false
+    $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
     @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
-    $(".preview-wrapper").show()
-    $(".chat-preview").hide()
-    $(".chat-edit").show()
-    $(".chat-text-wrapper").hide()
-    @previewVisible = true
-
-  onEditSubmit: (event) =>
-    $(".preview-wrapper").hide()
-    $(".chat-preview").show()
-    $(".chat-edit").hide()
-    $(".chat-text-wrapper").show()
-    @chatText.focus()
-    @previewVisible = false
 
   onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
       @messageHub.sendChat(message, @channelViewCollection.currentChannel)
-      @onEditSubmit() if @previewVisible
       @addToChatHistory(message)
     @chatText.val("").focus()
     event.preventDefault()
+
+  onPreviewSend: =>
+    $("#message-preview").modal("hide")
+    @onChatSubmit(preventDefault: ->)
 
   onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")

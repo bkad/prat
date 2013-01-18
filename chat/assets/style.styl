@@ -362,16 +362,10 @@ button, select
       height: 100%
       font-size: 14px
       resize: none
-  .preview-wrapper .message
-    padding: 5px
-    width: 100%
-    height: 100%
-  .chat-text-wrapper, .preview-wrapper
+  .chat-text-wrapper
     absolute: top padding-amount left padding-amount
     right: input-controls-width + padding-amount
     height: container-height - (2 * padding-amount)
-  .preview-wrapper
-    overflow-y: auto
   .input-controls
     absolute: top right
     bottom: 0px
@@ -382,3 +376,83 @@ button, select
       height: ((container-height - (2 * padding-amount) - button-margin) / 2)
       width: input-controls-width - padding-amount
       margin-bottom: button-margin
+
+.modal-backdrop
+  position: fixed
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  z-index: 1040
+  background-color: #000000
+
+  &.fade
+    opacity: 0
+    transition: opacity 0.15s linear
+
+    &.in
+      opacity: 0.8
+
+.modal
+  position: fixed
+  top: 10%
+  left: 50%
+  z-index: 1050
+  width: 560px
+  margin-left: -280px
+  background-color: #fff
+  border: 1px solid rgba(0, 0, 0, 0.3)
+
+  border-radius: 3px
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+  background-clip: padding-box
+  outline: none
+
+  &.fade
+    opacity 0;
+    transition: opacity .15s linear
+
+    &.in
+      opacity 1;
+      top: 10%
+
+.modal-header
+  padding: 9px 15px
+  border-bottom: 1px solid #eee
+
+  .close
+    margin-top: 2px
+    padding: 0
+    cursor: pointer
+    background: transparent
+    border: 0
+    appearance: none
+
+  h3
+    margin: 0
+    line-height: 30px
+    font-size: 24px
+    font-weight: bold
+
+.modal-body
+  position: relative
+  overflow-y: auto
+  max-height: 400px
+  padding: 15px
+
+.modal-footer
+  padding: 10px 15px
+  margin-bottom: 0
+  text-align: right
+  background-color: light-grey
+  border-top: 1px solid #ddd
+  border-radius: 0 0 3px 3px
+  box-shadow: inset 0 1px 0 #fff
+
+  .btn + .btn
+    margin-left: 5px
+    margin-bottom: 0
+
+  .btn
+    height: 27px
+    width: 65px
