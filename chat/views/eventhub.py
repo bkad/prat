@@ -66,7 +66,7 @@ def eventhub_client():
         action = unpacked["action"]
         if action in ["publish_message", "join_channel", "leave_channel", "user_active", "user_offline"]:
           websocket.send(packed)
-        elif action in ["self_join_channel", "self_leave_channel", "self_reorder_channels"]:
+        elif action in ["self_join_channel", "self_leave_channel"]:
           event_type = action.split("_")[1]
           handle_self_channel_event(client_id, websocket, subscribe_socket, unpacked["data"], event_type)
 
