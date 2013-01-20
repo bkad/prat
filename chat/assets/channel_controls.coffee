@@ -134,5 +134,6 @@ class window.ChannelViewCollection extends Backbone.View
     @messageHub.joinChannel(channel)
 
   joinChannelClick: (event) =>
+    console.log(event.currentTarget)
     @toAdd = $(event.currentTarget).attr("data-channelname")
-    @joinChannel(toAdd)
+    @joinChannel(@toAdd)
