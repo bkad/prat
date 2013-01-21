@@ -22,6 +22,7 @@ class window.ChannelView extends Backbone.View
     @trigger("changeCurrentChannel", @name)
 
   setActive: =>
+    $(".chat-controls .channel-name").html(@name)
     @channelButton.removeClass("unread")
     @channelButton.addClass("current").off("click")
 
