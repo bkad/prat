@@ -1,45 +1,26 @@
 import pymongo
 from chat import markdown
 from chat.tardis import datetime_to_unix
-from pymongo import DESCENDING, ASCENDING
-from flask import _app_ctx_stack
+from pymongo import DESCENDING, ASCENDING, MongoClient
+from flask import current_app
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId, InvalidId
-import redis
+from redis import StrictRedis
 import base64
 
-def init_app(app):
-  app.teardown_appcontext(close_db_connection)
-
-def _get_connection_attribute():
-  context = _app_ctx_stack.top
-  return getattr(context, "oochat_db", None)
-
-def get_db_connection():
-  context = _app_ctx_stack.top
-  connection = _get_connection_attribute()
-  if connection is None:
-    connection = pymongo.Connection(host=context.app.config["MONGO_HOST"],
-                                    port=context.app.config["MONGO_PORT"],
-                                    tz_aware=True)
-    context.oochat_db = connection
-  return connection
-
-def close_db_connection(error):
-  connection = _get_connection_attribute()
-  if connection is not None:
-    connection.close()
-
 def get_db():
-  return get_db_connection().oochat
+  connection = getattr(current_app, "oochat_db", None)
+  if connection is None:
+    connection = current_app.oochat_db = MongoClient(host=current_app.config["MONGO_HOST"],
+                                                     port=current_app.config["MONGO_PORT"],
+                                                     tz_aware=True)
+  return getattr(connection, current_app.config["MONGO_DB_NAME"])
 
 def get_redis_connection():
-  context = _app_ctx_stack.top
-  connection = getattr(context, "oochat_redis", None)
+  connection = getattr(current_app, "oochat_redis", None)
   if connection is None:
-    connection = redis.StrictRedis(host=context.app.config["REDIS_HOST"],
-                                   port=context.app.config["REDIS_PORT"])
-    context.oochat_redis = connection
+    connection = current_app.oochat_redis = StrictRedis(host=current_app.config["REDIS_HOST"],
+                                                        port=current_app.config["REDIS_PORT"])
   return connection
 
 def get_recent_messages(channel):
@@ -135,9 +116,8 @@ def user_clients_key(user):
   return "user-client:" + user["email"] + ":"
 
 def add_to_user_clients(user, client_id):
-  context = _app_ctx_stack.top
   redis_key = user_clients_key(user) + client_id
-  timeout = context.app.config["REDIS_USER_CLIENT_TIMEOUT"]
+  timeout = current_app.config["REDIS_USER_CLIENT_TIMEOUT"]
   redis_db.pipeline().set(redis_key, 1).expire(redis_key, timeout).execute()
 
 def remove_from_user_clients(user, client_id):
@@ -146,8 +126,7 @@ def remove_from_user_clients(user, client_id):
 
 def refresh_user_client(user, client_id):
   redis_key = user_clients_key(user) + client_id
-  context = _app_ctx_stack.top
-  timeout = context.app.config["REDIS_USER_CLIENT_TIMEOUT"]
+  timeout = current_app.config["REDIS_USER_CLIENT_TIMEOUT"]
   result = redis_db.expire(redis_key, timeout)
   if result == 0:
     add_to_user_clients(user, client_id)

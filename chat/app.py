@@ -1,11 +1,8 @@
 from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
-from flaskext.openid import OpenID
+from flask.ext.openid import OpenID
 from random import randint
-import zmq.green as zmq
-import zmq_context
-import datastore
 from chat.datastore import db
 from chat.crypto import check_request
 import gevent.monkey
@@ -32,9 +29,6 @@ def create_app(config=None, app_name=None, blueprints=None):
 
   app = Flask(app_name)
   app.config.from_object(config)
-
-  datastore.init_app(app)
-  zmq_context.init_app(app)
 
   configure_blueprints(app, blueprints)
   configure_before_handlers(app)
