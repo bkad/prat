@@ -13,7 +13,8 @@ reload(select)
 reload(threading)
 
 env.use_ssh_config = True
-env.hosts = ["pratchat.com"]
+if env.hosts == []:
+  env.hosts = ["pratchat.com"]
 
 config_template = """
 from chat.config import DefaultConfig
