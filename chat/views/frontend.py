@@ -58,6 +58,7 @@ def index():
                          initial_users=initial_users,
                          username=username,
                          email=g.user["email"],
+                         gravatar=g.user["gravatar"],
                          channels=channels,
                          last_selected_channel=last_selected_channel,
                          right_sidebar_closed=right_sidebar_closed,

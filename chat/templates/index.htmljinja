@@ -107,6 +107,12 @@
           <span class="ss-standard">{{"right" if left_sidebar_closed else "left"}}</span>
         </button>
         <div class="control-button-container">
+          <div class="current-user-info" style="background-image: url({{ gravatar }})">
+            <span>{{email}}</span>
+          </div>
+          <button id="settings" class="north" rel="tipsy" title="Settings">
+            <span class="ss-standard">gear</span>
+          </button>
           <a href="{{ url_for("auth.logout") }}">
             <button id="logout" class="north" rel="tipsy" title="Logout">
               <span class="ss-standard">logout</span>
