@@ -15,7 +15,7 @@ prat-gevent==1.0dev
 prat-geventwebsocket==0.3.7
 prat-misaka==1.0.3
 pycrypto==2.6
-pymongo==2.1.1
+pymongo==2.4.1
 python-openid==2.2.5
 pyzmq==2.2.0.1
 redis==2.6.0
