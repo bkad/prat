@@ -1,7 +1,6 @@
 # coding=utf-8
 
 from flask import Blueprint, g, render_template, request, current_app
-from chat.datastore import get_recent_messages, get_channel_users
 from chat.views.assets import asset_url
 
 frontend = Blueprint("frontend", __name__)
@@ -28,12 +27,6 @@ vendor_js_files = [
 def index():
   channels = g.user["channels"]
 
-  initial_messages = {}
-  initial_users = {}
-  for channel in channels:
-    initial_messages[channel] = get_recent_messages(channel)
-    initial_users[channel] = get_channel_users(channel)
-
   last_selected_channel = g.user["last_selected_channel"]
   username = g.user["email"].split("@")[0]
 
@@ -52,8 +45,6 @@ def index():
   stylus_files = ["style", "pygments", "tipsy_styles"]
 
   return render_template("index.htmljinja",
-                         initial_messages=initial_messages,
-                         initial_users=initial_users,
                          username=username,
                          email=g.user["email"],
                          channels=channels,

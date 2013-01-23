@@ -94,9 +94,15 @@ class window.MessagesViewCollection extends Backbone.View
     messagePreviewDiv.replaceWith($messageContainer)
     $("#message-preview").modal("show")
 
-  appendInitialMessages: (messageDict) =>
-    for channel, messages of messageDict
-      @appendMessages(messages, quiet: true)
+  appendInitialMessages: =>
+    $.ajax
+      url: "/api/messages"
+      dataType: "JSON"
+      success: (messageHash) =>
+        for channel, messages of messageHash
+          @appendMessages(messages, quiet: true)
+        @messageHub.unblockDequeue()
+        Util.scrollToBottom(animate: false)
 
   appendMessages: (messages, options) =>
     for message in messages

@@ -17,6 +17,11 @@ def user_status():
 def messages(channel):
   return json.dumps(get_recent_messages(channel))
 
+@api.route("/messages")
+def messages():
+  messages = { channel: get_recent_messages(channel) for channel in g.user["channels"] }
+  return json.dumps(messages)
+
 @api.route("/messages_since/<message_id>")
 def messages_since_id(message_id):
   messages, errorString, errorCode = get_messages_since_id(message_id, g.user["channels"])
