@@ -51,8 +51,8 @@ class window.MessagesViewCollection extends Backbone.View
 
   prevMessage: () =>
     if @focusedContainerIndex > 0
-      Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
       @focusedContainerIndex = @focusedContainerIndex-1
+      Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
 
   addChannel: (channel) =>
     @channelHash[channel] = new MessagesView()
