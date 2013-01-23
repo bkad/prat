@@ -1,0 +1,28 @@
+<div id="help" class="modal hide fade in" style="display: none;">  
+  <div class="modal-header">  
+    <a class="close" data-dismiss="modal">×</a>  
+    <h3>Help</h3>  
+  </div>  
+  <div class="modal-body">  
+    <h4>Keyboard Shortcuts</h4>
+    <p>
+    {{#bindings}}
+      <b>{{keys}}</b>: {{help}}<br>
+    {{/bindings}}
+    </p>
+    <h4>Markdown Cheatsheet</h4>
+    <pre>
+> Blockquotes
+> New line, same quote
+
+[I'm a link](https://www.google.com)
+
+![I'm an image](http://i.imgur.com/tqE84.jpg)
+
+```python
+ s = "Python syntax highlighting"
+ print s
+ ```
+</pre>
+  </div>  
+</div>
