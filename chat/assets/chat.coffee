@@ -40,7 +40,6 @@ class window.MessagesViewCollection extends Backbone.View
 
   initMessageScrollInfo: () =>
     @currentChannelMessages = @channelHash[@channelViewCollection.currentChannel].$el.children().filter('.message-container')
-    console.log(@currentChannelMessages.length)
     @focusedContainerIndex = @currentChannelMessages.length-1
 
   nextMessage: () =>
@@ -49,13 +48,11 @@ class window.MessagesViewCollection extends Backbone.View
       Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
     else
       Util.scrollToBottom()
-    console.log(@focusedContainerIndex)
 
   prevMessage: () =>
     if @focusedContainerIndex > 0
       Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
       @focusedContainerIndex = @focusedContainerIndex-1
-    console.log(@focusedContainerIndex)
 
   addChannel: (channel) =>
     @channelHash[channel] = new MessagesView()
