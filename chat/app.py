@@ -2,7 +2,6 @@ from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
 from flask.ext.openid import OpenID
-from random import randint
 from chat.datastore import db
 from chat.crypto import check_request
 import gevent.monkey
