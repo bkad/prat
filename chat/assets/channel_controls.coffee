@@ -21,11 +21,6 @@ class window.ChannelView extends Backbone.View
     @channelButton.addClass("current").off("click")
     @trigger("changeCurrentChannel", @name)
 
-  setActive: =>
-    $(".chat-controls .channel-name").html(@name)
-    @channelButton.removeClass("unread")
-    @channelButton.addClass("current").off("click")
-
   setInactive: =>
     @channelButton.removeClass("current").click(@onClick)
 
@@ -80,7 +75,6 @@ class window.ChannelViewCollection extends Backbone.View
   onChannelChange: (nextCurrentChannel) =>
     @channelsHash[@currentChannel]?.setInactive()
     @currentChannel = nextCurrentChannel
-    @channelsHash[@currentChannel]?.setActive()
     @trigger("changeCurrentChannel", nextCurrentChannel)
     @messageHub.switchChannel(@currentChannel)
 
@@ -131,14 +125,15 @@ class window.ChannelViewCollection extends Backbone.View
     @$el.append(view.$el)
 
   joinChannel: (channel) =>
-    return if _.include(@channels, channel)
-    @channels.push(channel)
-    view = @channelsHash[channel] = new ChannelView(name: channel)
-    @addNewChannelView(view)
-    @trigger("joinChannel", channel)
-    @messageHub.joinChannel(channel)
+    if not _.include(@channels, channel)
+      @channels.push(channel)
+      view = @channelsHash[channel] = new ChannelView(name: channel)
+      @addNewChannelView(view)
+      @trigger("joinChannel", channel)
+      @messageHub.joinChannel(channel)
+    return @channelsHash[channel]
 
   joinChannelClick: (event) =>
-    @toAdd = $(event.currentTarget).attr("data-channelname")
-    @joinChannel(@toAdd)
-    @onChannelChange(@toAdd)
+    toAdd = $(event.currentTarget).attr("data-channelname")
+    @joinChannel(toAdd).onClick()
+
