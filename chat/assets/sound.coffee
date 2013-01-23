@@ -6,12 +6,13 @@ class window.Sound
     @init()
 
   init: ->
+    return unless webkitAudioContext?
     @context = new webkitAudioContext()
-    @loadNewMessageAudio(@newMessageAudioLocation1)
+    @loadNewMessageAudio(@newMessageAudioLocation)
 
   loadNewMessageAudio: (location, buffer) ->
     request = new XMLHttpRequest()
-    request.open("GET", @newMessageAudioLocation, true)
+    request.open("GET", location, true)
     request.responseType = "arraybuffer"
     request.onload = =>
       @context.decodeAudioData(request.response, ((buffer) => @newMessageAudio = buffer))
