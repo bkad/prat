@@ -17,8 +17,8 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
-    @bindings = [{keys:"j", help:"Next message", action:()->@messagesViewCollection.nextMessage(); console.log("Next message")},
-    {keys:"k", help:"Previous message", action:()->@messagesViewCollection.prevMessage(); console.log("Previous message")},
+    @bindings = [{keys:"j", help:"Next message", action:()->@messagesViewCollection.nextMessage()},
+    {keys:"k", help:"Previous message", action:()->@messagesViewCollection.prevMessage()},
     {keys:"shift+n", help:"Next channel", action:()->@channelViewCollection.nextChannel()},
     {keys:"shift+p", help:"Previous channel", action:()->@channelViewCollection.prevChannel()},
     {keys:"shift+g", help:"Scroll to bottom", action:()->Util.scrollToBottom()}
