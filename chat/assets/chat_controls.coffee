@@ -17,7 +17,13 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
-
+    @bindings = [{keys:"j", help:"Next message", action:()->console.log("Next message")},
+    {keys:"k", help:"Previous message", action:()->console.log("Previous message")},
+    {keys:"shift+n", help:"Next channel", action:()->console.log("Next channel")},
+    {keys:"shift+p", help:"Previous channel", action:()->console.log("Previous channel")},
+    {keys:"?", help:"Show help", action:()->console.log("Show Help")}]
+    @initKeyBindings()
+    
   onPreviewSubmit: (event) =>
     message = @chatText.val()
     @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
@@ -65,6 +71,9 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  initKeyBindings: () =>
+    Mousetrap.bind(b['keys'], b['action']) for b in @bindings
 
   getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))

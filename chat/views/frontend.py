@@ -20,6 +20,7 @@ vendor_js_files = [
   "bootstrap-transition.js",
   "bootstrap-alert.js",
   "bootstrap-modal.js",
+  "mousetrap-1.2.2.min.js",
   "mustache.js",
   "underscore-1.3.3-min.js",
   "backbone-0.9.2-min.js",
