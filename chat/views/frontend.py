@@ -17,6 +17,7 @@ vendor_js_files = [
   "jquery-ui-1.8.23.min.js",
   "jquery.hotkeys.js",
   "jquery.caret.js",
+  "jquery.scrollTo.min.js",
   "bootstrap-transition.js",
   "bootstrap-alert.js",
   "bootstrap-modal.js",

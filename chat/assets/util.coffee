@@ -1,7 +1,6 @@
 window.Util =
   scrollingToBottom: 0
   scrolling: 0
-  currScroll: 0
 
   scrolledToBottom: ->
     # if a scrolling animation is taking place, we are at the bottom
@@ -10,25 +9,13 @@ window.Util =
     difference = (messages[0].scrollHeight - messages.scrollTop()) - messages.outerHeight()
     difference <= 1
 
-  scrollUpToMessage: (message, options = animate: true) ->
+  scrollToMessage: (message, options = animate: true) ->
     messages = $(".chat-messages.current")
-    @currScroll = @currScroll - $(message).outerHeight(true) - 1
-    console.log(@currScroll)
     if options.animate
         @scrolling += 1
-        messages.animate({ scrollTop: @currScroll }, duration: 150, complete: -> Util.scrolling -= 1)
+        messages.scrollTo(message, duration: 150, {margin: true, onAfter: -> Util.scrolling -= 1})
       else
-        messages.prop(scrollTop: @currScroll)
-
-  scrollDownToMessage: (message, options = animate: true) ->
-    messages = $(".chat-messages.current")
-    @currScroll = @currScroll + $(message).outerHeight(true) + 1
-    console.log(@currScroll)
-    if options.animate
-      @scrolling += 1
-      messages.animate({ scrollTop: @currScroll }, duration: 150, complete: -> Util.scrolling -= 1)
-    else
-      messages.prop(scrollTop: @currScroll)
+        messages.scrollTo(message)
 
   scrollToBottom: (options = animate: true) ->
     messages = $(".chat-messages.current")
@@ -38,6 +25,5 @@ window.Util =
       messages.animate({ scrollTop: scrollTop }, duration: 150, complete: -> Util.scrollingToBottom -= 1)
     else
       messages.prop(scrollTop: scrollTop)
-    @currScroll = scrollTop
 
   cleanupTipsy: -> $(".tipsy").remove()

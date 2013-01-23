@@ -46,14 +46,14 @@ class window.MessagesViewCollection extends Backbone.View
   nextMessage: () =>
     if @focusedContainerIndex < @currentChannelMessages.length-1
       @focusedContainerIndex = @focusedContainerIndex+1
-      Util.scrollDownToMessage(@currentChannelMessages[@focusedContainerIndex])
+      Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
     else
       Util.scrollToBottom()
     console.log(@focusedContainerIndex)
 
   prevMessage: () =>
     if @focusedContainerIndex > 0
-      Util.scrollUpToMessage(@currentChannelMessages[@focusedContainerIndex])
+      Util.scrollToMessage(@currentChannelMessages[@focusedContainerIndex])
       @focusedContainerIndex = @focusedContainerIndex-1
     console.log(@focusedContainerIndex)
 
