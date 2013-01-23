@@ -2,7 +2,7 @@ class window.ChatControls
   constructor: (@messageHub, @channelViewCollection, @messagesViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
 
-  init: (leftSidebarClosed, rightSidebarClosed) ->
+  init: (leftSidebarClosed, rightSidebarClosed) =>
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
@@ -17,15 +17,39 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
-    @bindings = [{keys:"j", help:"Next message", action:()->@messagesViewCollection.nextMessage()},
-    {keys:"k", help:"Previous message", action:()->@messagesViewCollection.prevMessage()},
-    {keys:"shift+n", help:"Next channel", action:()->@channelViewCollection.nextChannel()},
-    {keys:"shift+p", help:"Previous channel", action:()->@channelViewCollection.prevChannel()},
-    {keys:"shift+g", help:"Scroll to bottom", action:()->@messagesViewCollection.initMessageScrollInfo();Util.scrollToBottom()}
-    {keys:"enter", help:"Start new message", action:(e)->e.preventDefault(); $('#chat-text').focus()}
-    {keys:"?", help:"Show help", action:()->$('#help').modal('toggle')}]
+    @bindings = [
+        keys:"j",
+        help:"Next message",
+        action: -> @messagesViewCollection.nextMessage()
+      ,
+        keys:"k",
+        help:"Previous message",
+        action: -> @messagesViewCollection.prevMessage()
+      ,
+        keys:"shift+n",
+        help:"Next channel",
+        action: -> @channelViewCollection.nextChannel()
+      ,
+        keys:"shift+p",
+        help:"Previous channel",
+        action: -> @channelViewCollection.prevChannel()
+      ,
+        keys:"shift+g",
+        help:"Scroll to bottom",
+        action: -> @messagesViewCollection.initMessageScrollInfo; Util.scrollToBottom()
+      ,
+        keys:"enter",
+        help:"Start new message",
+        action: (e) ->
+          e.preventDefault()
+          $('#chat-text').focus()
+      ,
+        keys:"?",
+        help:"Show help",
+        action: -> $('#help').modal('toggle')
+    ]
     @initKeyBindings()
-    
+
   onPreviewSubmit: (event) =>
     message = @chatText.val()
     @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
@@ -78,7 +102,7 @@ class window.ChatControls
     rendered = Mustache.render($("#help-template").html(), bindings:@bindings)
     $('body').append(rendered)
     $('#help').modal({show:false, backdrop:false, keyboard:true})
-    Mousetrap.bind(b['keys'], b['action']) for b in @bindings
+    Mousetrap.bind(b.keys, b.action) for b in @bindings
 
   getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))
