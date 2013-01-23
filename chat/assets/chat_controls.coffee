@@ -21,7 +21,7 @@ class window.ChatControls
     {keys:"k", help:"Previous message", action:()->console.log("Previous message")},
     {keys:"shift+n", help:"Next channel", action:()->console.log("Next channel")},
     {keys:"shift+p", help:"Previous channel", action:()->console.log("Previous channel")},
-    {keys:"?", help:"Show help", action:()->console.log("Show Help")}]
+    {keys:"?", help:"Show help", action:()->$('#help').modal('toggle')}]
     @initKeyBindings()
     
   onPreviewSubmit: (event) =>
@@ -72,7 +72,11 @@ class window.ChatControls
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
 
+
   initKeyBindings: () =>
+    rendered = Mustache.render($("#help-template").html(), bindings:@bindings)
+    $('body').append(rendered)
+    $('#help').modal({show:false, backdrop:false, keyboard:true})
     Mousetrap.bind(b['keys'], b['action']) for b in @bindings
 
   getChatHistory: ->

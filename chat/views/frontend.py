@@ -44,7 +44,7 @@ def index():
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
 
   mustache_templates = []
-  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button"]:
+  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "help"]:
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))
