@@ -19,8 +19,8 @@ class window.ChatControls
     @chatHistoryOffset = -1
     @bindings = [{keys:"j", help:"Next message", action:()->console.log("Next message")},
     {keys:"k", help:"Previous message", action:()->console.log("Previous message")},
-    {keys:"shift+n", help:"Next channel", action:()->console.log("Next channel")},
-    {keys:"shift+p", help:"Previous channel", action:()->console.log("Previous channel")},
+    {keys:"shift+n", help:"Next channel", action:()->@channelViewCollection.nextChannel()},
+    {keys:"shift+p", help:"Previous channel", action:()->@channelViewCollection.prevChannel()},
     {keys:"shift+g", help:"Scroll to bottom", action:()->Util.scrollToBottom()}
     {keys:"enter", help:"Start new message", action:(e)->e.preventDefault(); $('#chat-text').focus()}
     {keys:"?", help:"Show help", action:()->$('#help').modal('toggle')}]

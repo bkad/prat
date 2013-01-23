@@ -137,3 +137,13 @@ class window.ChannelViewCollection extends Backbone.View
     toAdd = $(event.currentTarget).attr("data-channelname")
     @joinChannel(toAdd).onClick()
 
+  nextChannel: () =>
+    currentChannelIndex = @$el.children().index(@channelsHash[@currentChannel].el)
+    if currentChannelIndex < @channels.length-1
+      @channelsHash[@channels[currentChannelIndex+1]].onClick()
+
+  prevChannel: () =>
+    currentChannelIndex = @$el.children().index(@channelsHash[@currentChannel].el)
+    if currentChannelIndex > 0
+      @channelsHash[@channels[currentChannelIndex-1]].onClick()
+
