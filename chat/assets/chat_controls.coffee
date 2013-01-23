@@ -1,5 +1,5 @@
 class window.ChatControls
-  constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
+  constructor: (@messageHub, @channelViewCollection, @messagesViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
@@ -17,8 +17,8 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
-    @bindings = [{keys:"j", help:"Next message", action:()->console.log("Next message")},
-    {keys:"k", help:"Previous message", action:()->console.log("Previous message")},
+    @bindings = [{keys:"j", help:"Next message", action:()->@messagesViewCollection.nextMessage(); console.log("Next message")},
+    {keys:"k", help:"Previous message", action:()->@messagesViewCollection.prevMessage(); console.log("Previous message")},
     {keys:"shift+n", help:"Next channel", action:()->@channelViewCollection.nextChannel()},
     {keys:"shift+p", help:"Previous channel", action:()->@channelViewCollection.prevChannel()},
     {keys:"shift+g", help:"Scroll to bottom", action:()->Util.scrollToBottom()}
@@ -73,7 +73,6 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
-
 
   initKeyBindings: () =>
     rendered = Mustache.render($("#help-template").html(), bindings:@bindings)

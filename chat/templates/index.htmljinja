@@ -53,10 +53,6 @@
       channelViewCollection = new ChannelViewCollection({ currentChannel: initialChannel,
         messageHub: messageHub, channels: initialChannels })
       channelUsers = new ChannelUsers(messageHub, initialUsers, initialChannel, channelViewCollection)
-      chatControls = new ChatControls(messageHub,
-                                      channelViewCollection,
-                                      {{ left_sidebar_closed|tojson }},
-                                      {{ right_sidebar_closed|tojson }})
 
       sound = new Sound("/static/audio/ping.mp3")
 
@@ -73,6 +69,12 @@
                                                           })
 
       messagesViewCollection.appendInitialMessages(initialMessages)
+
+      chatControls = new ChatControls(messageHub,
+                                      channelViewCollection,
+                                      messagesViewCollection,
+                                      {{ left_sidebar_closed|tojson }},
+                                      {{ right_sidebar_closed|tojson }})
 
       messageHub.init()
       channelUsers.populateInitialUserStatuses()

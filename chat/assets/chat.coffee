@@ -29,6 +29,7 @@ class window.MessagesViewCollection extends Backbone.View
       view = @channelHash[channel] = new MessagesView()
       if channel is @channelViewCollection.currentChannel
         view.$el.addClass("current")
+    @initMessageScrollInfo()
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
     @render()
@@ -36,6 +37,25 @@ class window.MessagesViewCollection extends Backbone.View
   render: =>
     @$el.children().detach()
     @$el.append(@channelHash[channel].$el) for channel in @channels
+
+  initMessageScrollInfo: () =>
+    @currentChannelMessages = @channelHash[@channelViewCollection.currentChannel].$el.children().filter('.message-container')
+    console.log(@currentChannelMessages.length)
+    @focusedContainerIndex = @currentChannelMessages.length-1
+
+  nextMessage: () =>
+    if @focusedContainerIndex < @currentChannelMessages.length-1
+      @focusedContainerIndex = @focusedContainerIndex+1
+      Util.scrollDownToMessage(@currentChannelMessages[@focusedContainerIndex])
+    else
+      Util.scrollToBottom()
+    console.log(@focusedContainerIndex)
+
+  prevMessage: () =>
+    if @focusedContainerIndex > 0
+      Util.scrollUpToMessage(@currentChannelMessages[@focusedContainerIndex])
+      @focusedContainerIndex = @focusedContainerIndex-1
+    console.log(@focusedContainerIndex)
 
   addChannel: (channel) =>
     @channelHash[channel] = new MessagesView()
@@ -46,7 +66,6 @@ class window.MessagesViewCollection extends Backbone.View
       success: (messages) =>
         @appendMessages(messages, quiet: true)
 
-
   removeChannel: (channel) =>
     @channelHash[channel].$el.remove()
     delete @channelHash[channel]
@@ -54,6 +73,7 @@ class window.MessagesViewCollection extends Backbone.View
   changeCurrentChannel: (newChannel) =>
     view.$el.removeClass("current") for channel, view of @channelHash
     @channelHash[newChannel].$el.addClass("current")
+    @initMessageScrollInfo()
     Util.scrollToBottom(animate: false)
 
   checkAndNotify: (message, author) =>
@@ -85,6 +105,7 @@ class window.MessagesViewCollection extends Backbone.View
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
     if bottom
+      @initMessageScrollInfo()
       Util.scrollToBottom(animate: true)
       $message.find("img").one("load", -> Util.scrollToBottom(animate: true))
 
@@ -97,6 +118,7 @@ class window.MessagesViewCollection extends Backbone.View
   appendInitialMessages: (messageDict) =>
     for channel, messages of messageDict
       @appendMessages(messages, quiet: true)
+    @initMessageScrollInfo()
 
   appendMessages: (messages, options) =>
     for message in messages
