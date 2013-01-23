@@ -124,11 +124,16 @@ class window.ChannelViewCollection extends Backbone.View
     view.on("leaveChannel", @leaveChannel)
     @$el.append(view.$el)
 
-
   joinChannel: (channel) =>
-    return if _.include(@channels, channel)
-    @channels.push(channel)
-    view = @channelsHash[channel] = new ChannelView(name: channel)
-    @addNewChannelView(view)
-    @trigger("joinChannel", channel)
-    @messageHub.joinChannel(channel)
+    if not _.include(@channels, channel)
+      @channels.push(channel)
+      view = @channelsHash[channel] = new ChannelView(name: channel)
+      @addNewChannelView(view)
+      @trigger("joinChannel", channel)
+      @messageHub.joinChannel(channel)
+    return @channelsHash[channel]
+
+  joinChannelClick: (event) =>
+    toAdd = $(event.currentTarget).attr("data-channelname")
+    @joinChannel(toAdd).onClick()
+

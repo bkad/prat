@@ -17,6 +17,10 @@ class HtmlPygmentsRenderer(HtmlRenderer):
     escaped_text = re.sub(r'(@)([a-zA-Z0-9_.-]+)',
                           r'<span class="user-mention" data-username="\2">\1\2</span>',
                           escaped_text)
+    # mark up channel names (#channelname)
+    escaped_text = re.sub(r'(#)([a-zA-Z0-9_.-]+)',
+                          r'<span class="channel-mention" data-channelname="\2">\1\2</span>',
+                          escaped_text)
     for string_filter in current_app.config["STRING_FILTERS"]:
       escaped_text = string_filter(escaped_text)
     return escaped_text
