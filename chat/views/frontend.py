@@ -1,9 +1,7 @@
 # coding=utf-8
 
-from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
-from random import shuffle
-from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_channel_users
+from chat.datastore import get_recent_messages, get_channel_users
 from chat.views.assets import asset_url
 
 frontend = Blueprint("frontend", __name__)
