@@ -28,11 +28,7 @@ def eventhub_client():
   # add yourself to your current pool of open clients
   add_to_user_clients(g.user, client_id)
 
-  # listen for messages that happen on channels the user is subscribed to
   for channel in g.user["channels"]:
-    channel_id = zmq_channel_key(channel)
-    subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
-
     # if redis was cleared, we'll need to resend the join channel event to populate the user status of open
     # clients
     channel_status = get_user_channel_status(g.user, channel)
@@ -41,6 +37,14 @@ def eventhub_client():
 
     set_user_channel_status(g.user, channel, "active")
     send_user_status_update(g.user, channel, push_socket, "active")
+
+    # due to 'slow joiner' effect, we can't rely on picking up on our initial messages sent
+    websocket.send(json_user_status_event_object(g.user, channel, "active"))
+
+  # listen for messages that happen on channels the user is subscribed to
+  for channel in g.user["channels"]:
+    channel_id = zmq_channel_key(channel)
+    subscribe_socket.setsockopt(zmq.SUBSCRIBE, channel_id)
 
   # subscribe to events the user triggered that could affect the user's other open clients
   subscribe_socket.setsockopt(zmq.SUBSCRIBE, str(g.user["email"]))
@@ -215,23 +219,23 @@ def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
   push_socket.send(" ".join([str(g.user["email"]), packed_self_join_channel]))
 
 def send_user_status_update(user, channel, push_socket, status):
-  event_object = {
+  packed = json_user_status_event_object(user, channel, status)
+  push_socket.send(" ".join([zmq_channel_key(channel), packed]))
+
+def json_user_status_event_object(user, channel, status):
+  return json.dumps({
       "action": "user_" + status,
       "data": {
         "channel": channel,
         "user": {
-          "email": g.user["email"],
-          "gravatar": g.user["gravatar"],
-          "name": g.user["name"],
-          "username": g.user["email"].split("@")[0],
+          "email": user["email"],
+          "gravatar": user["gravatar"],
+          "name": user["name"],
+          "username": user["email"].split("@")[0],
           "status": status,
         }
       },
-  }
-  packed = json.dumps(event_object)
-  push_socket.send(" ".join([zmq_channel_key(channel), packed]))
-
-
+  })
 def handle_switch_channel(channel):
   # Update channel logged in user is subscribed to
   g.user["last_selected_channel"] = channel
