@@ -106,7 +106,7 @@ def reorder_user_channels(user, channels):
 
 def get_user_channel_status(user, channel_name):
   channel_key = redis_channel_key(channel_name)
-  redis_db.hget(channel_key, user["email"])
+  return redis_db.hget(channel_key, user["email"])
 
 def set_user_channel_status(user, channel_name, status):
   channel_key = redis_channel_key(channel_name)
