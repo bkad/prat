@@ -21,7 +21,7 @@ class window.ChatControls
     {keys:"k", help:"Previous message", action:()->@messagesViewCollection.prevMessage()},
     {keys:"shift+n", help:"Next channel", action:()->@channelViewCollection.nextChannel()},
     {keys:"shift+p", help:"Previous channel", action:()->@channelViewCollection.prevChannel()},
-    {keys:"shift+g", help:"Scroll to bottom", action:()->@messageViewCollection.initMessageScrollInfo();Util.scrollToBottom()}
+    {keys:"shift+g", help:"Scroll to bottom", action:()->@messagesViewCollection.initMessageScrollInfo();Util.scrollToBottom()}
     {keys:"enter", help:"Start new message", action:(e)->e.preventDefault(); $('#chat-text').focus()}
     {keys:"?", help:"Show help", action:()->$('#help').modal('toggle')}]
     @initKeyBindings()
