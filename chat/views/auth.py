@@ -54,11 +54,9 @@ def create_or_login(resp):
       send_join_channel(channel, user_object, push_socket)
     push_socket.close()
     g.user = user_object
-  flash(u'Successfully logged in')
   return redirect(oid.get_next_url())
 
 @auth.route('/logout')
 def logout():
     session.pop("email", None)
-    flash(u'You were signed out')
     return redirect(oid.get_next_url())
