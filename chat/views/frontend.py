@@ -15,7 +15,6 @@ def read_template(template_name):
 vendor_js_files = [
   "jquery-1.8.2.min.js",
   "jquery-ui-1.8.23.min.js",
-  "jquery.hotkeys.js",
   "jquery.caret.js",
   "jquery.scrollTo.min.js",
   "bootstrap-transition.js",

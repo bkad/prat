@@ -43,26 +43,26 @@ class window.ChatControls
         keys:"up",
         help:"",
         showHelp: false,
-        action: ((e) ->
+        action: (e) =>
           if $('#chat-text').is(":focus")
-            this.onPreviousChatHistory()).bind(this)
+            @onPreviousChatHistory()
       ,
         keys:"down",
         help:"",
         showHelp: false,
-        action: ((e) ->
+        action: (e) =>
           if $('#chat-text').is(":focus")
-            this.onNextChatHistory()).bind(this)
+            @onNextChatHistory()
       ,
         keys:"enter",
         help:"Start new message / Send message",
         showHelp: false,
-        action: ((e) ->
+        action: (e) ->
           if $('#chat-text').is(":focus")
-            this.onChatSubmit(e)
+            @onChatSubmit(e)
           else
             e.preventDefault()
-            $('#chat-text').focus()).bind(this)
+            $('#chat-text').focus()
       ,
         keys:"?",
         help:"Show help",
