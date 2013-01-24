@@ -1,6 +1,7 @@
 class window.ChatControls
   constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
+    @currentAutocompletePrefix = null
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
@@ -11,12 +12,95 @@ class window.ChatControls
     @chatText.on("keydown.return", @onChatSubmit)
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
+    @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
+
+  onChatAutocomplete: (event) =>
+    if event.which != 9
+      # If not a tab, cancel any current autocomplete.
+      @currentAutocompletePrefix = null
+      return
+
+    event.preventDefault()
+
+    position = @chatText[0].selectionStart
+    firstPart = @chatText.val().substring(0, position)
+    # Getting the current line before doing regexes is an optimization
+    currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
+    users = for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
+      model.attributes.username
+
+    # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
+    if @currentAutocompletePrefix == null
+      # Get the current word
+      matches = /\s([^\s]*)$/.exec(currentLine)
+      currentWord = if matches? then matches[1] else currentLine
+
+      # Don't do anything unless the current word starts with '@'
+      return unless currentWord.length > 0 && currentWord[0] == "@"
+      currentWord = currentWord.substring(1)
+
+      chosen = ""
+      for user, i in users
+        if user.indexOf(currentWord) == 0
+          @currentAutocompletePrefix = currentWord
+          chosen = user + " "
+          break
+
+      # Didn't find anything; abort.
+      return if chosen == ""
+
+      # Select the current word, so that when we insert text it will overwrite it.
+      @chatText[0].setSelectionRange(position - currentWord.length, position)
+
+    # Otherwise, rotate to the next user entry matching the current autocomplete.
+    else
+      # Get the current autocomplete suggestion
+      window.line = currentLine
+      matches = /@([^\s]+) $/.exec(currentLine)
+      if matches?
+        currentMatch = matches[1]
+      else
+        # Weird state
+        @currentAutocompletePrefix = null
+        return
+
+      # Rotate to the next matching user entry.
+      prefixMatches = []
+      for user in users
+        if user.indexOf(@currentAutocompletePrefix) == 0
+          prefixMatches.push(user)
+      if prefixMatches.length == 0
+        @currentAutocompletePrefix = null
+        return
+      currentPos = prefixMatches.indexOf(currentMatch)
+      # currentPos should usually be >= 0, because we expect the current word to match a username. But it
+      # might not, if someone just got removed from the list somehow. Either way, the following logic works,
+      # because if currentMatch isn't in the list of matching usernames, currentPos is -1.
+      nextUsername = prefixMatches[(currentPos + 1) % prefixMatches.length]
+      chosen = nextUsername + " "
+
+      # Select the current match and the following space, so the text insertion overwrites it.
+      @chatText[0].setSelectionRange(position - currentMatch.length - 1, position)
+
+    # Now we have the substitute word, and the replacement text is highlighted.
+    @insertTextAtCursor(@chatText[0], chosen)
+
+  # http://stackoverflow.com/questions/7553430/javascript-textarea-undo-redo
+  # This could also be done via the 'usual' method, which is basically copying all the text from the box,
+  # manipulating it, pasting it all back in, and then putting the cursor in the right place.
+  # Pros: This is way easier than that. undo/redo works with this method.
+  # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
+  # in Firefox. Whatevs.
+  insertTextAtCursor: (element, text) ->
+    event = document.createEvent("TextEvent")
+    event.initTextEvent("textInput", true, true, null, text)
+    element.dispatchEvent(event)
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
@@ -100,7 +184,7 @@ class window.ChatControls
     history ?= []
     history.push(message)
     history.shift() while history.length > 50
-      
+
     @setChatHistory(history)
     @chatHistoryOffset = -1
     @currentMessage = ""
