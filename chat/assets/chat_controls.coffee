@@ -8,9 +8,6 @@ class window.ChatControls
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
     @chatText = $("#chat-text")
-    @chatText.on("keydown.return", @onChatSubmit)
-    @chatText.on("keydown.up", @onPreviousChatHistory)
-    @chatText.on("keydown.down", @onNextChatHistory)
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
@@ -20,32 +17,56 @@ class window.ChatControls
     @bindings = [
         keys:"j",
         help:"Next message",
+        showHelp: true,
         action: -> @messagesViewCollection.nextMessage()
       ,
         keys:"k",
         help:"Previous message",
+        showHelp: true,
         action: -> @messagesViewCollection.prevMessage()
       ,
         keys:"shift+n",
         help:"Next channel",
+        showHelp: true,
         action: -> @channelViewCollection.nextChannel()
       ,
         keys:"shift+p",
         help:"Previous channel",
+        showHelp: true,
         action: -> @channelViewCollection.prevChannel()
       ,
         keys:"shift+g",
         help:"Scroll to bottom",
+        showHelp: true,
         action: -> @messagesViewCollection.initMessageScrollInfo; Util.scrollToBottom()
       ,
+        keys:"up",
+        help:"",
+        showHelp: false,
+        action: ((e) ->
+          if $('#chat-text').is(":focus")
+            this.onPreviousChatHistory()).bind(this)
+      ,
+        keys:"down",
+        help:"",
+        showHelp: false,
+        action: ((e) ->
+          if $('#chat-text').is(":focus")
+            this.onNextChatHistory()).bind(this)
+      ,
         keys:"enter",
-        help:"Start new message",
-        action: (e) ->
-          e.preventDefault()
-          $('#chat-text').focus()
+        help:"Start new message / Send message",
+        showHelp: false,
+        action: ((e) ->
+          if $('#chat-text').is(":focus")
+            this.onChatSubmit(e)
+          else
+            e.preventDefault()
+            $('#chat-text').focus()).bind(this)
       ,
         keys:"?",
         help:"Show help",
+        showHelp: true,
         action: -> $('#help').modal('toggle')
     ]
     @initKeyBindings()

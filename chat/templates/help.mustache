@@ -7,7 +7,9 @@
     <h4>Keyboard Shortcuts</h4>
     <p>
     {{#bindings}}
-      <b>{{keys}}</b>: {{help}}<br>
+      {{#showHelp}}
+        <b>{{keys}}</b>: {{help}}<br>
+      {{/showHelp}}
     {{/bindings}}
     </p>
     <h4>Markdown Cheatsheet</h4>
