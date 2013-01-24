@@ -102,7 +102,9 @@ class window.MessagesViewCollection extends Backbone.View
         for channel, messages of messageHash
           @appendMessages(messages, quiet: true)
         @messageHub.unblockDequeue()
-        Util.scrollToBottom(animate: false)
+        # If we don't use a timeout here, the container size changes slightly as the rendering happens
+        # so that by the time it's all done, we're no longer scrolled to the bottom
+        setTimeout((-> Util.scrollToBottom(animate: false)), 0)
 
   appendMessages: (messages, options) =>
     for message in messages
