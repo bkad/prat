@@ -1,7 +1,9 @@
 class window.ChatControls
   constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
-    @currentAutocompletePrefix = null
+    # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
+    # index of current match].
+    @currentAutocompletion = null
 
   init: (leftSidebarClosed, rightSidebarClosed) ->
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
@@ -23,7 +25,7 @@ class window.ChatControls
   onChatAutocomplete: (event) =>
     if event.which != 9
       # If not a tab, cancel any current autocomplete.
-      @currentAutocompletePrefix = null
+      @currentAutocompletion = null
       return
 
     event.preventDefault()
@@ -32,11 +34,12 @@ class window.ChatControls
     firstPart = @chatText.val().substring(0, position)
     # Getting the current line before doing regexes is an optimization
     currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
+    users = []
     users = for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
-      model.attributes.username
+      [model.attributes.username, model.attributes.name]
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
-    if @currentAutocompletePrefix == null
+    if @currentAutocompletion == null
       # Get the current word
       matches = /\s([^\s]*)$/.exec(currentLine)
       currentWord = if matches? then matches[1] else currentLine
@@ -45,15 +48,23 @@ class window.ChatControls
       return unless currentWord.length > 0 && currentWord[0] == "@"
       currentWord = currentWord.substring(1)
 
-      chosen = ""
-      for user, i in users
-        if user.indexOf(currentWord) == 0
-          @currentAutocompletePrefix = currentWord
-          chosen = user + " "
-          break
+      exactMatches = []
+      inexactMatches = []
+      for user in users
+        # First check an exact match against the username
+        if user[0].indexOf(currentWord) == 0
+          exactMatches.push(user[0])
+          continue
+        # Now try a case-insensitive match against the username and real name
+        lower = currentWord.toLowerCase()
+        if user[0].toLowerCase().indexOf(lower) == 0 || user[1].toLowerCase().indexOf(lower) == 0
+          inexactMatches.push(user[0])
 
-      # Didn't find anything; abort.
-      return if chosen == ""
+      allMatches = exactMatches.concat(inexactMatches)
+      return if allMatches.length == 0
+
+      @currentAutocompletion = [allMatches, 0]
+      chosen = allMatches[0] + " "
 
       # Select the current word, so that when we insert text it will overwrite it.
       @chatText[0].setSelectionRange(position - currentWord.length, position)
@@ -67,23 +78,12 @@ class window.ChatControls
         currentMatch = matches[1]
       else
         # Weird state
-        @currentAutocompletePrefix = null
+        @currentAutocompletion = null
         return
 
       # Rotate to the next matching user entry.
-      prefixMatches = []
-      for user in users
-        if user.indexOf(@currentAutocompletePrefix) == 0
-          prefixMatches.push(user)
-      if prefixMatches.length == 0
-        @currentAutocompletePrefix = null
-        return
-      currentPos = prefixMatches.indexOf(currentMatch)
-      # currentPos should usually be >= 0, because we expect the current word to match a username. But it
-      # might not, if someone just got removed from the list somehow. Either way, the following logic works,
-      # because if currentMatch isn't in the list of matching usernames, currentPos is -1.
-      nextUsername = prefixMatches[(currentPos + 1) % prefixMatches.length]
-      chosen = nextUsername + " "
+      @currentAutocompletion[1] = (@currentAutocompletion[1] + 1) % @currentAutocompletion[0].length
+      chosen = @currentAutocompletion[0][@currentAutocompletion[1]] + " "
 
       # Select the current match and the following space, so the text insertion overwrites it.
       @chatText[0].setSelectionRange(position - currentMatch.length - 1, position)
