@@ -18,12 +18,12 @@ class window.ChatControls
         keys:"j",
         help:"Next message",
         showHelp: true,
-        action: -> @messagesViewCollection.nextMessage()
+        action: -> Util.scrollMessagesDown()
       ,
         keys:"k",
         help:"Previous message",
         showHelp: true,
-        action: -> @messagesViewCollection.prevMessage()
+        action: -> Util.scrollMessagesUp()
       ,
         keys:"shift+n",
         help:"Next channel",
