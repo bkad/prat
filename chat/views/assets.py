@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, current_app, g, make_response, request, _app_ctx_stack, url_for
+from flask import Blueprint, abort, current_app, make_response, _app_ctx_stack, url_for
 from werkzeug.local import LocalProxy
 from stylus import Stylus
 import coffeescript

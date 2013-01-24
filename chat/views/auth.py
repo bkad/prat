@@ -1,4 +1,4 @@
-from flask import Blueprint, g, render_template, request, flash, session, redirect, current_app
+from flask import Blueprint, g, render_template, request, session, redirect, current_app
 from flaskext.openid import OpenID
 from hashlib import md5
 from chat.datastore import db, add_user_to_channel
