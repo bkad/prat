@@ -14,7 +14,7 @@ def user_status():
   return json.dumps(user_statuses)
 
 @api.route("/messages/<path:channel>")
-def messages(channel):
+def channel_messages(channel):
   return json.dumps(get_recent_messages(channel))
 
 @api.route("/messages")
