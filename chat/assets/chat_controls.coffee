@@ -15,6 +15,8 @@ class window.ChatControls
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
     @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
+    # Fix for jquery hotkeys messing up bootstrap modal dismissal
+    $(document).on("keydown.esc", (e) -> $('#help').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)

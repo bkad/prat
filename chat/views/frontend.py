@@ -13,7 +13,6 @@ vendor_js_files = [
   "jquery-1.8.2.min.js",
   "jquery-ui-1.8.23.min.js",
   "jquery.caret.js",
-  "jquery.hotkeys.js",
   "jquery.scrollTo.min.js",
   "bootstrap-transition.js",
   "bootstrap-alert.js",
@@ -22,6 +21,7 @@ vendor_js_files = [
   "underscore-1.3.3-min.js",
   "backbone-0.9.2-min.js",
   "jquery.tipsy.js",
+  "jquery.hotkeys.js",
 ]
 
 @frontend.route('/')
