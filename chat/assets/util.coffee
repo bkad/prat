@@ -31,7 +31,7 @@ window.Util =
       @scrolling += 1
       messageList.scrollTo(firstOffScreenMessage, {duration: 150, margin: true, onAfter: -> Util.scrolling -= 1})
     else
-      messageList.scrollTo(firstOffScreenMessage { margin: true } )
+      messageList.scrollTo(firstOffScreenMessage, { margin: true } )
 
   scrollMessagesDown: (options = animate: true) =>
     messageList = $(".chat-messages.current")
@@ -55,7 +55,7 @@ window.Util =
 
     # If we're scrolling to the bottom most message, just scroll to the very bottom
     if firstOffScreenMessage[0] == $(messages[messages.length-1])[0]
-      Util.scrollToBottom()
+      Util.scrollToBottom(animate: options.animate)
     else
       # place the bottom of the message just above the bottom of the message view
       difference = -messageList.outerHeight() + $(messages[i]).outerHeight(true)
@@ -64,9 +64,9 @@ window.Util =
       # Scroll to message
       if options.animate
         @scrolling += 1
-        messageList.scrollTo(firstOffScreenMessage, {offset:offset, duration:150, margin: true, onAfter: -> Util.scrolling -= 1})
+        messageList.scrollTo(firstOffScreenMessage, {offset:offset, duration: 150, margin: true, onAfter: -> Util.scrolling -= 1})
       else
-        messageList.scrollTo(firstOffScreenMessage, { offset:offset })
+        messageList.scrollTo(firstOffScreenMessage, { offset:offset, margin: true })
 
   scrollToBottom: (options = animate: true) ->
     messages = $(".chat-messages.current")

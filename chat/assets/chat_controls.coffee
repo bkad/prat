@@ -25,12 +25,12 @@ class window.ChatControls
         keys:'j',
         help:"Next message",
         showHelp: true,
-        action: -> Util.scrollMessagesDown()
+        action: -> Util.scrollMessagesDown(animate: false)
       ,
         keys:'k',
         help:"Previous message",
         showHelp: true,
-        action: -> Util.scrollMessagesUp()
+        action: -> Util.scrollMessagesUp(animate: false)
       ,
         keys:'shift_n',
         help:"Next channel",
