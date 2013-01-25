@@ -36,8 +36,6 @@ window.Util =
     top: 'auto',          # Top position relative to parent in px
     left: 'auto'          # Left position relative to parent in px
 
-$ ->
-  window.onbeforeunload = ->
-    if $("#chat-text").val().length > 0
-      return "You have an unsent message."
-    return null
+window.onbeforeunload = ->
+  if $("#chat-text").val().length > 0
+    return "You have an unsent message."
