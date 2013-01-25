@@ -18,3 +18,9 @@ window.Util =
       messages.prop(scrollTop: scrollTop)
 
   cleanupTipsy: -> $(".tipsy").remove()
+
+$ ->
+  window.onbeforeunload = ->
+    if $("#chat-text").val().length > 0
+      return "You have an unsent message."
+    return null
