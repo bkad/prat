@@ -14,6 +14,7 @@ class window.ChatControls
     @chatText.on("keydown.return", @onChatSubmit)
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
+    @chatText.on("keydown.esc", (e) -> e.preventDefault(); $('#chat-text').blur())
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -22,39 +23,39 @@ class window.ChatControls
     @currentMessage = ""
     @chatHistoryOffset = -1
     @globalBindings = [
-        keys:'j',
+        keys:['j'],
         help:"Next message",
         showHelp: true,
-        action: -> Util.scrollMessagesDown(animate: false)
+        action: -> Util.scrollMessagesDown()
       ,
-        keys:'k',
+        keys:['k'],
         help:"Previous message",
         showHelp: true,
-        action: -> Util.scrollMessagesUp(animate: false)
+        action: -> Util.scrollMessagesUp()
       ,
-        keys:'shift_n',
+        keys:['shift_n'],
         help:"Next channel",
         showHelp: true,
         action: => @channelViewCollection.nextChannel()
       ,
-        keys:'shift_p',
+        keys:['shift_p'],
         help:"Previous channel",
         showHelp: true,
         action: => @channelViewCollection.prevChannel()
       ,
-        keys:'shift_g',
+        keys:['shift_g'],
         help:"Scroll to bottom",
         showHelp: true,
         action: => Util.scrollToBottom()
       ,
-        keys:'return',
-        help:"Start new message",
+        keys:['return', '/'],
+        help:"Focus on chat box",
         showHelp: false,
         action: (e) ->
           e.preventDefault()
           $('#chat-text').focus()
       ,
-        keys:'shift_/',
+        keys:['shift_/'],
         help:"Show help",
         showHelp: true,
         action: -> $('#help').modal('toggle')
@@ -190,10 +191,19 @@ class window.ChatControls
     document.cookie = "leftSidebar=closed"
 
   initKeyBindings: () =>
-    rendered = Mustache.render($("#help-template").html(), bindings:@globalBindings)
+    helpDocumentation = []
+    for b in @globalBindings
+      if b.showHelp
+        keys = []
+        for key in b.keys
+          keys.push(key.replace(/_(?!$)/g, " + "))
+        helpDocumentation.push({keys:keys, helpMsg:b.help})
+    rendered = Mustache.render($("#help-template").html(), bindings:helpDocumentation)
     $('body').append(rendered)
     $('#help').modal({show:false, backdrop:false, keyboard:true})
-    $(document).on('keydown.'+ b.keys, b.action) for b in @globalBindings
+    for b in @globalBindings
+      for key in b.keys
+        $(document).on('keydown.'+ key, b.action)
 
   getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))
