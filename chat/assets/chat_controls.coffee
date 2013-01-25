@@ -14,7 +14,7 @@ class window.ChatControls
     @chatText.on("keydown.return", @onChatSubmit)
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
-    @chatText.on("keydown.esc", (e) -> e.preventDefault(); $('#chat-text').blur())
+    @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -58,7 +58,7 @@ class window.ChatControls
         keys:['shift_/'],
         help:"Show help",
         showHelp: true,
-        action: -> $('#help').modal('toggle')
+        action: -> $('#help').modal("show")
     ]
     @initKeyBindings()
 
@@ -202,7 +202,7 @@ class window.ChatControls
         helpDocumentation.push({keys:keys, helpMsg:b.help})
     rendered = Mustache.render($("#help-template").html(), bindings:helpDocumentation)
     $('body').append(rendered)
-    $('#help').modal({show:false, backdrop:false, keyboard:true})
+    $('#help').modal()
     for b in @globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)
