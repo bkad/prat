@@ -25,6 +25,11 @@ class window.ChatControls
     @currentMessage = ""
     @chatHistoryOffset = -1
     @globalBindings = [
+        keys:['shift_/'],
+        help:"Show this help dialog",
+        showHelp: true,
+        action: -> $('#help').modal("toggle")
+      ,
         keys:['j'],
         help:"Next message",
         showHelp: true,
@@ -56,11 +61,6 @@ class window.ChatControls
         action: (e) ->
           e.preventDefault()
           $('#chat-text').focus()
-      ,
-        keys:['shift_/'],
-        help:"Show help",
-        showHelp: true,
-        action: -> $('#help').modal("toggle")
     ]
     @initKeyBindings()
 

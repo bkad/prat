@@ -437,6 +437,8 @@ button, select
     appearance: none
 
   h3
+    font: bold 30px "Oswald", sans-serif
+    text-transform: lowercase
     margin: 0
     line-height: 30px
     font-size: 24px
@@ -447,30 +449,23 @@ button, select
   overflow-y: auto
   max-height: 400px
   padding: 15px
-  h4
-    margin: 0
-    line-height: 20px
-    font-size: 16px
-    font-weight: bold
-  .keyboardHelp
-    padding: 4px
+  &.keyboard-help
+    tr
+      line-height: 20px
     span
-      display: inline-block;
-      margin: 0;
-      padding: 3px 6px;
-      min-width: 10px;
-      text-align: center;
-      color: dark-grey
+      padding: 2px 6px
+      margin: 2px 0
+      display: inline-block
     .keys
-      font-family: Monaco, "Liberation Mono", Courier, monospace;
-      background: dark-grey;
-      color: light-grey;
-      border-radius: 2px;
-      text-shadow: 1px 1px 0 #000;
-    .sep
-      padding: 3px 3px;
-      min-width: 8px;
-      font-size: 12px
+      font-family: mono-font-family
+      background: accent-blue
+      color: light-grey
+      border-radius: 2px
+      text-shadow: 1px 1px 0 #222
+      box-shadow: inset 1px 1px 1px #444
+    td:first-child
+      text-align: right
+      padding-right: 14px
 
 .modal-footer
   padding: 10px 15px
