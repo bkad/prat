@@ -327,12 +327,13 @@ button, select
     border-radius: 2px
     overflow-x: auto
   .channel-mention
-    font-weight: bold
     color: accent-blue
+    border: 1px solid lighten(accent-blue, 60%)
+    padding: 0 2px
     cursor: pointer
+    border-radius: 3px
     &:hover
-      color: lighten(accent-blue, 20%)
-      text-decoration: underline
+      background-color: lighten(accent-blue, 97%)
   .user-mention
     font-weight: bold
   .its-you

@@ -14,11 +14,12 @@ class HtmlPygmentsRenderer(HtmlRenderer):
     escaped_text = cgi.escape(text)
 
     # mark up user mentions (@username)
-    escaped_text = re.sub(r'(@)([a-zA-Z0-9_.-]+)',
+    escaped_text = re.sub(r'(@)([\w.-]+)',
                           r'<span class="user-mention" data-username="\2">\1\2</span>',
                           escaped_text)
-    # mark up channel names (#channelname)
-    escaped_text = re.sub(r'(#)([a-zA-Z0-9_.-]+)',
+    # mark up channel names (#channelname). Channel name must have at least one letter to avoid the common
+    # case of '#123'.
+    escaped_text = re.sub(r'(#)([\w.-]*[a-zA-Z][\w.-]*)',
                           r'<span class="channel-mention" data-channelname="\2">\1\2</span>',
                           escaped_text)
     for string_filter in current_app.config["STRING_FILTERS"]:

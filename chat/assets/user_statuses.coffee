@@ -1,12 +1,12 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub, @initialUsers, currentChannel, channelViewCollection) ->
+  constructor: (@messageHub, initialChannels, currentChannel, channelViewCollection) ->
     @views = {}
-    @init(currentChannel, channelViewCollection)
+    @init(currentChannel, channelViewCollection, initialChannels)
 
-  init: (currentChannel, channelViewCollection) ->
-    for channel, users of @initialUsers
+  init: (currentChannel, channelViewCollection, initialChannels) ->
+    for channel in initialChannels
       @addUserStatusesView(channel)
       @displayUserStatuses(channel) if channel is currentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
@@ -38,10 +38,6 @@ class window.ChannelUsers
     collection = @views[channel].collection
     for user in users
       collection.add(user) unless collection.get(user.email)
-
-  populateInitialUserStatuses: =>
-    for channel, users of @initialUsers
-      @addUserStatusesIfNecessary(users, channel)
 
   addUserStatusesView: (channel) =>
     usersCollection = new UserStatusCollection

@@ -1,4 +1,4 @@
-from flask import Blueprint, g, render_template, request, flash, session, redirect, current_app
+from flask import Blueprint, g, render_template, request, session, redirect, current_app
 from flaskext.openid import OpenID
 from hashlib import md5
 from chat.datastore import db, add_user_to_channel
@@ -54,11 +54,9 @@ def create_or_login(resp):
       send_join_channel(channel, user_object, push_socket)
     push_socket.close()
     g.user = user_object
-  flash(u'Successfully logged in')
   return redirect(oid.get_next_url())
 
 @auth.route('/logout')
 def logout():
     session.pop("email", None)
-    flash(u'You were signed out')
     return redirect(oid.get_next_url())

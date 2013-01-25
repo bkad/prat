@@ -14,8 +14,13 @@ def user_status():
   return json.dumps(user_statuses)
 
 @api.route("/messages/<path:channel>")
-def messages(channel):
+def channel_messages(channel):
   return json.dumps(get_recent_messages(channel))
+
+@api.route("/messages")
+def messages():
+  messages = { channel: get_recent_messages(channel) for channel in g.user["channels"] }
+  return json.dumps(messages)
 
 @api.route("/messages_since/<message_id>")
 def messages_since_id(message_id):

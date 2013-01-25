@@ -1,7 +1,7 @@
 from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
-from flask.ext.openid import OpenID
+from chat.views.auth import oid
 from chat.datastore import db
 from chat.crypto import check_request
 import gevent.monkey
@@ -15,8 +15,6 @@ DEFAULT_BLUEPRINTS = (
     (views.api, "/api", "login_required"),
     (views.auth, "/auth", None),
 )
-
-oid = OpenID()
 
 def create_app(config=None, app_name=None, blueprints=None):
   if app_name is None:

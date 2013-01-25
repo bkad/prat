@@ -1,9 +1,6 @@
 # coding=utf-8
 
-from pymongo import DESCENDING
 from flask import Blueprint, g, render_template, request, current_app
-from random import shuffle
-from chat.datastore import db, get_recent_messages, message_dict_from_event_object, get_channel_users
 from chat.views.assets import asset_url
 
 frontend = Blueprint("frontend", __name__)
@@ -16,6 +13,7 @@ vendor_js_files = [
   "jquery-1.8.2.min.js",
   "jquery-ui-1.8.23.min.js",
   "jquery.caret.js",
+  "jquery.hotkeys.js",
   "jquery.scrollTo.min.js",
   "bootstrap-transition.js",
   "bootstrap-alert.js",
@@ -30,12 +28,6 @@ vendor_js_files = [
 @frontend.route('/')
 def index():
   channels = g.user["channels"]
-
-  initial_messages = {}
-  initial_users = {}
-  for channel in channels:
-    initial_messages[channel] = get_recent_messages(channel)
-    initial_users[channel] = get_channel_users(channel)
 
   last_selected_channel = g.user["last_selected_channel"]
   username = g.user["email"].split("@")[0]
@@ -55,8 +47,6 @@ def index():
   stylus_files = ["style", "pygments", "tipsy_styles"]
 
   return render_template("index.htmljinja",
-                         initial_messages=initial_messages,
-                         initial_users=initial_users,
                          username=username,
                          email=g.user["email"],
                          channels=channels,

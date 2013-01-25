@@ -4,7 +4,7 @@ class window.MessageHub
   constructor: (@address, @reconnectTimeout, @pingInterval, @alertHelper) ->
     @timeoutIDs = []
     @pingIDs = []
-    @queueing = false
+    @queueing = true
     @reconnect = false
     @queue = []
 
@@ -109,3 +109,4 @@ class window.MessageHub
 
   blockDequeue: =>
     @blockingDequeue += 1
+    @currentlyBlockingDequeue += 1
