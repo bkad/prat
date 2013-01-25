@@ -106,11 +106,13 @@ class window.MessagesViewCollection extends Backbone.View
         @messageHub.unblockDequeue()
         # If we don't use a timeout here, the container size changes slightly as the rendering happens
         # so that by the time it's all done, we're no longer scrolled to the bottom
-        setTimeout((-> Util.scrollToBottom(animate: false)), 0)
-        # Remove the spinner and overlay
-        spinner.stop()
-        $("#spin-overlay").fadeOut(500)
-        $("#chat-text").focus()
+        setTimeout((->
+          Util.scrollToBottom(animate: false)
+          # Remove the spinner and overlay
+          spinner.stop()
+          $("#spin-overlay").fadeOut(200)
+          $("#chat-text").focus()
+        ), 0)
 
   appendMessages: (messages, options) =>
     for message in messages
