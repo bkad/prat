@@ -115,7 +115,7 @@
         <div class="channel-name">{{ last_selected_channel }}</div>
       </div>
       <div class="input-container">
-        <div class="chat-text-wrapper"><textarea class="mousetrap" id="chat-text"></textarea></div>
+        <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
         <div id="message-preview" class="modal fade" style="display:none">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">×</button>
