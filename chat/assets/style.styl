@@ -452,9 +452,21 @@ button, select
     line-height: 20px
     font-size: 16px
     font-weight: bold
-  p, pre
+  .keyboardHelp
     padding: 4px
-    padding-left: 10px
+    span
+      display: inline-block;
+      margin: 0;
+      padding: 3px 6px;
+      min-width: 10px;
+      text-align: center;
+      color: dark-grey
+    .keys
+      font-family: Monaco, "Liberation Mono", Courier, monospace;
+      background: dark-grey;
+      color: light-grey;
+      border-radius: 2px;
+      text-shadow: 1px 1px 0 #000;
 
 .modal-footer
   padding: 10px 15px
