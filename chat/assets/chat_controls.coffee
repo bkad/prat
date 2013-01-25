@@ -58,7 +58,7 @@ class window.ChatControls
         keys:['shift_/'],
         help:"Show help",
         showHelp: true,
-        action: -> $('#help').modal("show")
+        action: -> $('#help').modal("toggle")
     ]
     @initKeyBindings()
 
