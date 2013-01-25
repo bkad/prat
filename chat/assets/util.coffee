@@ -29,7 +29,7 @@ window.Util =
     # Scroll to message
     if options.animate
       @scrolling += 1
-      messageList.scrollTo(firstOffScreenMessage, {duration: 150, margin: true, onAfter: -> Util.scrolling -= 1})
+      messageList.scrollTo(firstOffScreenMessage, {duration: 50, margin: true, onAfter: -> Util.scrolling -= 1})
     else
       messageList.scrollTo(firstOffScreenMessage, { margin: true } )
 
@@ -64,7 +64,7 @@ window.Util =
       # Scroll to message
       if options.animate
         @scrolling += 1
-        messageList.scrollTo(firstOffScreenMessage, {offset:offset, duration: 150, margin: true, onAfter: -> Util.scrolling -= 1})
+        messageList.scrollTo(firstOffScreenMessage, {offset:offset, duration: 50, margin: true, onAfter: -> Util.scrolling -= 1})
       else
         messageList.scrollTo(firstOffScreenMessage, { offset:offset, margin: true })
 
