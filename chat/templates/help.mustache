@@ -6,7 +6,12 @@
   <div class="modal-body">
     <h4>Keyboard Shortcuts</h4>
     {{#bindings}}
-      <div class="keyboardHelp"><span class="keys">{{keys}}</span><span class="helpMsg">{{helpMsg}}</span></div>
+      <div class="keyboardHelp">
+        {{#keys}}
+          {{#key}}<span class="keys">{{key}}</span>{{/key}}
+          {{#sep}}<span class="sep">{{sep}}</span>{{/sep}}
+        {{/keys}}
+        <span class="helpMsg">{{helpMsg}}</span></div>
     {{/bindings}}
 </pre>
   </div>

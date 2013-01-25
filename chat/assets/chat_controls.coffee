@@ -49,8 +49,8 @@ class window.ChatControls
         action: => Util.scrollToBottom()
       ,
         keys:['return', '/'],
-        help:"Focus on chat box",
-        showHelp: false,
+        help:"Focus chat box",
+        showHelp: true,
         action: (e) ->
           e.preventDefault()
           $('#chat-text').focus()
@@ -196,7 +196,9 @@ class window.ChatControls
       if b.showHelp
         keys = []
         for key in b.keys
-          keys.push(key.replace('shift_/', '?').replace(/_(?!$)/g, " + "))
+          keys.push({key:key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
+          if key != b.keys[b.keys.length-1]
+            keys.push({sep: 'or'})
         helpDocumentation.push({keys:keys, helpMsg:b.help})
     rendered = Mustache.render($("#help-template").html(), bindings:helpDocumentation)
     $('body').append(rendered)
