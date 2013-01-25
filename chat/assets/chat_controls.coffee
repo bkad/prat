@@ -188,4 +188,3 @@ class window.ChatControls
     @setChatHistory(history)
     @chatHistoryOffset = -1
     @currentMessage = ""
-
