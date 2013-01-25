@@ -95,6 +95,8 @@ class window.MessagesViewCollection extends Backbone.View
     $("#message-preview").modal("show")
 
   appendInitialMessages: =>
+    target = $(".chat-column")[0]
+    spinner = new Spinner(Util.spinConfig).spin(target)
     $.ajax
       url: "/api/messages"
       dataType: "JSON"
@@ -103,6 +105,9 @@ class window.MessagesViewCollection extends Backbone.View
           @appendMessages(messages, quiet: true)
         @messageHub.unblockDequeue()
         Util.scrollToBottom(animate: false)
+        spinner.stop()
+        $("#spin-overlay").fadeOut(200)
+        $("#chat-text").focus()
 
   appendMessages: (messages, options) =>
     for message in messages

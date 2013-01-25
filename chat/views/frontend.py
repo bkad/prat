@@ -21,6 +21,7 @@ vendor_js_files = [
   "underscore-1.3.3-min.js",
   "backbone-0.9.2-min.js",
   "jquery.tipsy.js",
+  "spin.min.js",
 ]
 
 @frontend.route('/')
