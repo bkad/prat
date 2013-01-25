@@ -97,6 +97,7 @@
   </div>
   <div class="main-content {{ "collapse-left" if left_sidebar_closed else "" }}">
     <div class="chat-column {{ "collapse-right" if right_sidebar_closed else "" }}">
+      <div id="spin-overlay"></div>
       <div class="alert-container"></div>
       <div class="chat-controls">
         <button class="toggle-left-sidebar">

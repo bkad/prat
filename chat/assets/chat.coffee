@@ -95,6 +95,8 @@ class window.MessagesViewCollection extends Backbone.View
     $("#message-preview").modal("show")
 
   appendInitialMessages: =>
+    target = $(".chat-column")[0]
+    spinner = new Spinner(Util.spinConfig).spin(target)
     $.ajax
       url: "/api/messages"
       dataType: "JSON"
@@ -105,6 +107,10 @@ class window.MessagesViewCollection extends Backbone.View
         # If we don't use a timeout here, the container size changes slightly as the rendering happens
         # so that by the time it's all done, we're no longer scrolled to the bottom
         setTimeout((-> Util.scrollToBottom(animate: false)), 0)
+        # Remove the spinner and overlay
+        spinner.stop()
+        $("#spin-overlay").fadeOut(500)
+        $("#chat-text").focus()
 
   appendMessages: (messages, options) =>
     for message in messages
