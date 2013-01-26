@@ -22,6 +22,7 @@ vendor_js_files = [
   "backbone-0.9.2-min.js",
   "jquery.tipsy.js",
   "jquery.hotkeys.js",
+  "spin.min.js",
 ]
 
 @frontend.route('/')
