@@ -5,7 +5,7 @@ class window.ChatControls
     # index of current match].
     @currentAutocompletion = null
 
-  init: (leftSidebarClosed, rightSidebarClosed) ->
+  init: (leftSidebarClosed, rightSidebarClosed) =>
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
@@ -14,6 +14,9 @@ class window.ChatControls
     @chatText.on("keydown.return", @onChatSubmit)
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
+    @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
+    # Fix for jquery hotkeys messing up bootstrap modal dismissal
+    $(document).on("keydown.esc", (e) -> $('#help').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -21,6 +24,45 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
+    @globalBindings = [
+        keys:['shift_/'],
+        help:"Show this help dialog",
+        showHelp: true,
+        action: -> $('#help').modal("toggle")
+      ,
+        keys:['j'],
+        help:"Next message",
+        showHelp: true,
+        action: -> Util.scrollMessagesDown()
+      ,
+        keys:['k'],
+        help:"Previous message",
+        showHelp: true,
+        action: -> Util.scrollMessagesUp()
+      ,
+        keys:['shift_n'],
+        help:"Next channel",
+        showHelp: true,
+        action: => @channelViewCollection.nextChannel()
+      ,
+        keys:['shift_p'],
+        help:"Previous channel",
+        showHelp: true,
+        action: => @channelViewCollection.prevChannel()
+      ,
+        keys:['shift_g'],
+        help:"Scroll to bottom",
+        showHelp: true,
+        action: => Util.scrollToBottom()
+      ,
+        keys:['return', '/'],
+        help:"Focus chat box",
+        showHelp: true,
+        action: (e) ->
+          e.preventDefault()
+          $('#chat-text').focus()
+    ]
+    @initKeyBindings()
 
   onChatAutocomplete: (event) =>
     if event.which != 9
@@ -149,6 +191,23 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  initKeyBindings: () =>
+    helpDocumentation = []
+    for b in @globalBindings
+      if b.showHelp
+        keys = []
+        for key in b.keys
+          keys.push({key:key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
+          if key != b.keys[b.keys.length-1]
+            keys.push({sep: 'or'})
+        helpDocumentation.push({keys:keys, helpMsg:b.help})
+    rendered = Mustache.render($("#help-template").html(), bindings:helpDocumentation)
+    $('body').append(rendered)
+    $('#help').modal()
+    for b in @globalBindings
+      for key in b.keys
+        $(document).on('keydown.'+ key, b.action)
 
   getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))

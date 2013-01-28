@@ -409,7 +409,7 @@ button, select
     transition: opacity 0.15s linear
 
     &.in
-      opacity: 0.8
+      opacity: 0.4
 
 .modal
   position: fixed
@@ -447,6 +447,8 @@ button, select
     appearance: none
 
   h3
+    font: bold 30px "Oswald", sans-serif
+    text-transform: lowercase
     margin: 0
     line-height: 30px
     font-size: 24px
@@ -457,6 +459,23 @@ button, select
   overflow-y: auto
   max-height: 400px
   padding: 15px
+  &.keyboard-help
+    tr
+      line-height: 20px
+    span
+      padding: 2px 6px
+      margin: 2px 0
+      display: inline-block
+    .keys
+      font-family: mono-font-family
+      background: accent-blue
+      color: light-grey
+      border-radius: 2px
+      text-shadow: 1px 1px 0 #222
+      box-shadow: inset 1px 1px 1px #444
+    td:first-child
+      text-align: right
+      padding-right: 14px
 
 .modal-footer
   padding: 10px 15px

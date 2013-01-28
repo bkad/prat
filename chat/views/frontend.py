@@ -12,8 +12,8 @@ def read_template(template_name):
 vendor_js_files = [
   "jquery-1.8.2.min.js",
   "jquery-ui-1.8.23.min.js",
-  "jquery.hotkeys.js",
   "jquery.caret.js",
+  "jquery.scrollTo.min.js",
   "bootstrap-transition.js",
   "bootstrap-alert.js",
   "bootstrap-modal.js",
@@ -21,6 +21,7 @@ vendor_js_files = [
   "underscore-1.3.3-min.js",
   "backbone-0.9.2-min.js",
   "jquery.tipsy.js",
+  "jquery.hotkeys.js",
   "spin.min.js",
 ]
 
@@ -35,7 +36,7 @@ def index():
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
 
   mustache_templates = []
-  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button"]:
+  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "help"]:
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))

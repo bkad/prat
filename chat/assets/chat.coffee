@@ -46,7 +46,6 @@ class window.MessagesViewCollection extends Backbone.View
       success: (messages) =>
         @appendMessages(messages, quiet: true)
 
-
   removeChannel: (channel) =>
     @channelHash[channel].$el.remove()
     delete @channelHash[channel]
