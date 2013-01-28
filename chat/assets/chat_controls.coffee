@@ -77,8 +77,11 @@ class window.ChatControls
     # Getting the current line before doing regexes is an optimization
     currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
     users = []
-    users = for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
-      [model.attributes.username, model.attributes.name]
+    for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
+      # For some reason this collection sometimes has bad entries without username/name defined.
+      # TODO(caleb): remove this check once we figure out why that is and fix it.
+      if model.attributes.username?
+        users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
     if @currentAutocompletion == null
