@@ -55,6 +55,7 @@ button, select
   height: 100%
   width: 200px
   border-right: border-grey
+  overflow-y: auto
   &.closed { display: none }
   .logo-title
     font: bold 30px "Oswald", sans-serif
@@ -71,6 +72,7 @@ button, select
       height: 43px
       width: 100%
       cursor: default
+      white-space: nowrap
       .reorder
         cursor: ns-resize
         color: #bbb
@@ -165,6 +167,7 @@ button, select
   absolute: top right
   height: 100%
   width: 200px
+  overflow-y: auto
   &.closed { display: none }
   .channel-users
     &:not(.current) { display: none }
