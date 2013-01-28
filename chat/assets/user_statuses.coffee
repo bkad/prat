@@ -43,7 +43,7 @@ class window.ChannelUsers
     usersCollection = new UserStatusCollection
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
-    usersCollection.on("change add remove reset", usersView.render)
+    usersCollection.on("sort add remove reset", usersView.render)
     usersView.render()
     @views[channel] = usersView
 
