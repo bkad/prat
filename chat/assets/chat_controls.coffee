@@ -25,43 +25,43 @@ class window.ChatControls
     @currentMessage = ""
     @chatHistoryOffset = -1
     @globalBindings = [
-        keys:['shift_/'],
-        help:"Show this help dialog",
+        keys: ['shift_/'],
+        help: "Show this help dialog",
         showHelp: true,
         action: -> $('#help').modal("toggle")
       ,
-        keys:['j'],
-        help:"Next message",
+        keys: ['j'],
+        help: "Next message",
         showHelp: true,
         action: -> Util.scrollMessagesDown()
       ,
-        keys:['k'],
-        help:"Previous message",
+        keys: ['k'],
+        help: "Previous message",
         showHelp: true,
         action: -> Util.scrollMessagesUp()
       ,
-        keys:['shift_n'],
-        help:"Next channel",
+        keys: ['shift_n'],
+        help: "Next channel",
         showHelp: true,
         action: => @channelViewCollection.cycleChannel(1)
       ,
-        keys:['shift_p'],
-        help:"Previous channel",
+        keys: ['shift_p'],
+        help: "Previous channel",
         showHelp: true,
         action: => @channelViewCollection.cycleChannel(-1)
       ,
-        keys:['shift_j'],
-        help:"Join a new channel",
+        keys: ['shift_j'],
+        help: "Join a new channel",
         showHelp: true,
         action: -> $(".add-channel-container").click()
       ,
-        keys:['shift_g'],
-        help:"Scroll to bottom",
+        keys: ['shift_g'],
+        help: "Scroll to bottom",
         showHelp: true,
         action: => Util.scrollToBottom()
       ,
-        keys:['return', '/'],
-        help:"Focus chat box",
+        keys: ['return', '/'],
+        help: "Focus chat box",
         showHelp: true,
         action: (e) ->
           e.preventDefault()
@@ -203,11 +203,11 @@ class window.ChatControls
       if b.showHelp
         keys = []
         for key in b.keys
-          keys.push({key:key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
+          keys.push({key: key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
           if key != b.keys[b.keys.length-1]
             keys.push({sep: 'or'})
-        helpDocumentation.push({keys:keys, helpMsg:b.help})
-    rendered = Mustache.render($("#help-template").html(), bindings:helpDocumentation)
+        helpDocumentation.push({keys: keys, helpMsg: b.help})
+    rendered = Mustache.render($("#help-template").html(), bindings: helpDocumentation)
     $('body').append(rendered)
     $('#help').modal()
     for b in @globalBindings
