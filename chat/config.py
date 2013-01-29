@@ -22,7 +22,10 @@ class DefaultConfig(object):
   PUSH_ADDRESS = "tcp://localhost:5666"
   SUBSCRIBE_ADDRESS = "tcp://localhost:5667"
   DEFAULT_CHANNELS = ["general"]
-  STRING_FILTERS = [string_filters.replace_shas_with_barkeep_links, string_filters.replace_jira_links]
+  STRING_FILTERS =  [ string_filters.replace_shas_with_github_links,
+                     string_filters.replace_shas_with_barkeep_links,
+                     string_filters.replace_jira_links
+                    ]
   WEBSOCKET_KEEP_ALIVE_INTERVAL = 30000 # milliseconds
   REDIS_USER_CLIENT_TIMEOUT = 40 # seconds
 
