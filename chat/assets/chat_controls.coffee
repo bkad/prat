@@ -16,7 +16,7 @@ class window.ChatControls
     @chatText.on("keydown.down", @onNextChatHistory)
     @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
-    $(document).on("keydown.esc", (e) -> $('#help').modal('hide'); $('#message-preview').modal('hide');)
+    $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -28,7 +28,7 @@ class window.ChatControls
         keys: ['shift_/'],
         help: "Show this help dialog",
         showHelp: true,
-        action: -> $('#help').modal("toggle")
+        action: -> $('#info').modal("toggle")
       ,
         keys: ['j'],
         help: "Next message",
@@ -206,10 +206,10 @@ class window.ChatControls
           keys.push({key: key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
           if key != b.keys[b.keys.length-1]
             keys.push({sep: 'or'})
-        helpDocumentation.push({keys: keys, helpMsg: b.help})
-    rendered = Mustache.render($("#help-template").html(), bindings: helpDocumentation)
+        helpDocumentation.push({keys:keys, purpose: b.help})
+    rendered = Mustache.render($("#info-template").html(), bindings: helpDocumentation)
     $('body').append(rendered)
-    $('#help').modal()
+    $('#info').modal()
     for b in @globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)
