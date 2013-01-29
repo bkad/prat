@@ -43,12 +43,12 @@ class window.ChannelViewCollection extends Backbone.View
     $(".channel-controls-container").prepend(@$el)
     @$el.disableSelection()
 
-    @newChannelShown = false
-    $('.add-channel-container').on "click", @toggleNewChannel
+    @newChannelState = "hidden"
+    $('.add-channel-container').on "click", => @toggleNewChannel()
     $(".new-channel-name").on("click", (e) -> e.stopPropagation())
       .on("keydown.esc", => @hideNewChannel())
       .on("keydown.return", @onSubmitChannel)
-      .on("blur", => @hideNewChannel() if @newChannelShown)
+      .on("blur", => @hideNewChannel() if @newChannelState == "shown")
     @render()
 
   onSubmitChannel: (event) =>
@@ -84,10 +84,12 @@ class window.ChannelViewCollection extends Backbone.View
     @messageHub.switchChannel(@currentChannel)
 
   toggleNewChannel: =>
-    if @newChannelShown then @hideNewChannel() else @showNewChannel()
+    switch @newChannelState
+      when "hidden" then @showNewChannel()
+      when "shown" then @hideNewChannel()
 
   showNewChannel: =>
-    @newChannelShown = true
+    @newChannelState = "between"
     $(".plus-label").removeClass("unrotated")
     $(".plus-label").addClass("rotated")
     $(".add-channel-container")
@@ -96,10 +98,11 @@ class window.ChannelViewCollection extends Backbone.View
         channelName = $(".new-channel-name")
         channelName.show()
         channelName.focus()
+        @newChannelState = "shown"
       )
 
   hideNewChannel: (options={ animate: true }) =>
-    @newChannelShown = false
+    @newChannelState = "between"
     newChannelName = $('.new-channel-name')
     newChannelName.blur()
     newChannelName.hide()
@@ -108,10 +111,14 @@ class window.ChannelViewCollection extends Backbone.View
     $(".plus-label").removeClass("rotated")
     if options.animate
       newChannelUI.stop(true)
-                  .animate(width: "15px", 150, -> newChannelName.hide())
+        .animate(width: "15px", 150, =>
+          newChannelName.hide()
+          @newChannelState = "hidden"
+        )
     else
       newChannelName.hide()
       newChannelUI.width(15)
+      @newChannelState = "hidden"
 
   highlightChannel: (channel) ->
     @channelsHash[channel].highlight()
