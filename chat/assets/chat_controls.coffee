@@ -43,12 +43,12 @@ class window.ChatControls
         keys:['shift_n'],
         help:"Next channel",
         showHelp: true,
-        action: => @channelViewCollection.nextChannel()
+        action: => @channelViewCollection.cycleChannel(1)
       ,
         keys:['shift_p'],
         help:"Previous channel",
         showHelp: true,
-        action: => @channelViewCollection.prevChannel()
+        action: => @channelViewCollection.cycleChannel(-1)
       ,
         keys:['shift_g'],
         help:"Scroll to bottom",
