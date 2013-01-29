@@ -11,10 +11,9 @@ import hashlib
 assets = Blueprint("assets", __name__)
 
 def get_assets_cache():
-  context = _app_ctx_stack.top
-  cache = getattr(context, "prat_assets_cache", None)
+  cache = getattr(current_app, "prat_assets_cache", None)
   if cache is None:
-    cache = context.prat_assets_cache = defaultdict(lambda: None)
+    cache = current_app.prat_assets_cache = defaultdict(lambda: None)
   return cache
 
 assets_cache = LocalProxy(get_assets_cache)
