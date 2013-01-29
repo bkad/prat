@@ -83,6 +83,7 @@ class window.MessagesViewCollection extends Backbone.View
       @channelViewCollection.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
+    return unless $message?
     if bottom
       Util.scrollToBottom(animate: true)
       $message.find("img").one("load", -> Util.scrollToBottom(animate: true))
@@ -131,9 +132,9 @@ class window.MessagesViewCollection extends Backbone.View
     mustached
 
   appendMessage: (message, messagePartial) =>
-    return if $("#" + message.id).length > 0
+    return if $("#" + message.message_id).length > 0
 
-    if message.datetime > @latestMessage.datetime
+    if message.datetime >= @latestMessage.datetime
       @latestMessage = message
 
     messagesList = @channelHash[message.channel].$el
