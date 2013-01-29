@@ -43,15 +43,20 @@ class window.ChannelViewCollection extends Backbone.View
     $(".channel-controls-container").prepend(@$el)
     @$el.disableSelection()
 
-    $('.add-channel-container').one("click", @showNewChannel)
-    $('.new-channel-name').click((event) -> event.stopPropagation())
-    $(".new-channel-name").on("keydown.return", @onSubmitChannel)
+    @newChannelShown = false
+    $('.add-channel-container').on "click", @toggleNewChannel
+    $(".new-channel-name").on("click", (e) -> e.stopPropagation())
+      .on("keydown.esc", => @hideNewChannel())
+      .on("keydown.return", @onSubmitChannel)
+      .on("blur", => @hideNewChannel() if @newChannelShown)
     @render()
 
   onSubmitChannel: (event) =>
     newChannel = event.target.value
+    $(".new-channel-name").val("")
     if newChannel.replace(/\s*$/, "") isnt ""
       @joinChannel(newChannel)
+      @channelsHash[newChannel].onClick()
     @hideNewChannel(animate: false)
 
   render: =>
@@ -78,19 +83,25 @@ class window.ChannelViewCollection extends Backbone.View
     @trigger("changeCurrentChannel", nextCurrentChannel)
     @messageHub.switchChannel(@currentChannel)
 
+  toggleNewChannel: =>
+    if @newChannelShown then @hideNewChannel() else @showNewChannel()
+
   showNewChannel: =>
+    @newChannelShown = true
     $(".plus-label").removeClass("unrotated")
     $(".plus-label").addClass("rotated")
     $(".add-channel-container")
       .stop(true)
-      .animate(width: "133px", 150, ->
-        $(".new-channel-name").show()
-        $(".new-channel-name").focus()
-      ).one("click", => @hideNewChannel())
+      .animate(width: "133px", 150, =>
+        channelName = $(".new-channel-name")
+        channelName.show()
+        channelName.focus()
+      )
 
   hideNewChannel: (options={ animate: true }) =>
+    @newChannelShown = false
     newChannelName = $('.new-channel-name')
-    newChannelName.val('')
+    newChannelName.blur()
     newChannelName.hide()
     newChannelUI = $(".add-channel-container")
     $(".plus-label").addClass("unrotated")
@@ -101,7 +112,6 @@ class window.ChannelViewCollection extends Backbone.View
     else
       newChannelName.hide()
       newChannelUI.width(15)
-    newChannelUI.one("click", @showNewChannel)
 
   highlightChannel: (channel) ->
     @channelsHash[channel].highlight()

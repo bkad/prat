@@ -50,6 +50,11 @@ class window.ChatControls
         showHelp: true,
         action: => @channelViewCollection.cycleChannel(-1)
       ,
+        keys:['shift_j'],
+        help:"Join a new channel",
+        showHelp: true,
+        action: -> $(".add-channel-container").click()
+      ,
         keys:['shift_g'],
         help:"Scroll to bottom",
         showHelp: true,
