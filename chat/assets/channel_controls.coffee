@@ -45,11 +45,13 @@ class window.ChannelViewCollection extends Backbone.View
 
     $('.add-channel-container').one("click", @showNewChannel)
     $('.new-channel-name').click((event) -> event.stopPropagation())
+    $(".new-channel-name").on("keydown.esc", => @hideNewChannel())
     $(".new-channel-name").on("keydown.return", @onSubmitChannel)
     @render()
 
   onSubmitChannel: (event) =>
     newChannel = event.target.value
+    $(".new-channel-name").val("")
     if newChannel.replace(/\s*$/, "") isnt ""
       @joinChannel(newChannel)
     @hideNewChannel(animate: false)
@@ -83,14 +85,16 @@ class window.ChannelViewCollection extends Backbone.View
     $(".plus-label").addClass("rotated")
     $(".add-channel-container")
       .stop(true)
-      .animate(width: "133px", 150, ->
-        $(".new-channel-name").show()
-        $(".new-channel-name").focus()
-      ).one("click", => @hideNewChannel())
+      .animate(width: "133px", 150, =>
+        channelName = $(".new-channel-name")
+        channelName.show()
+        channelName.focus()
+        channelName.one "blur", => @hideNewChannel()
+      ).one "click", => @hideNewChannel()
 
   hideNewChannel: (options={ animate: true }) =>
     newChannelName = $('.new-channel-name')
-    newChannelName.val('')
+    newChannelName.blur()
     newChannelName.hide()
     newChannelUI = $(".add-channel-container")
     $(".plus-label").addClass("unrotated")
