@@ -198,7 +198,7 @@ button, select
   top: 30px
   bottom: 0px
   background-color: black
-  opacity: 0.1
+  opacity: 0.4
   z-index: 10
 
 .chat-column
@@ -415,14 +415,12 @@ button, select
   bottom: 0
   left: 0
   z-index: 1040
-  background-color: #000000
+  background-color: black
 
   &.fade
     opacity: 0
-    transition: opacity 0.15s linear
-
-    &.in
-      opacity: 0.4
+    transition: opacity 100ms linear
+    &.in { opacity: 0.4 }
 
 .modal
   position: fixed
@@ -440,11 +438,11 @@ button, select
   outline: none
 
   &.fade
-    opacity 0;
-    transition: opacity .15s linear
+    opacity 0
+    transition: opacity 100ms linear
 
     &.in
-      opacity 1;
+      opacity 1
       top: 10%
 
 .modal-header
