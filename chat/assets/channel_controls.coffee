@@ -125,7 +125,7 @@ class window.ChannelViewCollection extends Backbone.View
     @$el.append(view.$el)
 
   joinChannel: (channel) =>
-    if not _.include(@channels, channel)
+    if channel not in @channels
       @channels.push(channel)
       view = @channelsHash[channel] = new ChannelView(name: channel)
       @addNewChannelView(view)
