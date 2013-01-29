@@ -71,3 +71,7 @@ def write_config():
 
 def rsync():
   rsync_project(remote_dir="/home/ubuntu", exclude=".git")
+
+def deploy():
+  write_config()
+  rsync()
