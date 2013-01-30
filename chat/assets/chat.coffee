@@ -1,7 +1,7 @@
 class window.MessageNotification extends Backbone.View
 
   tagname: "div"
-  className: "message-notification fade"
+  className: "message-notification"
 
   initialize: (options) ->
     @chatControls = options.chatControls
