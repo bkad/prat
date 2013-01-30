@@ -1,7 +1,7 @@
 class window.MessageNotification extends Backbone.View
 
   tagname: "div"
-  className: "message-notification"
+  className: "message-notification fade"
 
   initialize: (options) ->
     @chatControls = options.chatControls
@@ -24,6 +24,7 @@ class window.MessagesView extends Backbone.View
   handleMouseScroll: =>
     if Util.scrolledToBottom()
       @notifier.deactivate()
+      $('.chat-messages.current>.message-container.unseen').removeClass("unseen")
 
 class window.MessagesViewCollection extends Backbone.View
   tagName: "div"
@@ -69,6 +70,7 @@ class window.MessagesViewCollection extends Backbone.View
   scrollToBottom: (options = animate: true) =>
     if not Util.scrolledToBottom()
       @notifier.deactivate()
+      $('.chat-messages.current>.message-container.unseen').removeClass("unseen")
       Util.scrollToBottom(options)
 
   scrollMessagesUp: (options = animate: true) =>
@@ -76,6 +78,7 @@ class window.MessagesViewCollection extends Backbone.View
 
   scrollMessagesDown: (options = animate: true) =>
     if Util.scrollMessagesDown()
+      $('.chat-messages.current>.message-container.unseen').removeClass("unseen")
       @notifier.deactivate()
 
   addChannel: (channel) =>
@@ -129,6 +132,7 @@ class window.MessagesViewCollection extends Backbone.View
       @scrollToBottom(animate: true)
       $message.find("img").one("load", => @scrollToBottom(animate: true))
     else
+      $message.parent().addClass("unseen")
       @notifier.activate()
 
   onPreviewMessage: (event, messageObject) =>
