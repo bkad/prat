@@ -1,22 +1,50 @@
-<div id="info" data-show="false" class="modal fade" tabindex="-1" style="display: none">
+<div id="info" data-show="false" class="modal fade user-guide" tabindex="-1" style="display: none">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3>Keyboard Shortcuts</h3>
+    <h3>Prat User Guide</h3>
   </div>
-  <div class="modal-body keyboard-shortcuts">
-    <table>
-      {{#bindings}}
-        <tr>
-          <td>
-            {{#keys}}
-              {{#key}}<span class="keys">{{key}}</span>{{/key}}
-              {{#sep}}<span class="sep">{{sep}}</span>{{/sep}}
-            {{/keys}}
-          </td>
-          <td>{{purpose}}</td>
-        </tr>
-      {{/bindings}}
-      <tr><td><span class="keys">escape</span></td><td>Unfocus the chat box or exit any dialog</td></tr>
-    </table>
+  <div id="info-body">
+    <div id="info-nav" class="column">
+      <ul>
+        <li data-contents-pane="channels">Channels</li>
+        <li data-contents-pane="markdown">Markdown</li>
+        <li class="selected" data-contents-pane="keyboard-shortcuts">Shortcuts</li>
+      </ul>
+    </div>
+    <div id="info-contents" class="column">
+
+      <div class="info-contents-pane channels">
+        Since, in the long run, every planetary civilization will be endangered by impacts from space, every
+        surviving civilization is obliged to become spacefaring--not because of exploratory or romantic zeal,
+        but for the most practical reason imaginable: staying alive... If our long-term survival is at stake,
+        we have a basic responsibility to our species to venture to other worlds.
+      </div>
+
+      <div class="info-contents-pane markdown">
+        The powered flight took a total of about eight and a half minutes. It seemed to me it had gone by in a
+        lash. We had gone from sitting still on the launch pad at the Kennedy Space Center to traveling at
+        17,500 miles an hour in that eight and a half minutes. It is still mind-boggling to me. I recall
+        making some statement on the air-to-ground radio for the benefit of my fellow astronauts, who had also
+        been in the program a long time, that it was well worth the wait.
+      </div>
+
+      <div class="info-contents-pane keyboard-shortcuts selected">
+        <table>
+          {{#bindings}}
+            <tr>
+              <td>
+                {{#keys}}
+                  {{#key}}<span class="keys">{{key}}</span>{{/key}}
+                  {{#sep}}<span class="sep">{{sep}}</span>{{/sep}}
+                {{/keys}}
+              </td>
+              <td>{{purpose}}</td>
+            </tr>
+          {{/bindings}}
+          <tr><td><span class="keys">escape</span></td><td>Unfocus the chat box or exit any dialog</td></tr>
+        </table>
+      </div>
+
+    </div>
   </div>
 </div>
