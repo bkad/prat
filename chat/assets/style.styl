@@ -57,9 +57,38 @@ button, select
   border-right: border-grey
   overflow-y: auto
   &.closed { display: none }
-  .logo-title
-    font: bold 30px "Oswald", sans-serif
-    div { margin: 30px 30px 30px 45px }
+  header
+    text-align: center
+    margin: 8px 0 15px 0
+    display: table
+    width: 100%
+    .logo-title
+      text-align: left
+      div { padding: 34px 0 0 30px }
+      display: table-cell
+      font: bold 30px "Oswald", sans-serif
+    .control-button-container
+      display: table-cell
+      vertical-align: top
+      padding-top: 15px
+      width: 40px
+      button
+        padding: 0 3px
+        border: none
+        background: transparent
+        color: dark-grey
+        opacity: 0.2
+        transition: opacity 100ms linear
+        &:hover
+          box-shadow: none
+          color: accent-blue
+          opacity: 1
+        margin: 2px 0px
+        font-size: 20px
+    &:hover
+      button
+        opacity: 1
+
   .channel-controls-container
     margin-left: -3px
     width: 93%
@@ -198,7 +227,7 @@ button, select
   top: 30px
   bottom: 0px
   background-color: black
-  opacity: 0.1
+  opacity: 0.4
   z-index: 10
 
 .chat-column
@@ -276,12 +305,6 @@ button, select
     margin-top: 5px
     margin-bottom: 5px
     text-align: center
-  .control-button-container
-    absolute: right 100px
-    button
-      margin: 2px 0px
-      font-size: 20px
-
 
 .chat-messages
   &:not(.current)
@@ -318,7 +341,21 @@ button, select
     font-size: 9px
     margin-right: 5px
 
-.message
+.message, .markdown
+  &.markdown
+    line-height: 20px
+    li
+      margin-bottom: 10px
+  h1, h2, h3, h4, h5
+    font-weight: bold
+  h1
+    font-size: 20px
+    margin: 10px 0
+  h2
+    font-size: 16px
+    margin: 10px 0
+  h3
+    margin: 5px 0
   img
     max-width: 600px
     max-height: 600px
@@ -332,6 +369,12 @@ button, select
     color: lighten(dark-grey, 15%)
   p, ol, div, ul
     margin-bottom: 5px
+  ul, ol
+    padding-left: 15px
+  ul
+    list-style-type: disc
+  ol
+    list-style-type: decimal
   hr
     border: none
     border-top: 1px dashed #ddd
@@ -362,7 +405,7 @@ button, select
   .its-you
     color: accent-blue
   display: inline
-  &:last-child
+  &.messages:last-child
     p, ol, div, ul
       margin-bottom: 0
 
@@ -415,14 +458,12 @@ button, select
   bottom: 0
   left: 0
   z-index: 1040
-  background-color: #000000
+  background-color: black
 
   &.fade
     opacity: 0
-    transition: opacity 0.15s linear
-
-    &.in
-      opacity: 0.4
+    transition: opacity 100ms linear
+    &.in { opacity: 0.4 }
 
 .modal
   position: fixed
@@ -431,6 +472,9 @@ button, select
   z-index: 1050
   width: 560px
   margin-left: -280px
+  &.user-guide
+    width: 700px
+    margin-left: -350px
   background-color: #fff
   border: 1px solid rgba(0, 0, 0, 0.3)
 
@@ -440,11 +484,11 @@ button, select
   outline: none
 
   &.fade
-    opacity 0;
-    transition: opacity .15s linear
+    opacity 0
+    transition: opacity 100ms linear
 
     &.in
-      opacity 1;
+      opacity 1
       top: 10%
 
 .modal-header
@@ -472,23 +516,67 @@ button, select
   overflow-y: auto
   max-height: 400px
   padding: 15px
-  &.keyboard-help
-    tr
-      line-height: 20px
-    span
-      padding: 2px 6px
-      margin: 2px 0
-      display: inline-block
-    .keys
-      font-family: mono-font-family
-      background: accent-blue
+
+#info-body
+  width: 100%
+  display: table
+  .column
+    display: table-cell
+    vertical-align: top
+
+#info-nav
+  width: 150px
+  border-right: 1px solid #eee
+  padding-top: 15px
+  user-select: none
+  ul > li
+    display: block
+    width: 80px
+    margin: 6px auto
+    color: accent-blue
+    font-size: 14px
+    line-height: 32px
+    padding: 0 12px
+    border-radius: 2px
+    cursor: pointer
+    &.selected
+      background-color: accent-blue
       color: light-grey
-      border-radius: 2px
-      text-shadow: 1px 1px 0 #222
-      box-shadow: inset 1px 1px 1px #444
-    td:first-child
-      text-align: right
-      padding-right: 14px
+    &:not(.selected):hover
+      background-color: darken(light-grey, 3%)
+
+#info-contents { position: relative }
+
+#info-body
+  height: 350px
+  .info-contents-pane
+    padding: 15px
+    position: absolute
+    height: @height - (2 * @padding)
+    overflow-y: auto
+    opacity: 0
+    transition: opacity 100ms linear
+    pointer-events: none
+    &.selected
+      opacity: 1
+      pointer-events: all
+    &.keyboard-shortcuts
+      tr
+        line-height: 20px
+      span
+        padding: 2px 6px
+        margin: 2px 0
+        display: inline-block
+      .keys
+        font-family: mono-font-family
+        background: accent-blue
+        color: light-grey
+        border-radius: 2px
+        text-shadow: 1px 1px 0 #222
+        box-shadow: inset 1px 1px 1px #444
+      td:first-child
+        text-align: right
+        padding-right: 14px
 
 .modal-footer
   padding: 10px 15px

@@ -1,4 +1,48 @@
 class window.ChatControls
+  @globalBindings: [
+      keys: ['shift_/'],
+      help: "Show this help dialog",
+      showHelp: true,
+      action: -> UserGuide.showShortcuts()
+    ,
+      keys: ['j'],
+      help: "Next message",
+      showHelp: true,
+      action: -> Util.scrollMessagesDown()
+    ,
+      keys: ['k'],
+      help: "Previous message",
+      showHelp: true,
+      action: -> Util.scrollMessagesUp()
+    ,
+      keys: ['shift_n'],
+      help: "Next channel",
+      showHelp: true,
+      action: -> channelViewCollection.cycleChannel(1)
+    ,
+      keys: ['shift_p'],
+      help: "Previous channel",
+      showHelp: true,
+      action: -> channelViewCollection.cycleChannel(-1)
+    ,
+      keys: ['shift_j'],
+      help: "Join a new channel",
+      showHelp: true,
+      action: -> $(".add-channel-container").click()
+    ,
+      keys: ['shift_g'],
+      help: "Scroll to bottom",
+      showHelp: true,
+      action: => Util.scrollToBottom()
+    ,
+      keys: ['return', '/'],
+      help: "Focus chat box",
+      showHelp: true,
+      action: (e) ->
+        e.preventDefault()
+        $('#chat-text').focus()
+  ]
+
   constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
@@ -16,7 +60,7 @@ class window.ChatControls
     @chatText.on("keydown.down", @onNextChatHistory)
     @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
-    $(document).on("keydown.esc", (e) -> $('#help').modal('hide'); $('#message-preview').modal('hide');)
+    $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
     @messageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -24,49 +68,6 @@ class window.ChatControls
     $("#preview-submit").click(@onPreviewSend)
     @currentMessage = ""
     @chatHistoryOffset = -1
-    @globalBindings = [
-        keys: ['shift_/'],
-        help: "Show this help dialog",
-        showHelp: true,
-        action: -> $('#help').modal("toggle")
-      ,
-        keys: ['j'],
-        help: "Next message",
-        showHelp: true,
-        action: -> Util.scrollMessagesDown()
-      ,
-        keys: ['k'],
-        help: "Previous message",
-        showHelp: true,
-        action: -> Util.scrollMessagesUp()
-      ,
-        keys: ['shift_n'],
-        help: "Next channel",
-        showHelp: true,
-        action: => @channelViewCollection.cycleChannel(1)
-      ,
-        keys: ['shift_p'],
-        help: "Previous channel",
-        showHelp: true,
-        action: => @channelViewCollection.cycleChannel(-1)
-      ,
-        keys: ['shift_j'],
-        help: "Join a new channel",
-        showHelp: true,
-        action: -> $(".add-channel-container").click()
-      ,
-        keys: ['shift_g'],
-        help: "Scroll to bottom",
-        showHelp: true,
-        action: => Util.scrollToBottom()
-      ,
-        keys: ['return', '/'],
-        help: "Focus chat box",
-        showHelp: true,
-        action: (e) ->
-          e.preventDefault()
-          $('#chat-text').focus()
-    ]
     @initKeyBindings()
 
   onChatAutocomplete: (event) =>
@@ -198,19 +199,7 @@ class window.ChatControls
     document.cookie = "leftSidebar=closed"
 
   initKeyBindings: () =>
-    helpDocumentation = []
-    for b in @globalBindings
-      if b.showHelp
-        keys = []
-        for key in b.keys
-          keys.push({key: key.replace('shift_/', '?').replace(/_(?!$)/g, " + ")})
-          if key != b.keys[b.keys.length-1]
-            keys.push({sep: 'or'})
-        helpDocumentation.push({keys: keys, helpMsg: b.help})
-    rendered = Mustache.render($("#help-template").html(), bindings: helpDocumentation)
-    $('body').append(rendered)
-    $('#help').modal()
-    for b in @globalBindings
+    for b in ChatControls.globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)
 

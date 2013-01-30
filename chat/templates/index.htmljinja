@@ -56,6 +56,7 @@
                                       {{ left_sidebar_closed|tojson }},
                                       {{ right_sidebar_closed|tojson }})
 
+      UserGuide.init()
       sound = new Sound("/static/audio/ping.mp3")
 
       dateTimeHelper = new DateTimeHelper()
@@ -85,9 +86,24 @@
 </head>
 <body>
   <div class="left-sidebar {{ "closed" if left_sidebar_closed else "" }}">
-    <div class="logo-title">
-      <div>{{ title }}</div>
-    </div>
+    <header>
+      <div class="control-button-container">
+        <button id="user-info-button" class="west" rel="tipsy" title="User guide">
+          <span class="ss-standard">question</span>
+        </button>
+        <button id="settings-button" class="west" rel="tipsy" title="Preferences">
+          <span class="ss-standard">gear</span>
+        </button>
+        <a href="{{ url_for("auth.logout") }}">
+          <button id="logout" class="west" rel="tipsy" title="Logout">
+            <span class="ss-standard">logout</span>
+          </button>
+        </a>
+      </div>
+      <div class="logo-title">
+        <div>{{ title }}</div>
+      </div>
+    </header>
     <div class="channel-controls-container">
       <div class="add-channel-container">
         <div class="plus-label">+</div>
@@ -103,13 +119,6 @@
         <button class="toggle-left-sidebar">
           <span class="ss-standard">{{"right" if left_sidebar_closed else "left"}}</span>
         </button>
-        <div class="control-button-container">
-          <a href="{{ url_for("auth.logout") }}">
-            <button id="logout" class="north" rel="tipsy" title="Logout">
-              <span class="ss-standard">logout</span>
-            </button>
-          </a>
-        </div>
         <button class="toggle-right-sidebar">
           <span class="ss-standard">{{ "left" if right_sidebar_closed else "right" }}</span>
         </button>

@@ -1,0 +1,150 @@
+<div id="info" data-show="false" class="modal fade user-guide" tabindex="-1" style="display: none">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Prat User Guide</h3>
+  </div>
+  <div id="info-body">
+    <div id="info-nav" class="column">
+      <ul>
+        <li class="selected" data-contents-pane="channels">Channels</li>
+        <li data-contents-pane="markdown-cheatsheet">Markdown</li>
+        <li data-contents-pane="keyboard-shortcuts">Shortcuts</li>
+        <li data-contents-pane="faq">FAQ</li>
+      </ul>
+    </div>
+    <div id="info-contents" class="column">
+
+      <div class="info-contents-pane markdown channels">
+        At any time, you are a member of some number of channels indicated by the bars on the left side. Your current channel is colored blue. You can switch between channels by clicking on them, or by using the `shift+p` and `shift+n` shortcuts.
+
+        ![channel view](/static/images/channel-general.png)
+
+        Join a new channel by clicking the new channel button, indicated by the **+** sign.
+
+        ![add a channel](/static/images/channel-add.png)
+
+        You can leave channels by hovering over the channel button and clicking on the trash can. Similarly, can use the drag handle to reorder channels.
+
+        ![reorder channels](/static/images/channel-reorder.png)
+
+        You can link to channels by using the syntax `#channel-name` in your message. This will render as #channel-name, a link to that channel. Use this to invite people to join you in a different channel.
+      </div>
+
+      <div class="info-contents-pane markdown markdown-cheatsheet">
+        Messages in Prat are written in a [Markdown](http://daringfireball.net/projects/markdown/syntax) variant similar to [Github-formatted markdown](http://github.github.com/github-flavored-markdown/). There are a couple of features that help when entering complex markup into Prat:
+
+        * Hitting `shift+enter` enters a newline instead of sending the message
+        * You can hit the Preview button to see how a message will be rendered before sending it.
+
+        Below you can see some of the more useful markup features that are available in Prat:
+
+        ## Text formatting
+
+            Text can be **bold** or *italic* (_this_ is also italic).
+
+        Text can be **bold** or *italic* (_this_ is also italic).
+
+        ## Usernames and channels
+
+        You can address someone directly in a message by typing `@username` -- this is displayed as @username. You can use tab completion to help you write the username quickly. A message addressed at you will have your username highlighted in blue, and will alert you with a pinging sound.
+
+        Channel links are written as `#roller-coasters`: #roller-coasters. This will be a link that takes you to that channel.
+
+        ## Links and images
+
+        URLs are turned into links automatically: http://google.com. You can make other links using the syntax `[link text](http://google.com)`: [link text](http://google.com).
+
+        Inline images take the syntax `![link text](/static/images/nyan.gif)`:
+
+        ![link text](/static/images/nyan.gif)
+
+        ## Quotes
+
+            > You can make block quotes by prefixing with '>'
+            >
+            > -- me
+
+        > You can make block quotes by prefixing with '>'
+        >
+        > -- me
+
+        ## Code
+
+            Inline code can be made with backticks, `like this`.
+
+        Inline code can be made with backticks, `like this`.
+
+        Code blocks are formed by indenting text by four or more spaces from the surrounding text, or by surrounding the block with three or more backticks:
+
+              def answer():
+                return 42
+
+            ```
+            def answer():
+              return 42
+            ```
+
+        These both render as:
+
+            def answer():
+              return 42
+
+        The second form also allows you to specify a language and have syntax highlighting:
+
+            ``` go
+            func answer() int {
+              return 42
+            }
+            ```
+
+        is rendered as:
+
+        ``` go
+        func answer() int {
+          return 42
+        }
+        ```
+      </div>
+
+      <div class="info-contents-pane keyboard-shortcuts">
+        <table>
+          {{#bindings}}
+            <tr>
+              <td>
+                {{#keys}}
+                  {{#key}}<span class="keys">{{key}}</span>{{/key}}
+                  {{#sep}}<span class="sep">{{sep}}</span>{{/sep}}
+                {{/keys}}
+              </td>
+              <td>{{purpose}}</td>
+            </tr>
+          {{/bindings}}
+          <tr><td><span class="keys">escape</span></td><td>Unfocus the chat box or exit any dialog</td></tr>
+        </table>
+      </div>
+
+      <div class="info-contents-pane markdown faq">
+        * **What is this project?**
+
+          Prat is an open-source chat program. You can see the project [on Github](//github.com/bkad/oochat).
+
+        * **What does it mean when a username in the right-hand column is grayed out?**
+
+          This indicates that the user is currently offline. When that user comes back online, he or she will be a member of this channel and will see any messages you have left in the meantime.
+
+        * **Can I make a private channel?**
+
+          No.
+
+        * **Why are there no emoji?**
+
+          [We know, we know.](//github.com/bkad/oochat/issues/17)
+
+        * **Does Prat work in browsers other than Chrome?**
+
+          Hell no. (Well, we haven't checked. But probably not.)
+      </div>
+
+    </div>
+  </div>
+</div>
