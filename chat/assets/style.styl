@@ -57,9 +57,26 @@ button, select
   border-right: border-grey
   overflow-y: auto
   &.closed { display: none }
-  .logo-title
-    font: bold 30px "Oswald", sans-serif
-    div { margin: 30px 30px 30px 45px }
+  header
+    text-align: center
+    padding-top: 30px
+    margin-bottom: 15px
+    .logo-title
+      font: bold 30px "Oswald", sans-serif
+      margin-bottom: 30px
+    .control-button-container
+      padding: 10px 0 5px 0
+      margin-bottom: 20px
+      background-color: darken(light-grey, 3%)
+      button
+        padding: 0 3px
+        border: none
+        background: transparent
+        &:hover
+          box-shadow: none
+          color: accent-blue
+        margin: 2px 0px
+        font-size: 20px
   .channel-controls-container
     margin-left: -3px
     width: 93%
@@ -276,12 +293,6 @@ button, select
     margin-top: 5px
     margin-bottom: 5px
     text-align: center
-  .control-button-container
-    absolute: right 100px
-    button
-      margin: 2px 0px
-      font-size: 20px
-
 
 .chat-messages
   &:not(.current)
