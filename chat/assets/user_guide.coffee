@@ -25,7 +25,6 @@ window.UserGuide =
   nav: (name) ->
     $old = $("#info-nav li.selected")
     $target = $("#info-nav li[data-contents-pane='#{name}']")
-    return if $target.is($old)
     $old.removeClass("selected")
     $target.addClass("selected")
     $oldPane = $("#info-contents .info-contents-pane.selected")
