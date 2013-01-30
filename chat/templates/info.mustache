@@ -6,21 +6,35 @@
   <div id="info-body">
     <div id="info-nav" class="column">
       <ul>
-        <li data-contents-pane="channels">Channels</li>
-        <li data-contents-pane="markdown">Markdown</li>
-        <li class="selected" data-contents-pane="keyboard-shortcuts">Shortcuts</li>
+        <li class="selected" data-contents-pane="channels">Channels</li>
+        <li data-contents-pane="markdown-cheatsheet">Markdown</li>
+        <li data-contents-pane="keyboard-shortcuts">Shortcuts</li>
+        <li data-contents-pane="faq">FAQ</li>
       </ul>
     </div>
     <div id="info-contents" class="column">
 
-      <div class="info-contents-pane channels">
-        Since, in the long run, every planetary civilization will be endangered by impacts from space, every
-        surviving civilization is obliged to become spacefaring--not because of exploratory or romantic zeal,
-        but for the most practical reason imaginable: staying alive... If our long-term survival is at stake,
-        we have a basic responsibility to our species to venture to other worlds.
+      <div class="info-contents-pane markdown channels">
+        At any time, you are a member of some number of channels indicated by the bars on the left side. Your
+        current channel is colored blue. You can switch between channels by clicking on them, or by using the
+        `p` and `q` shortcuts.
+
+        ![channel view](/static/images/channel-general.png)
+
+        Join a new channel by clicking the new channel button, indicated by the **+** sign.
+
+        ![add a channel](/static/images/channel-add.png)
+
+        You can leave channels by hovering over the channel button and clicking on the trash can. Similarly,
+        can use the drag handle to reorder channels.
+
+        ![reorder channels](/static/images/channel-reorder.png)
+
+        You can link to channels by using the syntax `#channel-name` in your message. This will render as
+        #channel-name, a link to that channel. Use this to invite people to join you in a different channel.
       </div>
 
-      <div class="info-contents-pane markdown">
+      <div class="info-contents-pane markdown markdown-cheatsheet">
         The powered flight took a total of about eight and a half minutes. It seemed to me it had gone by in a
         lash. We had gone from sitting still on the launch pad at the Kennedy Space Center to traveling at
         17,500 miles an hour in that eight and a half minutes. It is still mind-boggling to me. I recall
@@ -28,7 +42,7 @@
         been in the program a long time, that it was well worth the wait.
       </div>
 
-      <div class="info-contents-pane keyboard-shortcuts selected">
+      <div class="info-contents-pane keyboard-shortcuts">
         <table>
           {{#bindings}}
             <tr>
@@ -43,6 +57,29 @@
           {{/bindings}}
           <tr><td><span class="keys">escape</span></td><td>Unfocus the chat box or exit any dialog</td></tr>
         </table>
+      </div>
+
+      <div class="info-contents-pane markdown faq">
+        * **What is this project?**
+
+          Prat is an open-source chat program. You can see the project [on Github](//github.com/bkad/oochat).
+
+        * **What does it mean when a username in the right-hand column is grayed out?**
+
+          This indicates that the user is currently offline. When that user comes back online, he or she will
+          be a member of this channel and will see any messages you have left in the meantime.
+
+        * **Can I make a private channel?**
+
+          No.
+
+        * **Why are there no emoji?**
+
+          [We know, we know.](//github.com/bkad/oochat/issues/17)
+
+        * **Does Prat work in browsers other than Chrome?**
+
+          Hell no.
       </div>
 
     </div>

@@ -318,7 +318,11 @@ button, select
     font-size: 9px
     margin-right: 5px
 
-.message
+.message, .markdown
+  &.markdown
+    line-height: 20px
+    li
+      margin-bottom: 10px
   img
     max-width: 600px
     max-height: 600px
@@ -332,6 +336,12 @@ button, select
     color: lighten(dark-grey, 15%)
   p, ol, div, ul
     margin-bottom: 5px
+  ul, ol
+    padding-left: 15px
+  ul
+    list-style-type: disc
+  ol
+    list-style-type: decimal
   hr
     border: none
     border-top: 1px dashed #ddd
@@ -362,7 +372,7 @@ button, select
   .its-you
     color: accent-blue
   display: inline
-  &:last-child
+  &.messages:last-child
     p, ol, div, ul
       margin-bottom: 0
 
@@ -475,7 +485,6 @@ button, select
   padding: 15px
 
 #info-body
-  height: 350px
   width: 100%
   display: table
   .column
@@ -505,31 +514,36 @@ button, select
 
 #info-contents { position: relative }
 
-.info-contents-pane
-  padding: 15px
-  position: absolute
-  opacity: 0
-  transition: opacity 100ms linear
-  &.selected
-    opacity: 1
-  overflow-y: auto
-  &.keyboard-shortcuts
-    tr
-      line-height: 20px
-    span
-      padding: 2px 6px
-      margin: 2px 0
-      display: inline-block
-    .keys
-      font-family: mono-font-family
-      background: accent-blue
-      color: light-grey
-      border-radius: 2px
-      text-shadow: 1px 1px 0 #222
-      box-shadow: inset 1px 1px 1px #444
-    td:first-child
-      text-align: right
-      padding-right: 14px
+#info-body
+  height: 350px
+  .info-contents-pane
+    padding: 15px
+    position: absolute
+    height: @height - (2 * @padding)
+    overflow-y: auto
+    opacity: 0
+    transition: opacity 100ms linear
+    pointer-events: none
+    &.selected
+      opacity: 1
+      pointer-events: all
+    &.keyboard-shortcuts
+      tr
+        line-height: 20px
+      span
+        padding: 2px 6px
+        margin: 2px 0
+        display: inline-block
+      .keys
+        font-family: mono-font-family
+        background: accent-blue
+        color: light-grey
+        border-radius: 2px
+        text-shadow: 1px 1px 0 #222
+        box-shadow: inset 1px 1px 1px #444
+      td:first-child
+        text-align: right
+        padding-right: 14px
 
 .modal-footer
   padding: 10px 15px
