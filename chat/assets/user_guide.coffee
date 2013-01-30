@@ -6,6 +6,7 @@ window.UserGuide =
     $template.find(".info-contents-pane.markdown").each (_, markdown) =>
       $section = $(markdown)
       text = @dedent($section.text())
+      console.log ">>>> text: #{text}"
       renderTasks.push($.ajax
         type: "POST"
         url: "/api/markdown"
@@ -58,5 +59,5 @@ window.UserGuide =
       leadingSpaces.push(/^(\s*)/.exec(line)[1].length) if line != ""
     leadingSpace = Math.min(leadingSpaces...)
     result = for line in lines
-      if line == "" then "\n\n" else line.substr(leadingSpace)
-    result.join(" ")
+      if line == "" then "" else line.substr(leadingSpace)
+    result.join("\n")
