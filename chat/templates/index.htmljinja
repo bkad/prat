@@ -87,21 +87,21 @@
 <body>
   <div class="left-sidebar {{ "closed" if left_sidebar_closed else "" }}">
     <header>
-      <div class="logo-title">
-        <div>{{ title }}</div>
-      </div>
       <div class="control-button-container">
-        <button id="user-info-button" class="north" rel="tipsy" title="User guide">
+        <button id="user-info-button" class="west" rel="tipsy" title="User guide">
           <span class="ss-standard">question</span>
         </button>
-        <button id="settings-button" class="north" rel="tipsy" title="Preferences">
+        <button id="settings-button" class="west" rel="tipsy" title="Preferences">
           <span class="ss-standard">gear</span>
         </button>
         <a href="{{ url_for("auth.logout") }}">
-          <button id="logout" class="north" rel="tipsy" title="Logout">
+          <button id="logout" class="west" rel="tipsy" title="Logout">
             <span class="ss-standard">logout</span>
           </button>
         </a>
+      </div>
+      <div class="logo-title">
+        <div>{{ title }}</div>
       </div>
     </header>
     <div class="channel-controls-container">

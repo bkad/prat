@@ -59,24 +59,36 @@ button, select
   &.closed { display: none }
   header
     text-align: center
-    padding-top: 30px
     margin-bottom: 15px
+    display: table
+    width: 100%
     .logo-title
+      text-align: left
+      div { padding: 33px 0 0 30px }
+      display: table-cell
       font: bold 30px "Oswald", sans-serif
-      margin-bottom: 30px
     .control-button-container
-      padding: 10px 0 5px 0
-      margin-bottom: 20px
-      background-color: darken(light-grey, 3%)
+      display: table-cell
+      vertical-align: top
+      padding-top: 15px
+      width: 40px
       button
         padding: 0 3px
         border: none
         background: transparent
+        color: dark-grey
+        opacity: 0.2
+        transition: opacity 100ms linear
         &:hover
           box-shadow: none
           color: accent-blue
+          opacity: 1
         margin: 2px 0px
         font-size: 20px
+    &:hover
+      button
+        opacity: 1
+
   .channel-controls-container
     margin-left: -3px
     width: 93%
