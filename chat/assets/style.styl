@@ -15,6 +15,18 @@ accent-blue = #4782B4
 sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
 mono-font-family = "Cousine", monospace
 
+@-webkit-keyframes blink {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+
 * {
   margin: 0
   padding: 0
@@ -371,10 +383,10 @@ button, select
     display: none
   border-bottom: 1px solid lighten(med-grey, 60%)
 
+padding-amount = 10px
+input-controls-width = 75px
+container-height = 80px
 .input-container
-  padding-amount = 10px
-  input-controls-width = 75px
-  container-height = 80px
   absolute: bottom left
   right: 0px
   height: container-height
@@ -407,6 +419,22 @@ button, select
       height: ((container-height - (2 * padding-amount) - button-margin) / 2)
       width: input-controls-width - padding-amount
       margin-bottom: button-margin
+
+.message-notification
+  absolute: bottom left
+  z-index: 99
+  left: 2px
+  right: 2px
+  bottom: container-height
+  &.active
+    box-shadow: 0px 0px 2px 2px lighten(accent-blue, 40%)
+    transition: all 1s ease-in-out;
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-timing-function: ease-in-out;
+
 
 .modal-backdrop
   position: fixed

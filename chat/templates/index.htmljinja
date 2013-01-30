@@ -61,6 +61,7 @@
       dateTimeHelper = new DateTimeHelper()
 
       messagesViewCollection = new MessagesViewCollection({ messageHub: messageHub,
+                                                            chatControls: chatControls,
                                                             sound: sound,
                                                             channels: initialChannels,
                                                             channelViewCollection: channelViewCollection,

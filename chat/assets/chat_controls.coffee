@@ -1,4 +1,6 @@
 class window.ChatControls
+  _.extend @::, Backbone.Events
+  
   constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
@@ -33,12 +35,12 @@ class window.ChatControls
         keys: ['j'],
         help: "Next message",
         showHelp: true,
-        action: -> Util.scrollMessagesDown()
+        action: => @trigger("scrollMessagesDown")
       ,
         keys: ['k'],
         help: "Previous message",
         showHelp: true,
-        action: -> Util.scrollMessagesUp()
+        action: => @trigger("scrollMessagesUp")
       ,
         keys: ['shift_n'],
         help: "Next channel",
@@ -58,7 +60,7 @@ class window.ChatControls
         keys: ['shift_g'],
         help: "Scroll to bottom",
         showHelp: true,
-        action: => Util.scrollToBottom()
+        action: => @trigger("scrollToBottom")
       ,
         keys: ['return', '/'],
         help: "Focus chat box",

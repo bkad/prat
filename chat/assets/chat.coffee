@@ -1,11 +1,35 @@
+class window.MessageNotification extends Backbone.View
+
+  tagname: "div"
+  className: "message-notification"
+
+  initialize: (options) ->
+    @chatControls = options.chatControls
+    $(".input-container").before(@$el)
+
+  activate: =>
+    @$el.addClass("active")
+
+  deactivate: =>
+    @$el.removeClass("active")
+
 class window.MessagesView extends Backbone.View
   tagName: "div"
   className: "chat-messages"
+  events: {"scroll": "handleMouseScroll"}
+
+  initialize: (options) ->
+    @notifier = options.notifier
+
+  handleMouseScroll: =>
+    if Util.scrolledToBottom()
+      @notifier.deactivate()
 
 class window.MessagesViewCollection extends Backbone.View
   tagName: "div"
   className: "chat-messages-container"
-  initialize: (options) ->
+
+  initialize: (options) =>
     @channelHash = {}
     @channels = options.channels
     @collapseTimeWindow = options.collapseTimeWindow
@@ -13,11 +37,13 @@ class window.MessagesViewCollection extends Backbone.View
     @username = options.username
     @sound = options.sound
     @title = options.title
+    @chatControls = options.chatControls
     @messageHub = options.messageHub
     # latest in terms of date time stamp
     @latestMessage = datetime: 0
     @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
+    @notifier = new MessageNotification({chatControls:@chatControls})
     @messageHub.on("publish_message", @onNewMessage)
                .on("preview_message", @onPreviewMessage)
                .on("reconnect", @pullMissingMessages)
@@ -25,8 +51,11 @@ class window.MessagesViewCollection extends Backbone.View
     @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
                           .on("leaveChannel", @removeChannel)
                           .on("joinChannel", @addChannel)
+    @chatControls.on("scrollToBottom", @scrollToBottom)
+    @chatControls.on("scrollMessagesUp", @scrollMessagesUp)
+    @chatControls.on("scrollMessagesDown", @scrollMessagesDown)
     for channel in options.channels
-      view = @channelHash[channel] = new MessagesView()
+      view = @channelHash[channel] = new MessagesView({notifier:@notifier})
       if channel is @channelViewCollection.currentChannel
         view.$el.addClass("current")
     @messageContainerTemplate = $("#message-container-template").html()
@@ -36,6 +65,18 @@ class window.MessagesViewCollection extends Backbone.View
   render: =>
     @$el.children().detach()
     @$el.append(@channelHash[channel].$el) for channel in @channels
+
+  scrollToBottom: (options = animate: true) =>
+    if not Util.scrolledToBottom()
+      @notifier.deactivate()
+      Util.scrollToBottom(options)
+
+  scrollMessagesUp: (options = animate: true) =>
+    Util.scrollMessagesUp()
+
+  scrollMessagesDown: (options = animate: true) =>
+    if Util.scrollMessagesDown()
+      @notifier.deactivate()
 
   addChannel: (channel) =>
     @channelHash[channel] = new MessagesView()
@@ -53,7 +94,7 @@ class window.MessagesViewCollection extends Backbone.View
   changeCurrentChannel: (newChannel) =>
     view.$el.removeClass("current") for channel, view of @channelHash
     @channelHash[newChannel].$el.addClass("current")
-    Util.scrollToBottom(animate: false)
+    @scrollToBottom(animate: false)
 
   checkAndNotify: (message, author) =>
     if !document.hasFocus() or document.webkitHidden
@@ -85,8 +126,10 @@ class window.MessagesViewCollection extends Backbone.View
     $message = @appendMessage(messageObject, messagePartial)
     return unless $message?
     if bottom
-      Util.scrollToBottom(animate: true)
-      $message.find("img").one("load", -> Util.scrollToBottom(animate: true))
+      @scrollToBottom(animate: true)
+      $message.find("img").one("load", => @scrollToBottom(animate: true))
+    else
+      @notifier.activate()
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $("#message-preview .message")
@@ -104,7 +147,7 @@ class window.MessagesViewCollection extends Backbone.View
         for channel, messages of messageHash
           @appendMessages(messages, quiet: true)
         @messageHub.unblockDequeue()
-        Util.scrollToBottom(animate: false)
+        @scrollToBottom(animate: false)
         spinner.stop()
         $("#spin-overlay").fadeOut(200)
         $("#chat-text").focus()
