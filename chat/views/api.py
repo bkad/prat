@@ -1,6 +1,8 @@
 from flask import Blueprint, request, g
 import json
-from chat.datastore import get_channel_users, get_recent_messages, get_messages_since_id
+from bson import InvalidDocument
+from chat.datastore import (get_channel_users, get_recent_messages, get_messages_since_id,
+    get_user_preferences, update_user_preferences)
 from chat import markdown
 
 api = Blueprint("api", __name__)
@@ -44,3 +46,18 @@ def whoami():
 @api.route("/markdown", methods=["POST"])
 def misaka():
   return markdown.render(request.data)
+
+@api.route("/user/preferences", methods=["PATCH", "GET"])
+def user_preferences():
+  if request.method == "PATCH":
+    try:
+      new_preferences = json.loads(request.data)
+    except ValueError:
+      return "Could not parse JSON", 400
+    try:
+      return json.dumps(update_user_preferences(g.user, new_preferences))
+    except InvalidDocument as e:
+      return 400, "Invalid Document: {0}".format(e.message)
+  elif request.method == "GET":
+    return json.dumps(get_user_preferences(g.user))
+
