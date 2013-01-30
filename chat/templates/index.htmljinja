@@ -57,6 +57,7 @@
                                       {{ right_sidebar_closed|tojson }})
 
       UserGuide.init()
+      Preferences.init()
       sound = new Sound("/static/audio/ping.mp3")
 
       dateTimeHelper = new DateTimeHelper()

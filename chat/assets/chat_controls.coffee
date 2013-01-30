@@ -55,7 +55,8 @@ class window.ChatControls
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
     @chatText = $("#chat-text")
-    @chatText.on("keydown.return", @onChatSubmit)
+    @chatText.on("keydown.shift_return", (e) => @onReturn(e, true))
+    @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
     @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
@@ -69,6 +70,8 @@ class window.ChatControls
     @currentMessage = ""
     @chatHistoryOffset = -1
     @initKeyBindings()
+
+  onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
 
   onChatAutocomplete: (event) =>
     if event.which != 9

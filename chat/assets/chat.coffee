@@ -61,7 +61,7 @@ class window.MessagesViewCollection extends Backbone.View
       unless @toggleTitleInterval?
         @toggleTitleInterval = setInterval(@toggleTitle, 1500)
       window.onfocus = @clearToggleTitleInterval
-      if message.find(".its-you").length > 0
+      if message.find(".its-you").length > 0 && Preferences.get("alert-sounds")
         @sound.playNewMessageAudio()
 
   clearToggleTitleInterval: =>
