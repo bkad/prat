@@ -6,7 +6,6 @@ window.UserGuide =
     $template.find(".info-contents-pane.markdown").each (_, markdown) =>
       $section = $(markdown)
       text = @dedent($section.text())
-      console.log ">>>> text: #{text}"
       renderTasks.push($.ajax
         type: "POST"
         url: "/api/markdown"
