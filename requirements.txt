@@ -13,7 +13,7 @@ gunicorn==0.17.2
 paramiko==1.9.0
 prat-gevent==1.0dev
 prat-geventwebsocket==0.3.7
-prat-misaka==1.0.4
+prat-misaka==1.0.5
 pycrypto==2.6
 pymongo==2.4.1
 python-openid==2.2.5
