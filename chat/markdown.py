@@ -12,15 +12,16 @@ import re
 class HtmlPygmentsRenderer(HtmlRenderer):
   def normal_text(self, text):
     escaped_text = cgi.escape(text)
+    print escaped_text
 
     # mark up user mentions (@username).
-    escaped_text = re.sub(r'((?:^|(?<=\s))(?P<sym>@)(?P<user>[\w.-]+))(?:(?![\w.-]*@[\w.-]*))',
-                          r'<span class="user-mention" data-username="\g<user>">\g<sym>\g<user></span>',
+    escaped_text = re.sub(r'(^|(?<=\s))@(?P<user>[\w.-]+)(?=\s|$)',
+                          r'<span class="user-mention" data-username="\g<user>">@\g<user></span>',
                           escaped_text)
     # mark up channel names (#channelname). Channel name must have at least one letter to avoid the common
     # case of '#123'.
-    escaped_text = re.sub(r'((?:^|(?<=\s))(?P<sym>#)(?P<chan>[\w.-]*[a-zA-Z][\w.-]*))(?:(?![\w.-]*#[\w.-]*))',
-                          r'<span class="channel-mention" data-channelname="\g<chan>">\g<sym>\g<chan></span>',
+    escaped_text = re.sub(r'(^|(?<=\s))#(?P<channel>[\w.-]*[a-zA-Z][\w.-]*)(?=\s|$)',
+                          r'<span class="channel-mention" data-channelname="\g<channel>">#\g<channel></span>',
                           escaped_text)
 
     for string_filter in current_app.config["STRING_FILTERS"]:
