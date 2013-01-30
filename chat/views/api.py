@@ -1,6 +1,7 @@
 from flask import Blueprint, request, g
 import json
 from chat.datastore import get_channel_users, get_recent_messages, get_messages_since_id
+from chat import markdown
 
 api = Blueprint("api", __name__)
 
@@ -39,3 +40,7 @@ def whoami():
     "username": g.user["email"].split("@")[0],
   }
   return json.dumps({ "user": user })
+
+@api.route("/markdown", methods=["POST"])
+def misaka():
+  return markdown.render(request.data)
