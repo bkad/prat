@@ -18,12 +18,12 @@ class window.ChatControls
       keys: ['shift_n'],
       help: "Next channel",
       showHelp: true,
-      action: => @channelViewCollection.cycleChannel(1)
+      action: -> channelViewCollection.cycleChannel(1)
     ,
       keys: ['shift_p'],
       help: "Previous channel",
       showHelp: true,
-      action: => @channelViewCollection.cycleChannel(-1)
+      action: -> channelViewCollection.cycleChannel(-1)
     ,
       keys: ['shift_j'],
       help: "Join a new channel",
