@@ -25,3 +25,22 @@ def replace_jira_links(word):
   return re.sub(r"([A-Z]+)-(\d+)",
                 check_valid_jira,
                 word)
+
+# replace repo/sha with a link to github
+# Uses full github "User/Project@SHA" format for now
+def replace_github_commits(word):
+  def linkify_github_commit(match):
+    replacements = match.groupdict()
+    replacements["short_sha"] = replacements["sha"][:8]
+    result = "<a href='//github.com/{user}/{repo}/commit/{sha}' target='_blank'>{user}/{repo}@{short_sha}</a>"
+    return result.format(**replacements)
+  return re.sub(r"(?P<user>[a-zA-Z0-9_-]+)/(?P<repo>[a-zA-Z0-9_-]+)@(?P<sha>[a-zA-Z0-9]{40})", linkify_github_commit, word)
+
+  # replace repo/sha with a link to github
+# Uses full github "User/Project@SHA" format for now
+def replace_github_issues(word):
+  def linkify_github_issue(match):
+    replacements = match.groupdict()
+    result = "<a href='//github.com/{user}/{repo}/issues/#issue/{issue}' target='_blank'>{user}/{repo}#{issue}</a>"
+    return result.format(**replacements)
+  return re.sub(r"(?P<user>[a-zA-Z0-9_-]+)/(?P<repo>[a-zA-Z0-9_-]+)#(?P<issue>[0-9]+)", linkify_github_issue, word)
