@@ -129,6 +129,14 @@ class window.MessagesViewCollection extends Backbone.View
     mustached = $(Mustache.render(@messagePartialTemplate, message))
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", @channelViewCollection.joinChannelClick)
+    mustached.find("img").replaceWith ->
+      "<div class='image'><button class='hide-image'></button><span>Image hidden</span>#{$(@)[0].outerHTML}</div>"
+    mustached.find("button.hide-image").on "click", (e) ->
+      bottom = Util.scrolledToBottom()
+      $(e.target).parent().toggleClass("closed")
+      if bottom
+        console.log "Scrolling to bottom"
+        Util.scrollToBottom()
     mustached
 
   appendMessage: (message, messagePartial) =>
