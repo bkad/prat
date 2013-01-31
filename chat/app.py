@@ -36,8 +36,12 @@ def create_app(config=None, app_name=None, blueprints=None):
 
 def check_login():
   if getattr(g, "user", None) is None:
+    if using_api_key_auth():
+      return "Invalid signature", 400
     return redirect(url_for("auth.login"))
 
+def using_api_key_auth():
+  return all(arg in request.args for arg in ["api_key", "signature", "expires"])
 
 def configure_blueprints(app, blueprints):
   for blueprint, url_prefix, login_required in blueprints:
@@ -51,14 +55,7 @@ def configure_before_handlers(app):
     g.authed = False
 
     # Catch logged in users
-    if "email" in session:
-      user = db.users.find_one({"email": session["email"]})
-      if user is not None:
-        g.user =  user
-        g.authed = True
-    elif("api_key" in request.args and
-         "signature" in request.args and
-         "expires" in request.args):
+    if using_api_key_auth():
       user = db.users.find_one({"api_key": request.args["api_key"]})
       if user is None:
         return
@@ -66,7 +63,11 @@ def configure_before_handlers(app):
         g.user = user
         g.authed = True
         session["email"] = user["email"]
-
+    elif "email" in session:
+      user = db.users.find_one({"email": session["email"]})
+      if user is not None:
+        g.user =  user
+        g.authed = True
 
 def configure_error_handlers(app):
   @app.errorhandler(404)
