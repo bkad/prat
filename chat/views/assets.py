@@ -77,7 +77,7 @@ def compile_asset(asset_path):
     content = file_contents
     content_tuple = mimetypes.guess_type(asset_path)
     content_type = content_tuple[0] or "text/plain"
-  fingerprint = hashlib.md5(content).hexdigest()
+  fingerprint = hashlib.md5(content.encode("utf-8")).hexdigest()
   last_modified = path.getmtime(absolute_path)
   return CompiledAsset(content, fingerprint, last_modified, content_type)
 
