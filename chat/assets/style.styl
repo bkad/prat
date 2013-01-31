@@ -471,8 +471,8 @@ button, select
   top: 10%
   left: 50%
   z-index: 1050
-  width: 560px
-  margin-left: -280px
+  width: 600px
+  margin-left: -300px
   &.user-guide
     width: 700px
     margin-left: -350px
@@ -579,6 +579,19 @@ button, select
         text-align: right
         padding-right: 14px
 
+#preferences
+  label
+    display: block
+    margin: 10px 0
+    color: lighten(dark-grey, 20%)
+    user-select: none
+    &:hover
+      color: dark-grey
+    code
+      background-color: lighten(accent-blue, 85%)
+      padding: 0 4px
+      font-family: mono-font-family
+
 .modal-footer
   padding: 10px 15px
   margin-bottom: 0
@@ -595,3 +608,13 @@ button, select
   .btn
     height: 27px
     width: 65px
+
+  #save-preferences
+    width: 100px
+    color: light-grey
+    background-color: accent-blue
+    border-color: lighten(dark-grey, 30%)
+    &:hover
+      border-color: lighten(dark-grey, 20%)
+    &:active
+      background-color: darken(accent-blue, 10%)
