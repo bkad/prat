@@ -211,7 +211,6 @@ class window.ChatControls
     for file in files
       fd = new FormData()
       fd.append("image", file)
-      fd.append("key", "6528448c258cff474ca9701c5bab6927")
       xhr = new XMLHttpRequest()
       xhr.open("POST", "https://api.imgur.com/3/image")
       xhr.setRequestHeader('Authorization', 'Client-ID df8c7d107087408')
