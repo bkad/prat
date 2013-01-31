@@ -69,6 +69,7 @@ class window.ChatControls
     @currentMessage = ""
     @chatHistoryOffset = -1
     @initKeyBindings()
+    @initImageUpload()
 
   onChatAutocomplete: (event) =>
     if event.which != 9
@@ -197,6 +198,31 @@ class window.ChatControls
     $(".main-content").addClass("collapse-left")
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
+
+  initImageUpload: () =>
+    $.event.props.push('dataTransfer')
+    $(document).on('drop', @handleDrop)
+
+  handleDrop: (event) =>
+    event.stopPropagation();
+    event.preventDefault();
+
+    files = event.dataTransfer.files
+    for file in files
+      fd = new FormData()
+      fd.append("image", file)
+      fd.append("key", "6528448c258cff474ca9701c5bab6927")
+      xhr = new XMLHttpRequest()
+      xhr.open("POST", "https://api.imgur.com/3/image")
+      xhr.setRequestHeader('Authorization', 'Client-ID df8c7d107087408')
+      xhr.onload = =>
+        if(xhr.status==400)
+          console.log(JSON.parse(xhr.responseText).error.message)
+        else
+          link = JSON.parse(xhr.responseText).data.link
+          @insertTextAtCursor($("#chat-text")[0], '![imgur]('+link+')')
+      xhr.onerror = (error) => console.log(error)
+      xhr.send(fd)
 
   initKeyBindings: () =>
     for b in ChatControls.globalBindings
