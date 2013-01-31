@@ -38,7 +38,7 @@
   <script charset="utf-8">
     $(function() {
       CurrentUserEmail = {{ email|tojson|safe }}
-      var initialChannel = {{ last_selected_channel|tojson|safe }}
+      CurrentChannel = {{ last_selected_channel|tojson|safe }}
       var initialChannels = {{ channels|tojson|safe }}
 
       websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
@@ -48,11 +48,9 @@
                                   {{ keep_alive_interval }},
                                   new AlertHelper())
 
-      channelViewCollection = new ChannelViewCollection({ currentChannel: initialChannel,
-        messageHub: messageHub, channels: initialChannels })
-      channelUsers = new ChannelUsers(messageHub, initialChannels, initialChannel, channelViewCollection)
+      channelViewCollection = new ChannelViewCollection({ messageHub: messageHub, channels: initialChannels })
+      channelUsers = new ChannelUsers(messageHub, initialChannels)
       chatControls = new ChatControls(messageHub,
-                                      channelViewCollection,
                                       {{ left_sidebar_closed|tojson }},
                                       {{ right_sidebar_closed|tojson }})
 

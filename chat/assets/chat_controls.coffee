@@ -43,7 +43,7 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
+  constructor: (@messageHub, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
@@ -86,7 +86,7 @@ class window.ChatControls
     # Getting the current line before doing regexes is an optimization
     currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
     users = []
-    for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
+    for model in channelUsers.views[CurrentChannel].collection.models
       users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
@@ -155,12 +155,12 @@ class window.ChatControls
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
-    @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
+    @messageHub.sendPreview(message, CurrentChannel)
 
   onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendChat(message, @channelViewCollection.currentChannel)
+      @messageHub.sendChat(message, CurrentChannel)
       @addToChatHistory(message)
     @chatText.val("").focus()
     event.preventDefault()

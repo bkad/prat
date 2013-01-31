@@ -27,7 +27,7 @@ class window.MessagesViewCollection extends Backbone.View
                           .on("joinChannel", @addChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
-      if channel is @channelViewCollection.currentChannel
+      if channel is CurrentChannel
         view.$el.addClass("current")
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
@@ -79,7 +79,7 @@ class window.MessagesViewCollection extends Backbone.View
   onNewMessage: (event, messageObject) =>
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject)
-    if messageObject.channel isnt @channelViewCollection.currentChannel
+    if messageObject.channel isnt CurrentChannel
       @channelViewCollection.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)

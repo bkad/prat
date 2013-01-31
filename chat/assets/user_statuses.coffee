@@ -1,14 +1,14 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub, initialChannels, currentChannel, channelViewCollection) ->
+  constructor: (@messageHub, initialChannels) ->
     @views = {}
-    @init(currentChannel, channelViewCollection, initialChannels)
+    @init(initialChannels)
 
-  init: (currentChannel, channelViewCollection, initialChannels) ->
+  init: (initialChannels) ->
     for channel in initialChannels
       @addUserStatusesView(channel)
-      @displayUserStatuses(channel) if channel is currentChannel
+      @displayUserStatuses(channel) if channel is CurrentChannel
     @messageHub.on("user_active user_offline", @updateUserStatus)
                .on("join_channel", @joinChannel)
                .on("leave_channel", @leaveChannel)

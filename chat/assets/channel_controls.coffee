@@ -34,7 +34,6 @@ class window.ChannelViewCollection extends Backbone.View
 
   initialize: (options) =>
     @channelsHash = {}
-    @currentChannel = options.currentChannel
     @messageHub = options.messageHub
     @channels = options.channels
 
@@ -78,10 +77,10 @@ class window.ChannelViewCollection extends Backbone.View
     @messageHub.reorderChannels(@channels)
 
   onChannelChange: (nextCurrentChannel) =>
-    @channelsHash[@currentChannel]?.setInactive()
-    @currentChannel = nextCurrentChannel
+    @channelsHash[CurrentChannel]?.setInactive()
+    window.CurrentChannel = nextCurrentChannel
     @trigger("changeCurrentChannel", nextCurrentChannel)
-    @messageHub.switchChannel(@currentChannel)
+    @messageHub.switchChannel(CurrentChannel)
 
   toggleNewChannel: =>
     switch @newChannelState
@@ -101,7 +100,7 @@ class window.ChannelViewCollection extends Backbone.View
         @newChannelState = "shown"
       )
 
-  hideNewChannel: (options={ animate: true }) =>
+  hideNewChannel: (options = animate: true) =>
     @newChannelState = "between"
     newChannelName = $('.new-channel-name')
     newChannelName.blur()
@@ -130,10 +129,10 @@ class window.ChannelViewCollection extends Backbone.View
     Util.cleanupTipsy()
     @messageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
-    $("button.channel").first().click() if channel is @currentChannel and @channels.length > 0
+    $("button.channel").first().click() if channel is CurrentChannel and @channels.length > 0
 
   addNewChannelView: (view) =>
-    if view.name isnt @currentChannel
+    if view.name isnt CurrentChannel
       view.setInactive()
     else
       view.channelButton.addClass("current")
@@ -156,7 +155,7 @@ class window.ChannelViewCollection extends Backbone.View
 
   # offset == -1 for previous channel
   cycleChannel: (offset = 1) =>
-    currentChannelIndex = @$el.children().index(@channelsHash[@currentChannel].el)
+    currentChannelIndex = @$el.children().index(@channelsHash[CurrentChannel].el)
     len = @channels.length
     # Stupid JS mod for negative numbers
     succIndex = (((currentChannelIndex + offset) % len) + len) % len
