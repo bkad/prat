@@ -311,22 +311,15 @@ button, select
   overflow-x: hidden
   padding-top: 5px
 .message-container
-  &.fade
-    transition: all 2s ease-in-out;
-  &.unseen
-    border: 0px
-    border-radius: 8px
-    background-color: lighten(accent-blue, 90%)
   font-size: 14px
-  padding: 4px
-  margin: 4px
+  margin: 8px
   position: relative
   .author
     display: inline-block
     font-size: 12px
     line-height: 0
     font-weight: bold
-    absolute: top 9px + 4px left 18px + 3px + 4px
+    absolute: top 9px left 18px + 3px
   .email
     display: none
   .gravatar
@@ -433,10 +426,9 @@ container-height = 80px
   left: 3px
   right: 3px
   bottom: container-height
-  &.fade
-    transition: all 2s ease-in-out;
   &.active
     box-shadow: 0px 0px 3px 3px lighten(accent-blue, 40%)
+    transition: all 2s ease-in-out;
     -webkit-animation-direction: normal;
     -webkit-animation-duration: 4s;
     -webkit-animation-iteration-count: infinite;
