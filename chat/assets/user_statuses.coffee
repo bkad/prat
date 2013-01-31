@@ -85,7 +85,6 @@ class window.ChannelUsers
     collection = @views[data.channel].collection
     collection.remove(data.user.email)
 
-
 # attributes: name, email, gravatar, status
 class window.UserStatus extends Backbone.Model
   initialize: (options) ->
@@ -93,28 +92,20 @@ class window.UserStatus extends Backbone.Model
 
   idAttribute: "email"
 
-
 class window.UserStatusCollection extends Backbone.Collection
   model: UserStatus
 
   comparator: (userA, userB) ->
     attrA = userA.attributes
     attrB = userB.attributes
-    if attrA.isCurrentUser
-      -1
-    else if attrB.isCurrentUser
-      1
-    else if attrA.status is "active" and attrB.status isnt "active"
-      -1
-    else if attrB.status is "active" and attrA.status isnt "active"
-      1
-    else if attrA.name is attrB.name
-      0
-    else if attrA.name < attrB.name
-      -1
-    else if attrA.name > attrB.name
-      1
-
+    switch
+      when attrA.isCurrentUser then -1
+      when attrB.isCurrentUser then 1
+      when attrA.status is "active" and attrB.status isnt "active" then -1
+      when attrB.status is "active" and attrA.status isnt "active" then 1
+      when attrA.name is attrB.name then 0
+      when attrA.name < attrB.name then -1
+      when attrA.name > attrB.name then 1
 
 class window.UserStatusView extends Backbone.View
   initialize: ->
@@ -133,5 +124,3 @@ class window.UserStatusView extends Backbone.View
     Util.cleanupTipsy()
     @$el.html(@renderUserStatusCollection())
     @
-
-

@@ -12,7 +12,6 @@ import re
 class HtmlPygmentsRenderer(HtmlRenderer):
   def normal_text(self, text):
     escaped_text = cgi.escape(text)
-    print escaped_text
 
     # mark up user mentions (@username).
     escaped_text = re.sub(r'(^|(?<=\s))@(?P<user>[\w.-]+)(?=\s|$)',
