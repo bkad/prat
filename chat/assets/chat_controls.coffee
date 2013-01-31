@@ -43,7 +43,7 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  constructor: (@messageHub, @channelViewCollection, leftClosed, rightClosed) ->
+  constructor: (@messageHub, @channelViewCollection, @imgurClientId, leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
@@ -209,19 +209,20 @@ class window.ChatControls
 
     files = event.dataTransfer.files
     for file in files
-      fd = new FormData()
-      fd.append("image", file)
-      xhr = new XMLHttpRequest()
-      xhr.open("POST", "https://api.imgur.com/3/image")
-      xhr.setRequestHeader('Authorization', 'Client-ID df8c7d107087408')
-      xhr.onload = =>
-        if(xhr.status==400)
-          console.log(JSON.parse(xhr.responseText).error.message)
-        else
+      if file.type.match(/image.*/)
+        fd = new FormData()
+        fd.append("image", file)
+        xhr = new XMLHttpRequest()
+        xhr.open("POST", "https://api.imgur.com/3/image")
+        xhr.setRequestHeader('Authorization', 'Client-ID ' + @imgurClientId)
+        xhr.onload = =>
+          if(xhr.status==400)
+            console.log(JSON.parse(xhr.responseText).error.message)
+          else
           link = JSON.parse(xhr.responseText).data.link
-          @insertTextAtCursor($("#chat-text")[0], '![imgur]('+link+')')
-      xhr.onerror = (error) => console.log(error)
-      xhr.send(fd)
+          @insertTextAtCursor($("#chat-text")[0], '!['+file.name+']('+link+')')
+        xhr.onerror = (error) => console.log(error)
+        xhr.send(fd)
 
   initKeyBindings: () =>
     for b in ChatControls.globalBindings

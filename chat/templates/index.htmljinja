@@ -53,6 +53,7 @@
       channelUsers = new ChannelUsers(messageHub, initialChannels, initialChannel, channelViewCollection)
       chatControls = new ChatControls(messageHub,
                                       channelViewCollection,
+                                      {{ imgur_client_id|tojson|safe }},
                                       {{ left_sidebar_closed|tojson }},
                                       {{ right_sidebar_closed|tojson }})
 

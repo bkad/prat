@@ -57,6 +57,7 @@ def index():
                          mustache_templates=mustache_templates,
                          title=current_app.config["APP_NAME"],
                          debug=current_app.config["DEBUG"],
+                         imgur_client_id=current_app.config["IMGUR_CLIENT_ID"],
                          keep_alive_interval=current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
                          coffee_files=coffee_files,
                          stylus_files=stylus_files,
