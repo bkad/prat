@@ -34,7 +34,6 @@ class window.ChannelViewCollection extends Backbone.View
 
   initialize: (options) =>
     @channelsHash = {}
-    @messageHub = options.messageHub
     @channels = options.channels
 
     for channel in options.channels
@@ -74,13 +73,13 @@ class window.ChannelViewCollection extends Backbone.View
     newDom = @$el.children()
     for channel, view of @channelsHash
       @channels[newDom.index(view.el)] = channel
-    @messageHub.reorderChannels(@channels)
+    MessageHub.reorderChannels(@channels)
 
   onChannelChange: (nextCurrentChannel) =>
     @channelsHash[CurrentChannel]?.setInactive()
     window.CurrentChannel = nextCurrentChannel
     @trigger("changeCurrentChannel", nextCurrentChannel)
-    @messageHub.switchChannel(CurrentChannel)
+    MessageHub.switchChannel(CurrentChannel)
 
   toggleNewChannel: =>
     switch @newChannelState
@@ -127,7 +126,7 @@ class window.ChannelViewCollection extends Backbone.View
     @channelsHash[channel].$el.remove()
     delete @channelsHash[channel]
     Util.cleanupTipsy()
-    @messageHub.leaveChannel(channel)
+    MessageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
     $("button.channel").first().click() if channel is CurrentChannel and @channels.length > 0
 
@@ -146,7 +145,7 @@ class window.ChannelViewCollection extends Backbone.View
       view = @channelsHash[channel] = new ChannelView(name: channel)
       @addNewChannelView(view)
       @trigger("joinChannel", channel)
-      @messageHub.joinChannel(channel)
+      MessageHub.joinChannel(channel)
     return @channelsHash[channel]
 
   joinChannelClick: (event) =>

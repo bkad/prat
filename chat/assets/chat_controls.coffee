@@ -43,7 +43,7 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  constructor: (@messageHub, leftClosed, rightClosed) ->
+  constructor: (leftClosed, rightClosed) ->
     @init(leftClosed, rightClosed)
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
@@ -63,7 +63,7 @@ class window.ChatControls
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
     $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
-    @messageHub.on("force_refresh", @refreshPage)
+    MessageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $("#preview-submit").click(@onPreviewSend)
@@ -155,12 +155,12 @@ class window.ChatControls
 
   onPreviewSubmit: (event) =>
     message = @chatText.val()
-    @messageHub.sendPreview(message, CurrentChannel)
+    MessageHub.sendPreview(message, CurrentChannel)
 
   onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendChat(message, CurrentChannel)
+      MessageHub.sendChat(message, CurrentChannel)
       @addToChatHistory(message)
     @chatText.val("").focus()
     event.preventDefault()
@@ -201,7 +201,7 @@ class window.ChatControls
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
 
-  initKeyBindings: () =>
+  initKeyBindings: =>
     for b in ChatControls.globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)

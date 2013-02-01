@@ -43,15 +43,9 @@
 
       websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
 
-      messageHub = new MessageHub(websocketProtocol + "://" + document.location.host + "/eventhub",
-                                  4000,
-                                  {{ keep_alive_interval }},
-                                  new AlertHelper())
-
-      channelViewCollection = new ChannelViewCollection({ messageHub: messageHub, channels: initialChannels })
-      channelUsers = new ChannelUsers(messageHub, initialChannels)
-      chatControls = new ChatControls(messageHub,
-                                      {{ left_sidebar_closed|tojson }},
+      channelViewCollection = new ChannelViewCollection({ channels: initialChannels })
+      channelUsers = new ChannelUsers(initialChannels)
+      chatControls = new ChatControls({{ left_sidebar_closed|tojson }},
                                       {{ right_sidebar_closed|tojson }})
 
       UserGuide.init()
@@ -60,8 +54,7 @@
 
       dateTimeHelper = new DateTimeHelper()
 
-      messagesViewCollection = new MessagesViewCollection({ messageHub: messageHub,
-                                                            sound: sound,
+      messagesViewCollection = new MessagesViewCollection({ sound: sound,
                                                             channels: initialChannels,
                                                             channelViewCollection: channelViewCollection,
                                                             username: {{ username|tojson|safe }},
@@ -70,7 +63,11 @@
                                                             title: {{ title|tojson|safe }},
                                                           })
 
-      messageHub.init()
+      MessageHub.init(websocketProtocol + "://" + document.location.host + "/eventhub",
+                      4000,
+                      {{ keep_alive_interval }},
+                      new AlertHelper())
+
       messagesViewCollection.appendInitialMessages()
       channelUsers.updateAllChannels()
 

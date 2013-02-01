@@ -1,7 +1,7 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (@messageHub, initialChannels) ->
+  constructor: (initialChannels) ->
     @views = {}
     @init(initialChannels)
 
@@ -9,11 +9,11 @@ class window.ChannelUsers
     for channel in initialChannels
       @addUserStatusesView(channel)
       @displayUserStatuses(channel) if channel is CurrentChannel
-    @messageHub.on("user_active user_offline", @updateUserStatus)
-               .on("join_channel", @joinChannel)
-               .on("leave_channel", @leaveChannel)
-               .on("reconnect", @updateAllChannels)
-    @messageHub.blockDequeue()
+    MessageHub.on("user_active user_offline", @updateUserStatus)
+              .on("join_channel", @joinChannel)
+              .on("leave_channel", @leaveChannel)
+              .on("reconnect", @updateAllChannels)
+    MessageHub.blockDequeue()
     channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
                          .on("leaveChannel", @removeUserStatuses)
                          .on("joinChannel", @populateNewUserStatusesView)
@@ -26,7 +26,7 @@ class window.ChannelUsers
       error: (xhr, textStatus, errorThrown) =>
         console.log "Error updating channels: #{textStatus}, #{errorThrown}"
       complete: =>
-        @messageHub.unblockDequeue()
+        MessageHub.unblockDequeue()
 
   resetUserStatuses: (channelsHash) =>
     for channel, users of channelsHash

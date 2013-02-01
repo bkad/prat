@@ -13,15 +13,14 @@ class window.MessagesViewCollection extends Backbone.View
     @username = options.username
     @sound = options.sound
     @title = options.title
-    @messageHub = options.messageHub
     # latest in terms of date time stamp
     @latestMessage = datetime: 0
     @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
-    @messageHub.on("publish_message", @onNewMessage)
-               .on("preview_message", @onPreviewMessage)
-               .on("reconnect", @pullMissingMessages)
-    @messageHub.blockDequeue()
+    MessageHub.on("publish_message", @onNewMessage)
+              .on("preview_message", @onPreviewMessage)
+              .on("reconnect", @pullMissingMessages)
+    MessageHub.blockDequeue()
     @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
                           .on("leaveChannel", @removeChannel)
                           .on("joinChannel", @addChannel)
@@ -103,7 +102,7 @@ class window.MessagesViewCollection extends Backbone.View
       success: (messageHash) =>
         for channel, messages of messageHash
           @appendMessages(messages, quiet: true)
-        @messageHub.unblockDequeue()
+        MessageHub.unblockDequeue()
         Util.scrollToBottom(animate: false)
         spinner.stop()
         $("#spin-overlay").fadeOut(200)
@@ -166,4 +165,4 @@ class window.MessagesViewCollection extends Backbone.View
       error: (xhr, textStatus, errorThrown) =>
         console.log "Error updating messages: #{textStatus}, #{errorThrown}"
       complete:
-        @messageHub.unblockDequeue()
+        MessageHub.unblockDequeue()
