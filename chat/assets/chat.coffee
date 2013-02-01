@@ -15,15 +15,14 @@ class window.MessagesViewCollection extends Backbone.View
     @title = options.title
     # latest in terms of date time stamp
     @latestMessage = datetime: 0
-    @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
     MessageHub.on("publish_message", @onNewMessage)
               .on("preview_message", @onPreviewMessage)
               .on("reconnect", @pullMissingMessages)
     MessageHub.blockDequeue()
-    @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
-                          .on("leaveChannel", @removeChannel)
-                          .on("joinChannel", @addChannel)
+    Channels.on("changeCurrentChannel", @changeCurrentChannel)
+            .on("leaveChannel", @removeChannel)
+            .on("joinChannel", @addChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
       if channel is CurrentChannel
@@ -79,7 +78,7 @@ class window.MessagesViewCollection extends Backbone.View
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject)
     if messageObject.channel isnt CurrentChannel
-      @channelViewCollection.highlightChannel(messageObject.channel)
+      Channels.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
     return unless $message?
@@ -127,7 +126,7 @@ class window.MessagesViewCollection extends Backbone.View
   renderMessagePartial: (message) =>
     mustached = $(Mustache.render(@messagePartialTemplate, message))
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
-    mustached.find(".channel-mention").on("click", @channelViewCollection.joinChannelClick)
+    mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
     mustached
 
   appendMessage: (message, messagePartial) =>

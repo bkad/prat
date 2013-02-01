@@ -12,9 +12,9 @@ class window.ChannelUsers
               .on("leave_channel", @leaveChannel)
               .on("reconnect", @updateAllChannels)
     MessageHub.blockDequeue()
-    channelViewCollection.on("changeCurrentChannel", @displayUserStatuses)
-                         .on("leaveChannel", @removeUserStatuses)
-                         .on("joinChannel", @populateNewUserStatusesView)
+    Channels.on("changeCurrentChannel", @displayUserStatuses)
+            .on("leaveChannel", @removeUserStatuses)
+            .on("joinChannel", @populateNewUserStatusesView)
 
   @updateAllChannels: =>
     $.ajax

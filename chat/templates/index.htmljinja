@@ -43,7 +43,7 @@
 
       websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
 
-      channelViewCollection = new ChannelViewCollection({ channels: initialChannels })
+      Channels = new ChannelViewCollection({ channels: initialChannels })
       ChannelUsers.init(initialChannels)
       ChatControls.init({{ left_sidebar_closed|tojson }},
                         {{ right_sidebar_closed|tojson }})
@@ -56,7 +56,6 @@
 
       messagesViewCollection = new MessagesViewCollection({ sound: sound,
                                                             channels: initialChannels,
-                                                            channelViewCollection: channelViewCollection,
                                                             username: {{ username|tojson|safe }},
                                                             dateTimeHelper: dateTimeHelper,
                                                             collapseTimeWindow: {{ time_window }},
