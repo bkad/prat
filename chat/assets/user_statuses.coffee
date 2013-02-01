@@ -1,6 +1,6 @@
 # Everything having to do with the active users view
 
-class window.ChannelUsers
+class window.Users
   @views: {}
 
   @init: (initialChannels) ->

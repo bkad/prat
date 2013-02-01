@@ -83,7 +83,7 @@ class window.ChatControls
     # Getting the current line before doing regexes is an optimization
     currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
     users = []
-    for model in ChannelUsers.views[CurrentChannel].collection.models
+    for model in Users.views[CurrentChannel].collection.models
       users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
