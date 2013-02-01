@@ -130,7 +130,13 @@ class window.MessagesViewCollection extends Backbone.View
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", @channelViewCollection.joinChannelClick)
     mustached.find("img").replaceWith ->
-      "<div class='image'><button class='hide-image'></button><span>Image hidden</span>#{$(@)[0].outerHTML}</div>"
+      """
+      <div class='image'>
+        <button class='hide-image'></button>
+        <span>Image hidden (<a href='#{$(@)[0].src}' target='_blank'>link</a>)</span>
+        #{$(@)[0].outerHTML}
+      </div>
+      """
     mustached.find("button.hide-image").on "click", (e) ->
       bottom = Util.scrolledToBottom()
       $(e.target).parent().toggleClass("closed")
