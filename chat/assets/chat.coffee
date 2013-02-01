@@ -135,6 +135,8 @@ class window.MessagesViewCollection extends Backbone.View
         #{$(@)[0].outerHTML}
       </div>
       """
+    if Preferences.get("hide-images")
+      mustached.find(".image").addClass("closed")
     mustached.find("button.hide-image").on "click", (e) ->
       bottom = Util.scrolledToBottom()
       $(e.target).parent().toggleClass("closed")
