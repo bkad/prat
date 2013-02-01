@@ -44,7 +44,7 @@
       websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
 
       channelViewCollection = new ChannelViewCollection({ channels: initialChannels })
-      channelUsers = new ChannelUsers(initialChannels)
+      ChannelUsers.init(initialChannels)
       chatControls = new ChatControls({{ left_sidebar_closed|tojson }},
                                       {{ right_sidebar_closed|tojson }})
 
@@ -69,7 +69,7 @@
                       new AlertHelper())
 
       messagesViewCollection.appendInitialMessages()
-      channelUsers.updateAllChannels()
+      ChannelUsers.updateAllChannels()
 
       // Load up tipsy tooltips
       var default_tipsy_options = { opacity: 0.95, live: true };

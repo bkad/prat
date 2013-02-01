@@ -1,11 +1,9 @@
 # Everything having to do with the active users view
 
 class window.ChannelUsers
-  constructor: (initialChannels) ->
-    @views = {}
-    @init(initialChannels)
+  @views: {}
 
-  init: (initialChannels) ->
+  @init: (initialChannels) ->
     for channel in initialChannels
       @addUserStatusesView(channel)
       @displayUserStatuses(channel) if channel is CurrentChannel
@@ -18,7 +16,7 @@ class window.ChannelUsers
                          .on("leaveChannel", @removeUserStatuses)
                          .on("joinChannel", @populateNewUserStatusesView)
 
-  updateAllChannels: =>
+  @updateAllChannels: =>
     $.ajax
       url: "/api/user_status"
       dataType: "json"
@@ -28,18 +26,18 @@ class window.ChannelUsers
       complete: =>
         MessageHub.unblockDequeue()
 
-  resetUserStatuses: (channelsHash) =>
+  @resetUserStatuses: (channelsHash) =>
     for channel, users of channelsHash
       continue unless @views[channel]
       @views[channel].collection.reset(users)
 
-  addUserStatusesIfNecessary: (users, channel) =>
+  @addUserStatusesIfNecessary: (users, channel) =>
     return unless @views[channel]?
     collection = @views[channel].collection
     for user in users
       collection.add(user) unless collection.get(user.email)
 
-  addUserStatusesView: (channel) =>
+  @addUserStatusesView: (channel) =>
     usersCollection = new UserStatusCollection
     usersView = new UserStatusView(collection: usersCollection)
     $(".right-sidebar").append(usersView.$el)
@@ -47,7 +45,7 @@ class window.ChannelUsers
     usersView.render()
     @views[channel] = usersView
 
-  populateNewUserStatusesView: (channel) =>
+  @populateNewUserStatusesView: (channel) =>
     @addUserStatusesView(channel)
     $.ajax
       url: "/api/user_status/#{encodeURIComponent(channel)}"
@@ -55,18 +53,18 @@ class window.ChannelUsers
       success: (data) =>
         @addUserStatusesIfNecessary(data, channel)
 
-  removeUserStatuses: (channel) =>
+  @removeUserStatuses: (channel) =>
     return unless @views[channel]?
     usersView = @views[channel]
     delete @views[channel]
     usersView.remove()
 
-  displayUserStatuses: (channel) =>
+  @displayUserStatuses: (channel) =>
     return unless @views[channel]?
     $(".channel-users.current").removeClass("current")
     @views[channel].$el.addClass("current")
 
-  updateUserStatus: (event, data) =>
+  @updateUserStatus: (event, data) =>
     newStatus = event.split("_")[1]
     view = @views[data.channel]
     model = view.collection.get(data.user.email)
@@ -76,23 +74,23 @@ class window.ChannelUsers
     else
       view.collection.add(data.user)
 
-  joinChannel: (event, data) =>
+  @joinChannel: (event, data) =>
     collection = @views[data.channel].collection
     return if collection.get(data.user.email)?
     collection.add(data.user)
 
-  leaveChannel: (event, data) =>
+  @leaveChannel: (event, data) =>
     collection = @views[data.channel].collection
     collection.remove(data.user.email)
 
 # attributes: name, email, gravatar, status
-class window.UserStatus extends Backbone.Model
+class UserStatus extends Backbone.Model
   initialize: (options) ->
     @attributes.isCurrentUser = @attributes.email is CurrentUserEmail
 
   idAttribute: "email"
 
-class window.UserStatusCollection extends Backbone.Collection
+class UserStatusCollection extends Backbone.Collection
   model: UserStatus
 
   comparator: (userA, userB) ->
@@ -107,7 +105,7 @@ class window.UserStatusCollection extends Backbone.Collection
       when attrA.name < attrB.name then -1
       when attrA.name > attrB.name then 1
 
-class window.UserStatusView extends Backbone.View
+class UserStatusView extends Backbone.View
   initialize: ->
     @userStatusTemplate = $("#user-status-template").html()
 
