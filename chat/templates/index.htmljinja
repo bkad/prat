@@ -45,8 +45,8 @@
 
       channelViewCollection = new ChannelViewCollection({ channels: initialChannels })
       ChannelUsers.init(initialChannels)
-      chatControls = new ChatControls({{ left_sidebar_closed|tojson }},
-                                      {{ right_sidebar_closed|tojson }})
+      ChatControls.init({{ left_sidebar_closed|tojson }},
+                        {{ right_sidebar_closed|tojson }})
 
       UserGuide.init()
       Preferences.init()

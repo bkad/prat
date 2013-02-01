@@ -43,13 +43,10 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  constructor: (leftClosed, rightClosed) ->
-    @init(leftClosed, rightClosed)
+  @init: (leftSidebarClosed, rightSidebarClosed) =>
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
     @currentAutocompletion = null
-
-  init: (leftSidebarClosed, rightSidebarClosed) =>
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
@@ -71,9 +68,9 @@ class window.ChatControls
     @chatHistoryOffset = -1
     @initKeyBindings()
 
-  onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
+  @onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
 
-  onChatAutocomplete: (event) =>
+  @onChatAutocomplete: (event) =>
     if event.which != 9
       # If not a tab, cancel any current autocomplete.
       @currentAutocompletion = null
@@ -148,16 +145,16 @@ class window.ChatControls
   # Pros: This is way easier than that. undo/redo works with this method.
   # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
   # in Firefox. Whatevs.
-  insertTextAtCursor: (element, text) ->
+  @insertTextAtCursor: (element, text) ->
     event = document.createEvent("TextEvent")
     event.initTextEvent("textInput", true, true, null, text)
     element.dispatchEvent(event)
 
-  onPreviewSubmit: (event) =>
+  @onPreviewSubmit: (event) =>
     message = @chatText.val()
     MessageHub.sendPreview(message, CurrentChannel)
 
-  onChatSubmit: (event) =>
+  @onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
       MessageHub.sendChat(message, CurrentChannel)
@@ -165,11 +162,11 @@ class window.ChatControls
     @chatText.val("").focus()
     event.preventDefault()
 
-  onPreviewSend: =>
+  @onPreviewSend: =>
     $("#message-preview").modal("hide")
     @onChatSubmit(preventDefault: ->)
 
-  onExpandRightSidebar: (event) =>
+  @onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.find(".ss-standard").html("right")
     $(".right-sidebar").removeClass("closed")
@@ -177,7 +174,7 @@ class window.ChatControls
     rightSidebarButton.one("click", @onCollapseRightSidebar)
     document.cookie = "rightSidebar=open"
 
-  onCollapseRightSidebar: (event) =>
+  @onCollapseRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.find(".ss-standard").html("left")
     $(".right-sidebar").addClass("closed")
@@ -185,7 +182,7 @@ class window.ChatControls
     rightSidebarButton.one("click", @onExpandRightSidebar)
     document.cookie = "rightSidebar=closed"
 
-  onExpandLeftSidebar: (event) =>
+  @onExpandLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.find(".ss-standard").html("left")
     $(".left-sidebar").removeClass("closed")
@@ -193,7 +190,7 @@ class window.ChatControls
     leftSidebarButton.one("click", @onCollapseLeftSidebar)
     document.cookie = "leftSidebar=open"
 
-  onCollapseLeftSidebar: (event) =>
+  @onCollapseLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.find(".ss-standard").html("right")
     $(".left-sidebar").addClass("closed")
@@ -201,21 +198,21 @@ class window.ChatControls
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
 
-  initKeyBindings: =>
-    for b in ChatControls.globalBindings
+  @initKeyBindings: =>
+    for b in @globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)
 
-  getChatHistory: ->
+  @getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))
 
-  setChatHistory: (history) ->
+  @setChatHistory: (history) ->
     localStorage.setItem("chat_history", JSON.stringify(history))
 
-  getChatFromHistory: (history) ->
+  @getChatFromHistory: (history) ->
     history[history.length - @chatHistoryOffset - 1]
 
-  onNextChatHistory: =>
+  @onNextChatHistory: =>
     return unless @chatText.caret() is @chatText.val().length
     history = @getChatHistory()
     return unless history?.length > 0 and @chatHistoryOffset isnt -1
@@ -223,7 +220,7 @@ class window.ChatControls
     newValue = if @chatHistoryOffset is -1 then @currentMessage else @getChatFromHistory(history)
     @chatText.val(newValue)
 
-  onPreviousChatHistory: =>
+  @onPreviousChatHistory: =>
     return unless @chatText.caret() is 0
     if @chatHistoryOffset is -1
       @currentMessage = @chatText.val()
@@ -235,7 +232,7 @@ class window.ChatControls
       @chatHistoryOffset++
       @chatText.val(@getChatFromHistory(history))
 
-  addToChatHistory: (message) =>
+  @addToChatHistory: (message) =>
     history = @getChatHistory()
     history ?= []
     history.push(message)
