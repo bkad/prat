@@ -38,7 +38,7 @@ class window.MessagesViewCollection extends Backbone.View
 
   addChannel: (channel) =>
     @channelHash[channel] = new MessagesView()
-    @$el.append(@channelHash[channel].$el)
+    @$el.append(@channelHash[channel].render())
     $.ajax
       url: "/api/messages/#{encodeURIComponent(channel)}"
       dataType: "json"
