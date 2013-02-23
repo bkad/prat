@@ -19,8 +19,8 @@ class window.MessagesViewCollection extends Backbone.View
     $(".input-container").before(@$el)
     MessageHub.on("publish_message", @onNewMessage)
               .on("preview_message", @onPreviewMessage)
-              .on("reconnect", @pullMissingMessages)
-    MessageHub.blockDequeue()
+              # We register a special callback for reconnection events because other events defer to it
+              .onReconnect(@pullMissingMessages)
     Channels.on("changeCurrentChannel", @changeCurrentChannel)
             .on("leaveChannel", @removeChannel)
             .on("joinChannel", @addChannel)
@@ -103,7 +103,6 @@ class window.MessagesViewCollection extends Backbone.View
       success: (messageHash) =>
         for channel, messages of messageHash
           @appendMessages(messages, quiet: true)
-        MessageHub.unblockDequeue()
         Util.scrollToBottom(animate: false)
         spinner.stop()
         $("#spin-overlay").fadeOut(200)
@@ -181,5 +180,3 @@ class window.MessagesViewCollection extends Backbone.View
         @appendMessages(messages, quiet: false)
       error: (xhr, textStatus, errorThrown) =>
         console.log "Error updating messages: #{textStatus}, #{errorThrown}"
-      complete:
-        MessageHub.unblockDequeue()

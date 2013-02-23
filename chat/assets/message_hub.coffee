@@ -1,7 +1,6 @@
 class window.MessageHub extends Backbone.Events
   # Track the number of listeners who listen to reconnect events and have to check in before events can dequeue
-  @blockingDequeue: 0
-  @currentlyBlockingDequeue: 0
+  @blockingDequeue: []
 
   @timeoutIDs: []
   @pingIDs: []
@@ -30,12 +29,13 @@ class window.MessageHub extends Backbone.Events
     else
       @trigger(messageObject.action, messageObject.action, messageObject.data)
 
-  @unblockDequeue: =>
-    @currentlyBlockingDequeue -= 1
-    if @currentlyBlockingDequeue <= 0
-      @trigger(message.action, message.action, message.data) for message in @queue
-      @queue = []
-      @queueing = false
+  @onReconnect: (callback) =>
+    @blockingDequeue.push(callback)
+
+  @dequeue: =>
+    @trigger(message.action, message.action, message.data) for message in @queue
+    @queue = []
+    @queueing = false
 
   @sendJSON: (messageObject) => @socket.send(JSON.stringify(messageObject))
 
@@ -79,7 +79,6 @@ class window.MessageHub extends Backbone.Events
 
   @onConnectionFailed: =>
     @reconnect = true
-    @currentlyBlockingDequeue = @blockingDequeue
     @clearAllTimeoutIDs()
     @alertHelper.newAlert("alert-error", "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds")
     console.log "Connection failed, reconnecting in #{@reconnectTimeout/1000} seconds"
@@ -89,7 +88,7 @@ class window.MessageHub extends Backbone.Events
     @alertHelper.delAlert()
     @clearAllTimeoutIDs()
     @pingIDs.push(setInterval(@keepAlive, @pingInterval))
-    @trigger("reconnect") if @reconnect
+    @deferDequeue() if @reconnect
     @reconnect = false
     console.log "Connection successful"
 
@@ -103,6 +102,6 @@ class window.MessageHub extends Backbone.Events
     clearTimeout(timeoutID) for timeoutID in @timeoutIDs
     @timeoutIDs = []
 
-  @blockDequeue: =>
-    @blockingDequeue += 1
-    @currentlyBlockingDequeue += 1
+  @deferDequeue: =>
+    $.when((callback.call() for callback in @blockingDequeue)...)
+     .then(@dequeue)

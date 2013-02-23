@@ -11,7 +11,8 @@ class window.Users
               .on("join_channel", @joinChannel)
               .on("leave_channel", @leaveChannel)
               .on("reconnect", @updateAllChannels)
-    MessageHub.blockDequeue()
+              # We register a special callback for reconnection events because other events defer to it
+              .onReconnect(@updateAllChannels)
     Channels.on("changeCurrentChannel", @displayUserStatuses)
             .on("leaveChannel", @removeUserStatuses)
             .on("joinChannel", @populateNewUserStatusesView)
@@ -23,8 +24,6 @@ class window.Users
       success: @resetUserStatuses
       error: (xhr, textStatus, errorThrown) =>
         console.log "Error updating channels: #{textStatus}, #{errorThrown}"
-      complete: =>
-        MessageHub.unblockDequeue()
 
   @resetUserStatuses: (channelsHash) =>
     for channel, users of channelsHash
