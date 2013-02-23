@@ -2,6 +2,7 @@
 
 from flask import Blueprint, g, render_template, request, current_app
 from chat.views.assets import asset_url
+from chat.datastore import get_user_preferences
 
 frontend = Blueprint("frontend", __name__)
 
@@ -66,4 +67,5 @@ def index():
                          compiled_js=current_app.config["COMPILED_JS"],
                          compiled_css=current_app.config["COMPILED_CSS"],
                          compiled_vendor_js=current_app.config["COMPILED_VENDOR_JS"],
+                         preferences=get_user_preferences(g.user),
                         )

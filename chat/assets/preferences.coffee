@@ -6,11 +6,9 @@ window.Preferences =
 
   get: (name) -> @prefs[name]?.value
 
-  init: ->
-    for _, pref of @prefs
-      pref.value = pref.default
-    @setCheckboxesFromPrefs()
-    @setPrefsFromServer()
+  init: (initialPrefs) ->
+    for name, pref of @prefs
+      pref.value = if name of initialPrefs then initialPrefs[name] else pref.default
 
     $template = $(Mustache.render($("#preferences-template").html()))
     $("body").append($template)
@@ -20,6 +18,7 @@ window.Preferences =
       $("#preferences").modal("hide")
     $("#preferences").on "hidden", => @setCheckboxesFromPrefs()
     $("#settings-button").on "click", @show
+    @setCheckboxesFromPrefs()
 
   show: ->
     $("#preferences").modal("toggle")
