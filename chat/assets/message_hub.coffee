@@ -104,4 +104,4 @@ class window.MessageHub extends Backbone.Events
 
   @deferDequeue: =>
     $.when((callback.call() for callback in @blockingDequeue)...)
-     .then(@dequeue)
+     .then(@dequeue, @dequeue)
