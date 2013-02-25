@@ -67,8 +67,7 @@
                       {{ keep_alive_interval }},
                       new AlertHelper())
 
-      messagesViewCollection.appendInitialMessages()
-      Users.updateAllChannels()
+      MessageHub.deferDequeue(messagesViewCollection.appendInitialMessages, Users.updateAllChannels)
 
       // Load up tipsy tooltips
       var default_tipsy_options = { opacity: 0.95, live: true };

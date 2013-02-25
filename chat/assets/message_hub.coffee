@@ -88,7 +88,7 @@ class window.MessageHub extends Backbone.Events
     @alertHelper.delAlert()
     @clearAllTimeoutIDs()
     @pingIDs.push(setInterval(@keepAlive, @pingInterval))
-    @deferDequeue() if @reconnect
+    @deferDequeue(@blockingDequeue...) if @reconnect
     @reconnect = false
     console.log "Connection successful"
 
@@ -102,6 +102,7 @@ class window.MessageHub extends Backbone.Events
     clearTimeout(timeoutID) for timeoutID in @timeoutIDs
     @timeoutIDs = []
 
-  @deferDequeue: =>
-    $.when((callback.call() for callback in @blockingDequeue)...)
+  # When connected, queue events and wait for backfilling to finish before dequeuing
+  @deferDequeue: (callbacks...) =>
+    $.when((callback.call() for callback in callbacks)...)
      .then(@dequeue, @dequeue)
