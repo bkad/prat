@@ -122,7 +122,7 @@ class window.MessagesViewCollection extends Backbone.View
   newMessageInTimeWindow: (recentMessage, oldMessage) =>
     # recentMessage: a javascript object (received from the server socket connection)
     # oldMessage: a JQuery object (from the DOM)
-    (recentMessage["datetime"] - @findMessageTime(oldMessage)) <= @collapseTimeWindow
+    (recentMessage.datetime - @findMessageTime(oldMessage)) <= @collapseTimeWindow
 
   renderMessagePartial: (message) =>
     mustached = $(Mustache.render(@messagePartialTemplate, message))
@@ -139,11 +139,9 @@ class window.MessagesViewCollection extends Backbone.View
     if Preferences.get("hide-images")
       mustached.find(".image").addClass("closed")
     mustached.find("button.hide-image").on "click", (e) ->
-      bottom = Util.scrolledToBottom()
+      atBottom = Util.scrolledToBottom()
       $(e.target).parent().toggleClass("closed")
-      if bottom
-        console.log "Scrolling to bottom"
-        Util.scrollToBottom()
+      Util.scrollToBottom() if atBottom
     mustached
 
   appendMessage: (message, messagePartial) =>
