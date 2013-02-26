@@ -132,8 +132,8 @@ class window.MessagesViewCollection extends Backbone.View
       """
       <div class='image'>
         <button class='hide-image'></button>
-        <span>Image hidden (<a href='#{$(@)[0].src}' target='_blank'>link</a>)</span>
-        #{$(@)[0].outerHTML}
+        <span>Image hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
+        #{@.outerHTML}
       </div>
       """
     if Preferences.get("hide-images")
