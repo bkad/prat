@@ -39,7 +39,7 @@ class HtmlPygmentsRenderer(HtmlRenderer):
       lexer = get_lexer_by_name("text", **lexer_options)
     formatter = HtmlFormatter(nowrap=True)
     rendered_code = pygments.highlight(code, lexer, formatter)
-    return "<div class=\"highlight\">{0}</div>".format(rendered_code)
+    return u"<div class=\"highlight\">{0}</div>".format(rendered_code)
 
 pygments_renderer = HtmlPygmentsRenderer(HTML_HARD_WRAP | HTML_ESCAPE | HTML_NEW_TAB_LINKS)
 markdown_renderer = Markdown(pygments_renderer, EXT_NO_INTRA_EMPHASIS | EXT_AUTOLINK | EXT_TABLES | EXT_FENCED_CODE |
