@@ -47,7 +47,7 @@
       Users.init(initialChannels)
       ChatControls.init({{ left_sidebar_closed|tojson }},
                         {{ right_sidebar_closed|tojson }})
-
+      ImgurUploader.init({{ imgur_client_id|tojson|safe }})
       UserGuide.init()
       Preferences.init({{ preferences|tojson|safe }})
       sound = new Sound("/static/audio/ping.mp3")

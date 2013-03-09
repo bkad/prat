@@ -44,7 +44,7 @@ def index():
     mustache_templates.append((template_id, template_content))
 
   coffee_files = ["util", "message_hub", "chat", "chat_controls", "channel_controls", "datetime", "sound",
-      "alert", "user_statuses", "user_guide", "preferences"]
+      "alert", "user_statuses", "user_guide", "preferences", "imgur_uploader"]
 
   stylus_files = ["style", "pygments", "tipsy_styles"]
 
