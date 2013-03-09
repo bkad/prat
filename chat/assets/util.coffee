@@ -6,12 +6,12 @@ window.Util =
     # if a scrolling animation is taking place, we are at the bottom
     return true if @scrollingToBottom > 0
     messages = $(".chat-messages.current")
-    difference = (messages[0].scrollHeight - messages.scrollTop()) - messages.outerHeight()
+    difference = messages[0].scrollHeight - messages.scrollTop() - messages.outerHeight()
     difference <= 1
 
   scrollMessagesUp: (options = animate: true) =>
     messageList = $(".chat-messages.current")
-    messages = $(messageList.children().filter(".message-container"))
+    messages = messageList.children(".message-container")
 
     # Return quickly if there's no chance of scrolling
     if messages.length == 0
@@ -35,7 +35,7 @@ window.Util =
 
   scrollMessagesDown: (options = animate: true) =>
     messageList = $(".chat-messages.current")
-    messages = $(messageList.children().filter(".message-container"))
+    messages = messageList.children().filter(".message-container")
 
     # Return quickly if there's no chance of scrolling
     if messages.length == 0
@@ -54,7 +54,7 @@ window.Util =
         break
 
     # If we're scrolling to the bottom most message, just scroll to the very bottom
-    if firstOffScreenMessage[0] == $(messages[messages.length-1])[0]
+    if firstOffScreenMessage[0] is messages[messages.length-1]
       Util.scrollToBottom(animate: options.animate)
     else
       # place the bottom of the message just above the bottom of the message view
