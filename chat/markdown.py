@@ -13,13 +13,15 @@ class HtmlPygmentsRenderer(HtmlRenderer):
   def normal_text(self, text):
     escaped_text = cgi.escape(text)
 
+    prefix = r'(^|(?<=[\s"\'(/]))'
+    suffix = r'(?=[\s"\'.!;,?)/]|$)'
     # mark up user mentions (@username).
-    escaped_text = re.sub(r'(^|(?<=\s))@(?P<user>[\w.-]+)(?=\s|$)',
+    escaped_text = re.sub(r'{0}@(?P<user>[\w.-]*\w+){1}'.format(prefix, suffix),
                           r'<span class="user-mention" data-username="\g<user>">@\g<user></span>',
                           escaped_text)
     # mark up channel names (#channelname). Channel name must have at least one letter to avoid the common
     # case of '#123'.
-    escaped_text = re.sub(r'(^|(?<=\s))#(?P<channel>[\w.-]*[a-zA-Z][\w.-]*)(?=\s|$)',
+    escaped_text = re.sub(r'{0}#(?P<channel>[\w.-]*[a-zA-Z]+){1}'.format(prefix, suffix),
                           r'<span class="channel-mention" data-channelname="\g<channel>">#\g<channel></span>',
                           escaped_text)
 
@@ -37,7 +39,7 @@ class HtmlPygmentsRenderer(HtmlRenderer):
       lexer = get_lexer_by_name("text", **lexer_options)
     formatter = HtmlFormatter(nowrap=True)
     rendered_code = pygments.highlight(code, lexer, formatter)
-    return "<div class=\"highlight\">{0}</div>".format(rendered_code)
+    return u"<div class=\"highlight\">{0}</div>".format(rendered_code)
 
 pygments_renderer = HtmlPygmentsRenderer(HTML_HARD_WRAP | HTML_ESCAPE | HTML_NEW_TAB_LINKS)
 markdown_renderer = Markdown(pygments_renderer, EXT_NO_INTRA_EMPHASIS | EXT_AUTOLINK | EXT_TABLES | EXT_FENCED_CODE |

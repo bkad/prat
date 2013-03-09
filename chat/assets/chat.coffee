@@ -1,6 +1,7 @@
 class window.MessagesView extends Backbone.View
   tagName: "div"
   className: "chat-messages"
+  render: => @$el.append("<div class='margin-hack'></div>")
 
 class window.MessagesViewCollection extends Backbone.View
   tagName: "div"
@@ -13,21 +14,19 @@ class window.MessagesViewCollection extends Backbone.View
     @username = options.username
     @sound = options.sound
     @title = options.title
-    @messageHub = options.messageHub
     # latest in terms of date time stamp
     @latestMessage = datetime: 0
-    @channelViewCollection = options.channelViewCollection
     $(".input-container").before(@$el)
-    @messageHub.on("publish_message", @onNewMessage)
-               .on("preview_message", @onPreviewMessage)
-               .on("reconnect", @pullMissingMessages)
-    @messageHub.blockDequeue()
-    @channelViewCollection.on("changeCurrentChannel", @changeCurrentChannel)
-                          .on("leaveChannel", @removeChannel)
-                          .on("joinChannel", @addChannel)
+    MessageHub.on("publish_message", @onNewMessage)
+              .on("preview_message", @onPreviewMessage)
+              # We register a special callback for reconnection events because other events defer to it
+              .onReconnect(@pullMissingMessages)
+    Channels.on("changeCurrentChannel", @changeCurrentChannel)
+            .on("leaveChannel", @removeChannel)
+            .on("joinChannel", @addChannel)
     for channel in options.channels
       view = @channelHash[channel] = new MessagesView()
-      if channel is @channelViewCollection.currentChannel
+      if channel is CurrentChannel
         view.$el.addClass("current")
     @messageContainerTemplate = $("#message-container-template").html()
     @messagePartialTemplate = $("#message-partial-template").html()
@@ -35,16 +34,17 @@ class window.MessagesViewCollection extends Backbone.View
 
   render: =>
     @$el.children().detach()
-    @$el.append(@channelHash[channel].$el) for channel in @channels
+    @$el.append(@channelHash[channel].render()) for channel in @channels
 
   addChannel: (channel) =>
-    @channelHash[channel] = new MessagesView()
-    @$el.append(@channelHash[channel].$el)
+    @channelHash[channel] = newView = new MessagesView()
+    @$el.append(newView.render())
     $.ajax
       url: "/api/messages/#{encodeURIComponent(channel)}"
       dataType: "json"
       success: (messages) =>
         @appendMessages(messages, quiet: true)
+        Util.scrollToBottom(animate: false, view: newView.$el)
 
   removeChannel: (channel) =>
     @channelHash[channel].$el.remove()
@@ -61,7 +61,7 @@ class window.MessagesViewCollection extends Backbone.View
       unless @toggleTitleInterval?
         @toggleTitleInterval = setInterval(@toggleTitle, 1500)
       window.onfocus = @clearToggleTitleInterval
-      if message.find(".its-you").length > 0
+      if message.find(".its-you").length > 0 && Preferences.get("alert-sounds")
         @sound.playNewMessageAudio()
 
   clearToggleTitleInterval: =>
@@ -79,8 +79,8 @@ class window.MessagesViewCollection extends Backbone.View
   onNewMessage: (event, messageObject) =>
     bottom = Util.scrolledToBottom()
     messagePartial = @renderMessagePartial(messageObject)
-    if messageObject.channel isnt @channelViewCollection.currentChannel
-      @channelViewCollection.highlightChannel(messageObject.channel)
+    if messageObject.channel isnt CurrentChannel
+      Channels.highlightChannel(messageObject.channel)
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
     return unless $message?
@@ -103,7 +103,6 @@ class window.MessagesViewCollection extends Backbone.View
       success: (messageHash) =>
         for channel, messages of messageHash
           @appendMessages(messages, quiet: true)
-        @messageHub.unblockDequeue()
         Util.scrollToBottom(animate: false)
         spinner.stop()
         $("#spin-overlay").fadeOut(200)
@@ -123,12 +122,26 @@ class window.MessagesViewCollection extends Backbone.View
   newMessageInTimeWindow: (recentMessage, oldMessage) =>
     # recentMessage: a javascript object (received from the server socket connection)
     # oldMessage: a JQuery object (from the DOM)
-    (recentMessage["datetime"] - @findMessageTime(oldMessage)) <= @collapseTimeWindow
+    (recentMessage.datetime - @findMessageTime(oldMessage)) <= @collapseTimeWindow
 
   renderMessagePartial: (message) =>
     mustached = $(Mustache.render(@messagePartialTemplate, message))
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
-    mustached.find(".channel-mention").on("click", @channelViewCollection.joinChannelClick)
+    mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
+    mustached.find("img").replaceWith ->
+      """
+      <div class='image'>
+        <button class='hide-image'></button>
+        <span>Image hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
+        #{@.outerHTML}
+      </div>
+      """
+    if Preferences.get("hide-images")
+      mustached.find(".image").addClass("closed")
+    mustached.find("button.hide-image").on "click", (e) ->
+      atBottom = Util.scrolledToBottom()
+      $(e.target).parent().toggleClass("closed")
+      Util.scrollToBottom() if atBottom
     mustached
 
   appendMessage: (message, messagePartial) =>
@@ -150,7 +163,7 @@ class window.MessagesViewCollection extends Backbone.View
     else
       $messageContainer = $(Mustache.render(@messageContainerTemplate, message))
       $messageContainer.filter(".message-container").append(messagePartial)
-      $messageContainer.appendTo(messagesList)
+      messagesList.find(".margin-hack").before($messageContainer)
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)
@@ -165,5 +178,3 @@ class window.MessagesViewCollection extends Backbone.View
         @appendMessages(messages, quiet: false)
       error: (xhr, textStatus, errorThrown) =>
         console.log "Error updating messages: #{textStatus}, #{errorThrown}"
-      complete:
-        @messageHub.unblockDequeue()

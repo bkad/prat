@@ -18,12 +18,12 @@ class window.ChatControls
       keys: ['shift_n'],
       help: "Next channel",
       showHelp: true,
-      action: -> channelViewCollection.cycleChannel(1)
+      action: -> Channels.cycleChannel(1)
     ,
       keys: ['shift_p'],
       help: "Previous channel",
       showHelp: true,
-      action: -> channelViewCollection.cycleChannel(-1)
+      action: -> Channels.cycleChannel(-1)
     ,
       keys: ['shift_j'],
       help: "Join a new channel",
@@ -43,26 +43,24 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  constructor: (@messageHub, @channelViewCollection, @imgurClientId, leftClosed, rightClosed) ->
-    @init(leftClosed, rightClosed)
+  @init: (leftSidebarClosed, rightSidebarClosed) =>
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
     @currentAutocompletion = null
-
-  init: (leftSidebarClosed, rightSidebarClosed) =>
     rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
     leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
     $(".toggle-right-sidebar").one("click", rightToggle)
     $(".toggle-left-sidebar").one("click", leftToggle)
     @chatText = $("#chat-text")
-    @chatText.on("keydown.return", @onChatSubmit)
+    @chatText.on("keydown.shift_return", (e) => @onReturn(e, true))
+    @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
     @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
     $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
     @chatText.on "keydown", @onChatAutocomplete
-    @messageHub.on("force_refresh", @refreshPage)
+    MessageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
     $(".chat-preview").click(@onPreviewSubmit)
     $("#preview-submit").click(@onPreviewSend)
@@ -71,7 +69,9 @@ class window.ChatControls
     @initKeyBindings()
     @initImageUpload()
 
-  onChatAutocomplete: (event) =>
+  @onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
+
+  @onChatAutocomplete: (event) =>
     if event.which != 9
       # If not a tab, cancel any current autocomplete.
       @currentAutocompletion = null
@@ -84,7 +84,7 @@ class window.ChatControls
     # Getting the current line before doing regexes is an optimization
     currentLine = firstPart.substring(firstPart.lastIndexOf("\n") + 1)
     users = []
-    for model in channelUsers.views[channelViewCollection.currentChannel].collection.models
+    for model in Users.views[CurrentChannel].collection.models
       users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
@@ -146,28 +146,28 @@ class window.ChatControls
   # Pros: This is way easier than that. undo/redo works with this method.
   # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
   # in Firefox. Whatevs.
-  insertTextAtCursor: (element, text) ->
+  @insertTextAtCursor: (element, text) ->
     event = document.createEvent("TextEvent")
     event.initTextEvent("textInput", true, true, null, text)
     element.dispatchEvent(event)
 
-  onPreviewSubmit: (event) =>
+  @onPreviewSubmit: (event) =>
     message = @chatText.val()
-    @messageHub.sendPreview(message, @channelViewCollection.currentChannel)
+    MessageHub.sendPreview(message, CurrentChannel)
 
-  onChatSubmit: (event) =>
+  @onChatSubmit: (event) =>
     message = @chatText.val()
     if message.replace(/\s*$/, "") isnt ""
-      @messageHub.sendChat(message, @channelViewCollection.currentChannel)
+      MessageHub.sendChat(message, CurrentChannel)
       @addToChatHistory(message)
     @chatText.val("").focus()
     event.preventDefault()
 
-  onPreviewSend: =>
+  @onPreviewSend: =>
     $("#message-preview").modal("hide")
     @onChatSubmit(preventDefault: ->)
 
-  onExpandRightSidebar: (event) =>
+  @onExpandRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.find(".ss-standard").html("right")
     $(".right-sidebar").removeClass("closed")
@@ -175,7 +175,7 @@ class window.ChatControls
     rightSidebarButton.one("click", @onCollapseRightSidebar)
     document.cookie = "rightSidebar=open"
 
-  onCollapseRightSidebar: (event) =>
+  @onCollapseRightSidebar: (event) =>
     rightSidebarButton = $(".toggle-right-sidebar")
     rightSidebarButton.find(".ss-standard").html("left")
     $(".right-sidebar").addClass("closed")
@@ -183,7 +183,7 @@ class window.ChatControls
     rightSidebarButton.one("click", @onExpandRightSidebar)
     document.cookie = "rightSidebar=closed"
 
-  onExpandLeftSidebar: (event) =>
+  @onExpandLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.find(".ss-standard").html("left")
     $(".left-sidebar").removeClass("closed")
@@ -191,7 +191,7 @@ class window.ChatControls
     leftSidebarButton.one("click", @onCollapseLeftSidebar)
     document.cookie = "leftSidebar=open"
 
-  onCollapseLeftSidebar: (event) =>
+  @onCollapseLeftSidebar: (event) =>
     leftSidebarButton = $(".toggle-left-sidebar")
     leftSidebarButton.find(".ss-standard").html("right")
     $(".left-sidebar").addClass("closed")
@@ -199,11 +199,11 @@ class window.ChatControls
     leftSidebarButton.one("click", @onExpandLeftSidebar)
     document.cookie = "leftSidebar=closed"
 
-  initImageUpload: () =>
+  @initImageUpload: () =>
     $.event.props.push('dataTransfer')
     $(document).on('drop', @handleDrop)
 
-  handleDrop: (event) =>
+  @handleDrop: (event) =>
     event.stopPropagation();
     event.preventDefault();
 
@@ -224,21 +224,21 @@ class window.ChatControls
         xhr.onerror = (error) => console.log(error)
         xhr.send(fd)
 
-  initKeyBindings: () =>
-    for b in ChatControls.globalBindings
+  @initKeyBindings: =>
+    for b in @globalBindings
       for key in b.keys
         $(document).on('keydown.'+ key, b.action)
 
-  getChatHistory: ->
+  @getChatHistory: ->
     JSON.parse(localStorage.getItem("chat_history"))
 
-  setChatHistory: (history) ->
+  @setChatHistory: (history) ->
     localStorage.setItem("chat_history", JSON.stringify(history))
 
-  getChatFromHistory: (history) ->
+  @getChatFromHistory: (history) ->
     history[history.length - @chatHistoryOffset - 1]
 
-  onNextChatHistory: =>
+  @onNextChatHistory: =>
     return unless @chatText.caret() is @chatText.val().length
     history = @getChatHistory()
     return unless history?.length > 0 and @chatHistoryOffset isnt -1
@@ -246,7 +246,7 @@ class window.ChatControls
     newValue = if @chatHistoryOffset is -1 then @currentMessage else @getChatFromHistory(history)
     @chatText.val(newValue)
 
-  onPreviousChatHistory: =>
+  @onPreviousChatHistory: =>
     return unless @chatText.caret() is 0
     if @chatHistoryOffset is -1
       @currentMessage = @chatText.val()
@@ -258,7 +258,7 @@ class window.ChatControls
       @chatHistoryOffset++
       @chatText.val(@getChatFromHistory(history))
 
-  addToChatHistory: (message) =>
+  @addToChatHistory: (message) =>
     history = @getChatHistory()
     history ?= []
     history.push(message)

@@ -2,6 +2,7 @@
 
 from flask import Blueprint, g, render_template, request, current_app
 from chat.views.assets import asset_url
+from chat.datastore import get_user_preferences
 
 frontend = Blueprint("frontend", __name__)
 
@@ -36,13 +37,14 @@ def index():
   left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
 
   mustache_templates = []
-  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info"]:
+  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
+      "preferences"]:
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))
 
   coffee_files = ["util", "message_hub", "chat", "chat_controls", "channel_controls", "datetime", "sound",
-      "alert", "user_statuses", "user_guide"]
+      "alert", "user_statuses", "user_guide", "preferences"]
 
   stylus_files = ["style", "pygments", "tipsy_styles"]
 
@@ -66,4 +68,5 @@ def index():
                          compiled_js=current_app.config["COMPILED_JS"],
                          compiled_css=current_app.config["COMPILED_CSS"],
                          compiled_vendor_js=current_app.config["COMPILED_VENDOR_JS"],
+                         preferences=get_user_preferences(g.user),
                         )

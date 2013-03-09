@@ -74,7 +74,7 @@ window.Util =
         messageList.scrollTo(firstOffScreenMessage, { offset: offset, margin: true })
 
   scrollToBottom: (options = animate: true) ->
-    messages = $(".chat-messages.current")
+    messages = options.view or $(".chat-messages.current")
     scrollTop = messages[0].scrollHeight - messages.outerHeight() - 1
     if options.animate
       @scrollingToBottom += 1

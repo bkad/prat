@@ -1,0 +1,24 @@
+<div id="preferences" data-show="false" class="modal fade" tabindex="-1" style="display: none">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Preferences</h3>
+  </div>
+  <div class="modal-body">
+    <label>
+      <input type="checkbox" id="pref-alert-sounds" />
+      <span>Play an alert sound when you are mentioned and the chat window is not focused.</span>
+    </label>
+    <label>
+      <input type="checkbox" id="pref-swap-enter" />
+      <span>In the input box, <code>enter</code> inserts a newline and <code>shift</code>+<code>enter</code> sends a message.</span>
+    </label>
+    <label>
+      <input type="checkbox" id="pref-hide-images" />
+      <span>Auto-hide all images in new messages.</span>
+    </label>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Cancel</button>
+    <button id="save-preferences" class="btn">Save changes</button>
+  </div>
+</div>

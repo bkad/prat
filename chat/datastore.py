@@ -136,6 +136,18 @@ def get_active_clients_count(user):
   prefix = user_clients_key(user) + "*"
   return len(redis_db.keys(prefix))
 
+def get_user_preferences(user):
+  preferences = user.get("preferences")
+  if preferences is None:
+    preferences = {}
+  return preferences
+
+def update_user_preferences(user, new_preferences):
+  preferences = get_user_preferences(user)
+  preferences.update(new_preferences)
+  user["preferences"] = preferences
+  db.users.save(user)
+  return preferences
 
 db = LocalProxy(get_db)
 redis_db = LocalProxy(get_redis_connection)
