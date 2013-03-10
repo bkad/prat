@@ -3,7 +3,7 @@ class window.ChatControls
       keys: ['shift_/'],
       help: "Show this help dialog",
       showHelp: true,
-      action: -> UserGuide.showShortcuts()
+      action: UserGuide.showShortcuts
     ,
       keys: ['j'],
       help: "Next message",
