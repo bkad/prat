@@ -42,11 +42,11 @@ class window.ChannelViewCollection extends Backbone.View
     @$el.disableSelection()
 
     @newChannelState = "hidden"
-    $('.add-channel-container').on "click", => @toggleNewChannel()
+    $('.add-channel-container').on "click", @toggleNewChannel
     $(".new-channel-name").on("click", (e) -> e.stopPropagation())
       .on("keydown.esc", => @hideNewChannel())
       .on("keydown.return", @onSubmitChannel)
-      .on("blur", => @hideNewChannel() if @newChannelState == "shown")
+      .on("blur", => @hideNewChannel() if @newChannelState is "shown")
     @render()
 
   onSubmitChannel: (event) =>
@@ -152,7 +152,7 @@ class window.ChannelViewCollection extends Backbone.View
     toAdd = $(event.currentTarget).attr("data-channelname")
     @joinChannel(toAdd).onClick()
 
-  # offset == -1 for previous channel
+  # offset is -1 for previous channel
   cycleChannel: (offset = 1) =>
     currentChannelIndex = @$el.children().index(@channelsHash[CurrentChannel].el)
     len = @channels.length

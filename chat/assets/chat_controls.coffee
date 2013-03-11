@@ -1,43 +1,43 @@
 class window.ChatControls
   @globalBindings: [
-      keys: ['shift_/'],
-      help: "Show this help dialog",
-      showHelp: true,
+      keys: ['shift_/']
+      help: "Show this help dialog"
+      showHelp: true
       action: UserGuide.showShortcuts
     ,
-      keys: ['j'],
-      help: "Next message",
-      showHelp: true,
-      action: -> Util.scrollMessagesDown()
+      keys: ['j']
+      help: "Next message"
+      showHelp: true
+      action: Util.scrollMessagesDown
     ,
-      keys: ['k'],
-      help: "Previous message",
-      showHelp: true,
-      action: -> Util.scrollMessagesUp()
+      keys: ['k']
+      help: "Previous message"
+      showHelp: true
+      action: Util.scrollMessagesUp
     ,
-      keys: ['shift_n'],
-      help: "Next channel",
-      showHelp: true,
+      keys: ['shift_n']
+      help: "Next channel"
+      showHelp: true
       action: -> Channels.cycleChannel(1)
     ,
-      keys: ['shift_p'],
-      help: "Previous channel",
-      showHelp: true,
+      keys: ['shift_p']
+      help: "Previous channel"
+      showHelp: true
       action: -> Channels.cycleChannel(-1)
     ,
-      keys: ['shift_j'],
-      help: "Join a new channel",
-      showHelp: true,
-      action: -> $(".add-channel-container").click()
+      keys: ['shift_j']
+      help: "Join a new channel"
+      showHelp: true
+      action: -> Channels.showNewChannel()
     ,
-      keys: ['shift_g'],
-      help: "Scroll to bottom",
-      showHelp: true,
-      action: => Util.scrollToBottom()
+      keys: ['shift_g']
+      help: "Scroll to bottom"
+      showHelp: true
+      action: Util.scrollToBottom
     ,
-      keys: ['return', '/'],
-      help: "Focus chat box",
-      showHelp: true,
+      keys: ['return', '/']
+      help: "Focus chat box"
+      showHelp: true
       action: (e) ->
         e.preventDefault()
         $('#chat-text').focus()
@@ -56,9 +56,10 @@ class window.ChatControls
     @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
-    @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
+    # TODO(kle): figure out why we have to close over blur
+    @chatText.on("keydown.esc", => @chatText.blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
-    $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
+    $(document).on("keydown.esc", @hideModals)
     @chatText.on "keydown", @onChatAutocomplete
     MessageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -68,10 +69,11 @@ class window.ChatControls
     @chatHistoryOffset = -1
     @initKeyBindings()
 
-  @onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
+  @onReturn: (e, shift) ->
+    @onChatSubmit(e) if shift is Preferences.get("swap-enter")
 
   @onChatAutocomplete: (event) =>
-    if event.which != 9
+    if event.which isnt 9
       # If not a tab, cancel any current autocomplete.
       @currentAutocompletion = null
       return
@@ -87,29 +89,29 @@ class window.ChatControls
       users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
-    if @currentAutocompletion == null
+    if @currentAutocompletion is null
       # Get the current word
       matches = /\s([^\s]*)$/.exec(currentLine)
       currentWord = if matches? then matches[1] else currentLine
 
       # Don't do anything unless the current word starts with '@'
-      return unless currentWord.length > 0 && currentWord[0] == "@"
+      return unless currentWord.length > 0 and currentWord[0] is "@"
       currentWord = currentWord.substring(1)
 
       exactMatches = []
       inexactMatches = []
       for user in users
         # First check an exact match against the username
-        if user[0].indexOf(currentWord) == 0
+        if user[0].indexOf(currentWord) is 0
           exactMatches.push(user[0])
           continue
         # Now try a case-insensitive match against the username and real name
         lower = currentWord.toLowerCase()
-        if user[0].toLowerCase().indexOf(lower) == 0 || user[1].toLowerCase().indexOf(lower) == 0
+        if user[0].toLowerCase().indexOf(lower) is 0 or user[1].toLowerCase().indexOf(lower) is 0
           inexactMatches.push(user[0])
 
       allMatches = exactMatches.concat(inexactMatches)
-      return if allMatches.length == 0
+      return if allMatches.length is 0
 
       @currentAutocompletion = [allMatches, 0]
       chosen = allMatches[0] + " "
@@ -241,3 +243,7 @@ class window.ChatControls
     @setChatHistory(history)
     @chatHistoryOffset = -1
     @currentMessage = ""
+
+  @hideModals: ->
+    $("#info").modal("hide")
+    $("#message-preview").modal("hide")
