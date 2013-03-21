@@ -3,17 +3,17 @@ class window.ChatControls
       keys: ['shift_/']
       help: "Show this help dialog"
       showHelp: true
-      action: UserGuide.showShortcuts
+      action: -> UserGuide.showShortcuts()
     ,
       keys: ['j']
       help: "Next message"
       showHelp: true
-      action: Util.scrollMessagesDown
+      action: -> Util.scrollMessagesDown()
     ,
       keys: ['k']
       help: "Previous message"
       showHelp: true
-      action: Util.scrollMessagesUp
+      action: -> Util.scrollMessagesUp()
     ,
       keys: ['shift_n']
       help: "Next channel"
@@ -33,7 +33,7 @@ class window.ChatControls
       keys: ['shift_g']
       help: "Scroll to bottom"
       showHelp: true
-      action: Util.scrollToBottom
+      action: -> Util.scrollToBottom()
     ,
       keys: ['return', '/']
       help: "Focus chat box"
