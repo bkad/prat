@@ -7,7 +7,7 @@ from chat.datastore import (db, message_dict_from_event_object, remove_user_from
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
                             get_user_channel_status, reorder_user_channels, refresh_user_client)
-from chat.zmq_context import zmq_context
+from chat.zmq_context import zmq_context, push_socket
 from chat import markdown
 import uuid
 
@@ -18,8 +18,6 @@ def eventhub_client():
   websocket = request.environ.get('wsgi.websocket')
   if not websocket:
     return
-  push_socket = zmq_context.socket(zmq.PUSH)
-  push_socket.connect(current_app.config["PUSH_ADDRESS"])
   subscribe_socket = zmq_context.socket(zmq.SUB)
   client_id = str(uuid.uuid4())
 
@@ -106,7 +104,6 @@ def eventhub_client():
       send_user_status_update(g.user, channel, push_socket, "offline")
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
-  push_socket.close()
   subscribe_socket.close()
   websocket.close()
   return ""

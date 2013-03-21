@@ -2,8 +2,7 @@ from flask import Blueprint, g, render_template, request, session, redirect, cur
 from flaskext.openid import OpenID
 from hashlib import md5
 from chat.datastore import db, add_user_to_channel
-from chat.zmq_context import zmq_context
-import zmq.green as zmq
+from chat.zmq_context import zmq_context, push_socket
 from chat.views.eventhub import send_join_channel
 import urllib
 import uuid
@@ -47,12 +46,9 @@ def create_or_login(resp):
         "secret": str(uuid.uuid4()),
     }
     db.users.save(user_object)
-    push_socket = zmq_context.socket(zmq.PUSH)
-    push_socket.connect(current_app.config["PUSH_ADDRESS"])
     for channel in default_channels:
       add_user_to_channel(user_object, channel)
       send_join_channel(channel, user_object, push_socket)
-    push_socket.close()
     g.user = user_object
   return redirect(oid.get_next_url())
 
