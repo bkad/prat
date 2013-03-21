@@ -26,6 +26,9 @@ vendor_js_files = [
   "spin.min.js",
 ]
 
+coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
+    "datetime", "sound", "alert", "user_statuses", "preferences"]
+
 @frontend.route('/')
 def index():
   channels = g.user["channels"]
@@ -42,9 +45,6 @@ def index():
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))
-
-  coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
-      "datetime", "sound", "alert", "user_statuses", "preferences"]
 
   stylus_files = ["style", "pygments", "tipsy_styles"]
 

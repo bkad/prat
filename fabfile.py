@@ -1,4 +1,4 @@
-from chat.views.frontend import vendor_js_files
+from chat.views.frontend import vendor_js_files, coffee_files
 import uuid
 from os import path
 import hashlib
@@ -50,8 +50,8 @@ def compile_vendor_js():
 
 def write_config():
   cleanup()
-
-  coffee_command = "coffee -cp chat/assets/*.coffee | java -jar bin/compiler.jar"
+  coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
+  coffee_command = "coffee -cp {0} | java -jar bin/compiler.jar".format(coffee_paths)
   js_filename = compile_assets_file(coffee_command, "js")
 
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
