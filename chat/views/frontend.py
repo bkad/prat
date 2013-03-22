@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from flask import Blueprint, g, render_template, request, current_app
+from flask import Blueprint, g, render_template, request, current_app, redirect, url_for
 from chat.views.assets import asset_url
-from chat.datastore import get_user_preferences
+from chat.datastore import get_user_preferences, db
 
 frontend = Blueprint("frontend", __name__)
 
@@ -29,7 +29,7 @@ vendor_js_files = [
 coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
     "datetime", "sound", "alert", "user_statuses", "preferences"]
 
-@frontend.route('/')
+@frontend.route('')
 def index():
   channels = g.user["channels"]
 
@@ -69,3 +69,11 @@ def index():
                          compiled_vendor_js=current_app.config["COMPILED_VENDOR_JS"],
                          preferences=get_user_preferences(g.user),
                         )
+
+@frontend.route("channel/<path:channel>")
+def room(channel):
+  if channel not in g.user["channels"]:
+    g.user["channels"].append(channel)
+  g.user["last_selected_channel"] = channel
+  db.users.save(g.user)
+  return redirect(url_for("frontend.index"))

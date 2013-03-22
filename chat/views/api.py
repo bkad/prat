@@ -45,6 +45,7 @@ def whoami():
 
 @api.route("/markdown", methods=["POST"])
 def misaka():
+  print request.data
   return markdown.render(request.data)
 
 @api.route("/user/preferences", methods=["PATCH", "GET"])
