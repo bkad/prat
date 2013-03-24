@@ -76,4 +76,5 @@ def room(channel):
   if channel not in g.user["channels"]:
     g.user["channels"].append(channel)
   g.user["last_selected_channel"] = channel
+  db.users.save(g.user)
   return redirect(url_for("frontend.index") + "?" + urlparse(request.url).query)
