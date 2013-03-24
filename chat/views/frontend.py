@@ -36,8 +36,8 @@ def index():
   last_selected_channel = g.user["last_selected_channel"]
   username = g.user["email"].split("@")[0]
 
-  right_sidebar_closed = request.cookies.get("rightSidebar") == "closed"
-  left_sidebar_closed = request.cookies.get("leftSidebar") == "closed"
+  right_sidebar_closed = (request.args.get("rightSidebar") or request.cookies.get("rightSidebar")) == "closed"
+  left_sidebar_closed = (request.args.get("leftSidebar") or request.cookies.get("leftSidebar")) == "closed"
 
   mustache_templates = []
   for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
