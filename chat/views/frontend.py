@@ -3,6 +3,7 @@
 from flask import Blueprint, g, render_template, request, current_app, redirect, url_for
 from chat.views.assets import asset_url
 from chat.datastore import get_user_preferences, db
+from urlparse import urlparse
 
 frontend = Blueprint("frontend", __name__)
 
@@ -75,5 +76,4 @@ def room(channel):
   if channel not in g.user["channels"]:
     g.user["channels"].append(channel)
   g.user["last_selected_channel"] = channel
-  db.users.save(g.user)
-  return redirect(url_for("frontend.index"))
+  return redirect(url_for("frontend.index") + "?" + urlparse(request.url).query)

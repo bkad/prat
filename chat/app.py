@@ -6,6 +6,8 @@ from chat.datastore import db
 from chat.crypto import check_request
 import gevent.monkey
 import urllib
+from urlparse import urlparse
+
 gevent.monkey.patch_all()
 
 DEFAULT_APP = "chat"
@@ -39,10 +41,8 @@ def check_login():
   if getattr(g, "user", None) is None:
     if using_api_key_auth():
       return "Invalid signature", 400
-    split_url = request.url.split("?", 1)
-    query_string = split_url[1] if len(split_url) == 2 else ""
     redirect_query_string = urllib.urlencode([("next", request.path),
-                                              ("args", query_string)])
+                                              ("args", urlparse(request.url).query)])
     return redirect(url_for("auth.login") + "?" +  redirect_query_string)
 
 def using_api_key_auth():
