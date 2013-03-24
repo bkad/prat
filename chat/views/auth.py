@@ -13,14 +13,17 @@ oid = OpenID()
 @auth.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
+  args = request.args.get("args")
+  query_string = ("?" + urllib.unquote(args)) if args else ""
+  next_url = oid.get_next_url() + query_string
   if g.authed is True:
-    return redirect(oid.get_next_url())
+    return redirect(next_url)
   if request.method == 'POST':
     openid = request.form.get('openid_identifier')
     if openid:
       return oid.try_login(openid, ask_for=['email', 'fullname', 'nickname'])
   return render_template('login.htmljinja',
-                         next=oid.get_next_url(),
+                         next=next_url,
                          error=oid.fetch_error())
 
 @oid.after_login
