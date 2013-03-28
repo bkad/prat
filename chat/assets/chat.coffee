@@ -1,7 +1,6 @@
 class window.MessagesView extends Backbone.View
   tagName: "div"
   className: "chat-messages"
-  render: => @$el.append("<div class='margin-hack'></div>")
 
 class window.MessagesViewCollection extends Backbone.View
   tagName: "div"
@@ -34,11 +33,11 @@ class window.MessagesViewCollection extends Backbone.View
 
   render: =>
     @$el.children().detach()
-    @$el.append(@channelHash[channel].render()) for channel in @channels
+    @$el.append(@channelHash[channel].el) for channel in @channels
 
   addChannel: (channel) =>
     @channelHash[channel] = newView = new MessagesView()
-    @$el.append(newView.render())
+    @$el.append(newView.el)
     $.ajax
       url: "/api/messages/#{encodeURIComponent(channel)}"
       dataType: "json"
@@ -163,7 +162,7 @@ class window.MessagesViewCollection extends Backbone.View
     else
       $messageContainer = $(Mustache.render(@messageContainerTemplate, message))
       $messageContainer.filter(".message-container").append(messagePartial)
-      messagesList.find(".margin-hack").before($messageContainer)
+      $messageContainer.appendTo(messagesList)
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)
