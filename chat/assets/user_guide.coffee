@@ -1,7 +1,7 @@
 class window.UserGuide
   @init: ->
     shortcuts = @constructShortcuts()
-    $template = $(Mustache.render($("#info-template").html(), bindings: shortcuts))
+    $template = Util.$mustache($("#info-template").html(), bindings: shortcuts)
     renderTasks = []
     $template.find(".info-contents-pane.markdown").each (_, markdown) =>
       $section = $(markdown)

@@ -99,6 +99,12 @@ window.Util =
     top: 'auto'          # Top position relative to parent in px
     left: 'auto'          # Left position relative to parent in px
 
+  mustache: (template, locals) ->
+    $.trim(Mustache.render(template, locals))
+
+  $mustache: (template, locals) ->
+    $(Util.mustache(template, locals))
+
 window.onbeforeunload = ->
   if $("#chat-text").val().length > 0
     "You have an unsent message."

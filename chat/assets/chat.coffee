@@ -89,7 +89,7 @@ class window.MessagesViewCollection extends Backbone.View
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $("#message-preview .message")
-    $messageContainer = $(Mustache.render(@messagePartialTemplate, messageObject))
+    $messageContainer = Util.$mustache(@messagePartialTemplate, messageObject)
     messagePreviewDiv.replaceWith($messageContainer)
     $("#message-preview").modal("show")
 
@@ -124,7 +124,7 @@ class window.MessagesViewCollection extends Backbone.View
     (recentMessage.datetime - @findMessageTime(oldMessage)) <= @collapseTimeWindow
 
   renderMessagePartial: (message) =>
-    mustached = $(Mustache.render(@messagePartialTemplate, message))
+    mustached = Util.$mustache(@messagePartialTemplate, message)
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
     mustached.find("img").replaceWith ->
@@ -160,7 +160,7 @@ class window.MessagesViewCollection extends Backbone.View
       timeContainer.attr("data-time", message["datetime"])
       @dateTimeHelper.removeBindings(timeContainer)
     else
-      $messageContainer = $(Mustache.render(@messageContainerTemplate, message))
+      $messageContainer = Util.$mustache(@messageContainerTemplate, message)
       $messageContainer.filter(".message-container").append(messagePartial)
       $messageContainer.appendTo(messagesList)
       timeContainer = $messageContainer.find(".time")

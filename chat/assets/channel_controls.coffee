@@ -11,7 +11,7 @@ class window.ChannelView extends Backbone.View
     @channelButton = @$el.find(".channel")
 
   render: =>
-    @$el.html(Mustache.render(@template, name: @name))
+    @$el.html(Util.mustache(@template, name: @name))
     @$el.find(".leave").click(=> @trigger("leaveChannel", @name))
     @$el.hover((=> @$el.addClass("hover")), => @$el.removeClass("hover"))
 

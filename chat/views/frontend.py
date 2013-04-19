@@ -12,8 +12,8 @@ def read_template(template_name):
     return template.read().decode("utf-8")
 
 vendor_js_files = [
-  "jquery-1.8.2.min.js",
-  "jquery-ui-1.8.23.min.js",
+  "jquery-2.0.0.min.js",
+  "jquery-ui-1.10.2.min.js",
   "jquery.caret.js",
   "jquery.scrollTo.min.js",
   "bootstrap-transition.js",

@@ -112,7 +112,7 @@ class UserStatusView extends Backbone.View
   className: "channel-users"
 
   renderUserStatus: (user) =>
-    Mustache.render(@userStatusTemplate, user.attributes)
+    Util.mustache(@userStatusTemplate, user.attributes)
 
   renderUserStatusCollection: =>
     @collection.map(@renderUserStatus).join("")
