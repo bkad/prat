@@ -41,7 +41,7 @@ def cleanup():
 
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
-  minified = local("java -jar bin/compiler.jar --js {0}".format(" ".join(vendor_files)), capture=True)
+  minified = local("./node_modules/.bin/uglifyjs {0} -c".format(" ".join(vendor_files)), capture=True)
   fingerprint = hashlib.md5(minified).hexdigest()
   target_filename = "/static/vendor_{0}.js".format(fingerprint)
   with open("chat" + target_filename, "w") as target_file:
@@ -51,7 +51,7 @@ def compile_vendor_js():
 def write_config():
   cleanup()
   coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
-  coffee_command = "coffee -cp {0} | java -jar bin/compiler.jar".format(coffee_paths)
+  coffee_command = "coffee -cp {0} | ./node_modules/.bin/uglifyjs - -c -m".format(coffee_paths)
   js_filename = compile_assets_file(coffee_command, "js")
 
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
