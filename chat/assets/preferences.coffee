@@ -18,7 +18,6 @@ window.Preferences =
 
     $template = Util.$mustache($("#preferences-template").html())
     $("body").append($template)
-    $("#preferences").modal()
     $("#save-preferences").on "click", =>
       @save()
       $("#preferences").modal("hide")
