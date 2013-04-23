@@ -13,22 +13,18 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='//fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic|Oswald:700'
         rel='stylesheet'>
-  {% if compiled_vendor_js %}
-  <script src="{{ compiled_vendor_js }}"></script>
+  {% if compiled_js %}
+  <script src="{{ compiled_js }}"></script>
   {% else %}
     {% for vendor_js in vendor_js_files %}
     <script src="/static/vendor/js/{{ vendor_js|safe }}"></script>
     {% endfor %}
-  {% endif %}
-  {% if debug %}
-  <script src="/static/vendor/js/livecss.js"></script>
-  {% endif %}
-  {% if compiled_js %}
-    <script src="{{ compiled_js|safe }}"></script>
-  {% else %}
     {% for coffee_file in coffee_files %}
     <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
     {% endfor %}
+  {% endif %}
+  {% if debug %}
+  <script src="/static/vendor/js/livecss.js"></script>
   {% endif %}
   {% for template_id, template_content in mustache_templates %}
   <script id="{{ template_id }}" type="text/x-mustache-template">

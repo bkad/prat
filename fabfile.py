@@ -24,16 +24,18 @@ class Config(DefaultConfig):
   SECRET_KEY = "{secret}"
   COMPILED_JS = "{compiled_coffee_assets}"
   COMPILED_CSS = "{compiled_stylus_assets}"
-  COMPILED_VENDOR_JS = "{compiled_vendor_js}"
 """
+
+def write_asset_contents(contents, extension):
+  fingerprint = hashlib.md5(contents).hexdigest()
+  target_filename = "/static/app_{1}_{0}.{1}".format(fingerprint, extension)
+  with open("chat" + target_filename, "w") as target_file:
+    target_file.write(contents)
+  return target_filename
 
 def compile_assets_file(command, extension):
   compiled = local(command, capture=True)
-  fingerprint = hashlib.md5(compiled).hexdigest()
-  target_filename = "/static/app_{1}_{0}.{1}".format(fingerprint, extension)
-  with open("chat" + target_filename, "w") as target_file:
-    target_file.write(compiled)
-  return target_filename
+  return write_asset_contents(compiled, extension)
 
 def cleanup():
   files = ["chat/static/app_js_*.js", "chat/static/vendor_*.js", "chat/static/app_css_*.css", "config.py"]
@@ -41,30 +43,29 @@ def cleanup():
 
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
-  minified = local("./node_modules/.bin/uglifyjs {0} -c".format(" ".join(vendor_files)), capture=True)
-  fingerprint = hashlib.md5(minified).hexdigest()
-  target_filename = "/static/vendor_{0}.js".format(fingerprint)
-  with open("chat" + target_filename, "w") as target_file:
-    target_file.write(minified)
-  return target_filename
+  return local("./node_modules/.bin/uglifyjs {0} -c".format(" ".join(vendor_files)), capture=True)
 
 def write_config():
   cleanup()
+
+  vendor_js = compile_vendor_js()
+
   coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
   coffee_command = "coffee -cp {0} | ./node_modules/.bin/uglifyjs - -c -m".format(coffee_paths)
-  js_filename = compile_assets_file(coffee_command, "js")
+  coffee_js = local(coffee_command, capture=True)
+
+  all_js = vendor_js + coffee_js
+  js_filename = write_asset_contents(all_js, "js")
 
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
   stylus_command = "cat chat/assets/*.styl | stylus --use {0}".format(nib_path)
   css_filename = compile_assets_file(stylus_command, "css")
-  vendor_js_filename = compile_vendor_js()
 
   secret = str(uuid.uuid4())
 
   compiled_config = config_template.format(secret=secret,
                                            compiled_coffee_assets=js_filename,
-                                           compiled_stylus_assets=css_filename,
-                                           compiled_vendor_js=vendor_js_filename)
+                                           compiled_stylus_assets=css_filename)
 
   with open("config.py", "w") as config_file:
     config_file.write(compiled_config)

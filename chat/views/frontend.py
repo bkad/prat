@@ -67,7 +67,6 @@ def index():
                          vendor_js_files=vendor_js_files,
                          compiled_js=current_app.config["COMPILED_JS"],
                          compiled_css=current_app.config["COMPILED_CSS"],
-                         compiled_vendor_js=current_app.config["COMPILED_VENDOR_JS"],
                          preferences=get_user_preferences(g.user),
                         )
 
