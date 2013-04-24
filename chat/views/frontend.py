@@ -2,7 +2,7 @@
 
 from flask import Blueprint, g, render_template, request, current_app, redirect, url_for
 from chat.views.assets import asset_url
-from chat.datastore import get_user_preferences, db
+from chat.datastore import get_user_preferences, db, add_user_to_channel
 from urlparse import urlparse
 
 frontend = Blueprint("frontend", __name__)
@@ -32,6 +32,11 @@ coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "c
 
 @frontend.route('')
 def index():
+  join_channel = request.args.get("channel")
+  if join_channel:
+    g.user["last_selected_channel"] = join_channel
+    add_user_to_channel(g.user, join_channel)
+
   channels = g.user["channels"]
 
   last_selected_channel = g.user["last_selected_channel"]
@@ -69,11 +74,3 @@ def index():
                          compiled_css=current_app.config["COMPILED_CSS"],
                          preferences=get_user_preferences(g.user),
                         )
-
-@frontend.route("channel/<path:channel>")
-def room(channel):
-  if channel not in g.user["channels"]:
-    g.user["channels"].append(channel)
-  g.user["last_selected_channel"] = channel
-  db.users.save(g.user)
-  return redirect(url_for("frontend.index") + "?" + urlparse(request.url).query)

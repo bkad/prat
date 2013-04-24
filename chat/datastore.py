@@ -85,10 +85,8 @@ def add_user_to_channel(user, channel_name):
   if channel_name not in user["channels"]:
     user["channels"].append(channel_name)
     db.users.save(user)
-
-  set_user_channel_status(user, channel_name, "active")
-
-  return zmq_channel_key(channel_name)
+    return True
+  return False
 
 def remove_user_from_channel(user, channel_name):
   if channel_name in user["channels"]:

@@ -179,7 +179,9 @@ def send_join_channel(channel, user, push_socket):
 
 
 def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
-  channel_id = add_user_to_channel(g.user, channel)
+  add_user_to_channel(g.user, channel)
+  set_user_channel_status(g.user, channel, "active")
+  channel_id = zmq_channel_key(channel)
 
   send_join_channel(channel, g.user, push_socket)
 
