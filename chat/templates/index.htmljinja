@@ -91,7 +91,7 @@
         </a>
       </div>
       <div class="logo-title">
-        <div>{{ title }}</div>
+        <div>{{ config["APP_NAME"] }}</div>
       </div>
     </header>
     <div class="channel-controls-container">
