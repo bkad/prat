@@ -16,8 +16,6 @@ window.Preferences =
     for name, pref of @prefs
       pref.value = if name of initialPrefs then initialPrefs[name] else pref.default
 
-    $template = Util.$mustache($("#preferences-template").html())
-    $("body").append($template)
     $("#save-preferences").on "click", =>
       @save()
       $("#preferences").modal("hide")

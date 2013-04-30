@@ -138,5 +138,6 @@
   </div>
   <div class="right-sidebar [[ "closed" if right_sidebar_closed else "" ]]">
   </div>
+  {{ preferences_snippet|safe }}
 </body>
 </html>

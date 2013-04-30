@@ -73,8 +73,7 @@ def index():
 
 def get_mustache_templates():
   mustache_templates = []
-  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
-      "preferences"]:
+  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info"]:
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))
@@ -86,6 +85,7 @@ def write_main_template():
       coffee_files=coffee_files,
       stylus_files=stylus_files,
       asset_url=asset_url,
-      vendor_js_files=vendor_js_files)
+      vendor_js_files=vendor_js_files,
+      preferences_snippet=read_template("preferences.html"))
   with codecs.open("chat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:
     template_file.write(template)
