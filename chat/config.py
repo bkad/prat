@@ -34,3 +34,6 @@ class DefaultConfig(object):
   # in production, we concatenate our assets and minify them
   COMPILED_JS = False
   COMPILED_CSS = False
+
+  # During development, we reconstruct the main template on each render just in case something changed.
+  REWRITE_MAIN_TEMPLATE = True

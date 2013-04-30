@@ -33,17 +33,17 @@
   {% endfor %}
   <script charset="utf-8">
     $(function() {
-      CurrentUserEmail = {{ email|tojson|safe }}
-      CurrentChannel = {{ last_selected_channel|tojson|safe }}
-      var initialChannels = {{ channels|tojson|safe }}
+      CurrentUserEmail = [[ email|tojson|safe ]]
+      CurrentChannel = [[ last_selected_channel|tojson|safe ]]
+      var initialChannels = [[ channels|tojson|safe ]]
 
       Channels = new ChannelViewCollection({ channels: initialChannels })
       Users.init(initialChannels)
-      ChatControls.init({{ left_sidebar_closed|tojson }},
-                        {{ right_sidebar_closed|tojson }})
+      ChatControls.init([[ left_sidebar_closed|tojson ]],
+                        [[ right_sidebar_closed|tojson ]])
 
       UserGuide.init()
-      Preferences.init({{ preferences|tojson|safe }})
+      Preferences.init([[ preferences|tojson|safe ]])
       sound = new Sound("/static/audio/ping.mp3")
 
       dateTimeHelper = new DateTimeHelper()
@@ -51,7 +51,7 @@
       messagesViewCollection =
         new MessagesViewCollection({ sound: sound,
                                      channels: initialChannels,
-                                     username: {{ username|tojson|safe }},
+                                     username: [[ username|tojson|safe ]],
                                      dateTimeHelper: dateTimeHelper,
                                      collapseTimeWindow: {{ config["COLLAPSED_MESSAGE_TIME_WINDOW"] }},
                                      title: {{ config["APP_NAME"]|tojson|safe }},
@@ -75,7 +75,7 @@
   </script>
 </head>
 <body>
-  <div class="left-sidebar {{ "closed" if left_sidebar_closed else "" }}">
+  <div class="left-sidebar [[ "closed" if left_sidebar_closed else "" ]]">
     <header>
       <div class="control-button-container">
         <button id="user-info-button" class="west" rel="tipsy" title="User guide">
@@ -101,18 +101,18 @@
       </div>
     </div>
   </div>
-  <div class="main-content {{ "collapse-left" if left_sidebar_closed else "" }}">
-    <div class="chat-column {{ "collapse-right" if right_sidebar_closed else "" }}">
+  <div class="main-content [[ "collapse-left" if left_sidebar_closed else "" ]]">
+    <div class="chat-column [[ "collapse-right" if right_sidebar_closed else "" ]]">
       <div id="spin-overlay"></div>
       <div class="alert-container"></div>
       <div class="chat-controls">
         <button class="toggle-left-sidebar">
-          <span class="ss-standard">{{"right" if left_sidebar_closed else "left"}}</span>
+          <span class="ss-standard">[[ "right" if left_sidebar_closed else "left" ]]</span>
         </button>
         <button class="toggle-right-sidebar">
-          <span class="ss-standard">{{ "left" if right_sidebar_closed else "right" }}</span>
+          <span class="ss-standard">[[ "left" if right_sidebar_closed else "right" ]]</span>
         </button>
-        <div class="channel-name">{{ last_selected_channel }}</div>
+        <div class="channel-name">[[ last_selected_channel ]]</div>
       </div>
       <div class="input-container">
         <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
@@ -136,7 +136,7 @@
       </div>
     </div>
   </div>
-  <div class="right-sidebar {{ "closed" if right_sidebar_closed else "" }}">
+  <div class="right-sidebar [[ "closed" if right_sidebar_closed else "" ]]">
   </div>
 </body>
 </html>

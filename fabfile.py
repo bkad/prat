@@ -1,10 +1,11 @@
-from chat.views.frontend import vendor_js_files, coffee_files
+from chat.views.frontend import vendor_js_files, coffee_files, write_main_template
 import uuid
 from os import path
 import hashlib
 from fabric.operations import local
 from fabric.contrib.project import rsync_project
 from fabric.state import env
+from chat import create_app
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
@@ -24,6 +25,7 @@ class Config(DefaultConfig):
   SECRET_KEY = "{secret}"
   COMPILED_JS = "{compiled_coffee_assets}"
   COMPILED_CSS = "{compiled_stylus_assets}"
+  REWRITE_MAIN_TEMPLATE = False
 """
 
 def write_asset_contents(contents, extension):
@@ -38,7 +40,12 @@ def compile_assets_file(command, extension):
   return write_asset_contents(compiled, extension)
 
 def cleanup():
-  files = ["chat/static/app_js_*.js", "chat/static/vendor_*.js", "chat/static/app_css_*.css", "config.py"]
+  files = ["chat/static/app_js_*.js",
+           "chat/static/vendor_*.js",
+           "chat/static/app_css_*.css",
+           "config.py",
+           "chat/templates/index.htmljinja",
+          ]
   local("rm -f {0}".format(" ".join(files)))
 
 def compile_vendor_js():
@@ -70,9 +77,16 @@ def write_config():
   with open("config.py", "w") as config_file:
     config_file.write(compiled_config)
 
+def precompile_template():
+  app = create_app()
+  app.config.from_pyfile("config.py")
+  with app.test_request_context():
+    write_main_template()
+
 def rsync():
   rsync_project(remote_dir="/home/ubuntu", exclude=".git")
 
 def deploy():
   write_config()
+  precompile_template()
   rsync()
