@@ -2,25 +2,11 @@ class window.UserGuide
   @init: ->
     shortcuts = @constructShortcuts()
     $template = Util.$mustache($("#info-template").html(), bindings: shortcuts)
-    renderTasks = []
-    $template.find(".info-contents-pane.markdown").each (_, markdown) =>
-      $section = $(markdown)
-      text = @dedent($section.text())
-      renderTasks.push($.ajax
-        type: "POST"
-        url: "/api/markdown"
-        processData: false
-        data: text
-        contentType: "text/markdown; charset=UTF-8"
-        success: (rendered) ->
-          $section.html(rendered)
-      )
-    $.when(renderTasks...).done =>
-      $("body").append($template)
-      $("#info").modal()
-      @nav("channels")
-      $("#info-nav li").on "click", (e) => @nav($(e.target).attr("data-contents-pane"))
-      $("#user-info-button").on "click", @showInfo
+    $("body").append($template)
+    $("#info").modal()
+    @nav("channels")
+    $("#info-nav li").on "click", (e) => @nav($(e.target).attr("data-contents-pane"))
+    $("#user-info-button").on "click", @showInfo
 
   @nav: (name) ->
     $old = $("#info-nav li.selected")

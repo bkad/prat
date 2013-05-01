@@ -5,6 +5,7 @@ from chat.views.assets import asset_url
 from chat.datastore import get_user_preferences, db, add_user_to_channel
 from urlparse import urlparse
 import codecs
+from chat import markdown
 
 frontend = Blueprint("frontend", __name__)
 
@@ -48,12 +49,6 @@ def index():
   right_sidebar_closed = (request.args.get("rightSidebar") or request.cookies.get("rightSidebar")) == "closed"
   left_sidebar_closed = (request.args.get("leftSidebar") or request.cookies.get("leftSidebar")) == "closed"
 
-  env = current_app.jinja_env.overlay(block_start_string = "[%",
-                                      block_end_string = "%]",
-                                      variable_start_string = "[[",
-                                      variable_end_string = "]]",
-                                      comment_start_string = "[#",
-                                      comment_end_string = "#]")
   context = {
     "username": username,
     "email": g.user["email"],
@@ -63,15 +58,14 @@ def index():
     "left_sidebar_closed": left_sidebar_closed,
     "preferences": get_user_preferences(g.user),
   }
-  current_app.update_template_context(context)
 
   if current_app.config["REWRITE_MAIN_TEMPLATE"]:
     write_main_template()
 
-  template = env.get_template("index.htmljinja")
-  return template.render(**context)
+  return render_square_bracket_template("index.htmljinja", context)
 
 def get_mustache_templates():
+  write_info_template()
   mustache_templates = []
   for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info"]:
     template_id = template.replace("_", "-") + "-template"
@@ -89,3 +83,21 @@ def write_main_template():
       preferences_snippet=read_template("preferences.html"))
   with codecs.open("chat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:
     template_file.write(template)
+
+def render_square_bracket_template(template_name, context):
+  env = current_app.jinja_env.overlay(block_start_string = "[%",
+                                      block_end_string = "%]",
+                                      variable_start_string = "[[",
+                                      variable_end_string = "]]",
+                                      comment_start_string = "[#",
+                                      comment_end_string = "#]")
+  current_app.update_template_context(context)
+  template = env.get_template(template_name)
+  return template.render(**context)
+
+def write_info_template():
+  args = { name: markdown.render(read_template(name + ".md"))
+      for name in ["channel_info", "markdown_info", "faq"] }
+  rendered = render_square_bracket_template("info.mustachejinja", args)
+  with codecs.open("chat/templates/info.mustache", "w", encoding="utf-8") as template_file:
+    template_file.write(rendered)

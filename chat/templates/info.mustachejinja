@@ -1,0 +1,48 @@
+<div id="info" data-show="false" class="modal fade user-guide" tabindex="-1" style="display: none">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Prat User Guide</h3>
+  </div>
+  <div id="info-body">
+    <div id="info-nav" class="column">
+      <ul>
+        <li class="selected" data-contents-pane="channels">Channels</li>
+        <li data-contents-pane="markdown-cheatsheet">Markdown</li>
+        <li data-contents-pane="keyboard-shortcuts">Shortcuts</li>
+        <li data-contents-pane="faq">FAQ</li>
+      </ul>
+    </div>
+    <div id="info-contents" class="column">
+
+      <div class="info-contents-pane markdown channels">
+        [[ channel_info|safe ]]
+      </div>
+
+      <div class="info-contents-pane markdown markdown-cheatsheet">
+        [[ markdown_info|safe ]]
+      </div>
+
+      <div class="info-contents-pane keyboard-shortcuts">
+        <table>
+          {{#bindings}}
+            <tr>
+              <td>
+                {{#keys}}
+                  {{#key}}<span class="keys">{{key}}</span>{{/key}}
+                  {{#sep}}<span class="sep">{{sep}}</span>{{/sep}}
+                {{/keys}}
+              </td>
+              <td>{{purpose}}</td>
+            </tr>
+          {{/bindings}}
+          <tr><td><span class="keys">escape</span></td><td>Unfocus the chat box or exit any dialog</td></tr>
+        </table>
+      </div>
+
+      <div class="info-contents-pane markdown faq">
+        [[ faq|safe ]]
+      </div>
+
+    </div>
+  </div>
+</div>
