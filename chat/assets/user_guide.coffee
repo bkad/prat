@@ -3,7 +3,6 @@ class window.UserGuide
     shortcuts = @constructShortcuts()
     $template = Util.$mustache($("#info-template").html(), bindings: shortcuts)
     $("body").append($template)
-    $("#info").modal()
     @nav("channels")
     $("#info-nav li").on "click", (e) => @nav($(e.target).attr("data-contents-pane"))
     $("#user-info-button").on "click", @showInfo
