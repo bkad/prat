@@ -36,13 +36,3 @@ class window.UserGuide
   @showShortcuts: =>
     @nav("keyboard-shortcuts")
     @showInfo()
-
-  @dedent: (text) ->
-    lines = text.split("\n").slice(0, -1) # Knock off the last one, on the line before the </div>
-    leadingSpaces = []
-    for line in lines
-      leadingSpaces.push(/^(\s*)/.exec(line)[1].length) if line isnt ""
-    leadingSpace = Math.min(leadingSpaces...)
-    result = for line in lines
-      if line is "" then "" else line.substr(leadingSpace)
-    result.join("\n")
