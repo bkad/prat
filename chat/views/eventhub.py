@@ -61,7 +61,7 @@ def eventhub_client():
         message = subscribe_socket.recv()
 
         # the message is prepended by the channel_id (for PUB/SUB reasons)
-        channel_id, packed = message.split(" ", 1)
+        _, packed = message.split(" ", 1)
 
         unpacked = json.loads(packed)
 

@@ -10,7 +10,7 @@ from redis import StrictRedis
 from pymongo import MongoClient
 
 def zmq_channel_key(channel_name):
-  return base64.b64encode(channel_name.encode("utf-8"))
+  return "channel:" + base64.b64encode(channel_name.encode("utf-8"))
 
 def send_user_offline(user, channel, socket):
   keyed_channel = zmq_channel_key(channel)
