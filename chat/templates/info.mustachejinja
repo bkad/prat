@@ -6,7 +6,7 @@
   <div id="info-body">
     <div id="info-nav" class="column">
       <ul>
-        <li class="selected" data-contents-pane="channels">Channels</li>
+        <li class="selected" data-contents-pane="channel-guide">Channels</li>
         <li data-contents-pane="markdown-cheatsheet">Markdown</li>
         <li data-contents-pane="keyboard-shortcuts">Shortcuts</li>
         <li data-contents-pane="faq">FAQ</li>
@@ -14,15 +14,15 @@
     </div>
     <div id="info-contents" class="column">
 
-      <div class="info-contents-pane markdown channels">
+      <div id="channel-guide" class="info-contents-pane markdown selected">
         [[ channel_info|safe ]]
       </div>
 
-      <div class="info-contents-pane markdown markdown-cheatsheet">
+      <div id="markdown-cheatsheet" class="info-contents-pane markdown">
         [[ markdown_info|safe ]]
       </div>
 
-      <div class="info-contents-pane keyboard-shortcuts">
+      <div id="keyboard-shortcuts" class="info-contents-pane">
         <table>
           {{#bindings}}
             <tr>
@@ -39,7 +39,7 @@
         </table>
       </div>
 
-      <div class="info-contents-pane markdown faq">
+      <div id="faq" class="info-contents-pane markdown">
         [[ faq|safe ]]
       </div>
 

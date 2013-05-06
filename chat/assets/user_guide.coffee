@@ -3,7 +3,6 @@ class window.UserGuide
     shortcuts = @constructShortcuts()
     $template = Util.$mustache($("#info-template").html(), bindings: shortcuts)
     $("body").append($template)
-    @nav("channels")
     $("#info-nav li").on "click", (e) => @nav($(e.target).attr("data-contents-pane"))
     $("#user-info-button").on "click", @showInfo
 
@@ -13,7 +12,7 @@ class window.UserGuide
     $old.removeClass("selected")
     $target.addClass("selected")
     $oldPane = $("#info-contents .info-contents-pane.selected")
-    $newPane = $("#info-contents .info-contents-pane.#{name}")
+    $newPane = $("##{name}")
     $oldPane.removeClass("selected")
     $newPane.addClass("selected")
 
