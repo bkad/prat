@@ -6,12 +6,13 @@ from fabric.operations import local
 from fabric.contrib.project import rsync_project
 from fabric.state import env
 from chat import create_app
+import imp
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
 import threading
-reload(select)
-reload(threading)
+imp.reload(select)
+imp.reload(threading)
 
 env.use_ssh_config = True
 if env.hosts == []:
@@ -78,8 +79,9 @@ def write_config():
     config_file.write(compiled_config)
 
 def precompile_template():
-  app = create_app()
-  app.config.from_pyfile("config.py")
+  # Yes, we're importing a module we just wrote.
+  config_module = imp.load_module("config", *imp.find_module("config", ["./"]))
+  app = create_app(config_module.Config)
   with app.test_request_context():
     write_main_template()
 
