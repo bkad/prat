@@ -37,3 +37,9 @@ class DefaultConfig(object):
 
   # During development, we reconstruct the main template on each render just in case something changed.
   REWRITE_MAIN_TEMPLATE = True
+
+  # The email address to send exceptions to
+  ADMIN_EMAIL = "foo@bar.com"
+
+  # The email address to send exceptions from
+  ERROR_EMAIL = "bar@foo.com"
