@@ -10,6 +10,7 @@ from chat.datastore import (db, message_dict_from_event_object, remove_user_from
 from chat.zmq_context import zmq_context, push_socket
 from chat import markdown
 import uuid
+import socket
 
 eventhub = Blueprint("eventhub", __name__)
 
@@ -96,6 +97,9 @@ def eventhub_client():
           handle_ping(websocket, push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
+  except socket.error, e:
+    pass
+
 
   remove_from_user_clients(g.user, client_id)
   if get_active_clients_count(g.user) == 0:
@@ -105,7 +109,6 @@ def eventhub_client():
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
   subscribe_socket.close()
-  websocket.close()
   return ""
 
 
