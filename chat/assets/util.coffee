@@ -80,7 +80,7 @@ window.Util =
     else
       messages.prop(scrollTop: scrollTop)
 
-  cleanupTipsy: -> $(".tipsy").remove()
+  cleanupTooltips: -> $(".tooltip").remove()
 
   spinConfig:
     lines: 11            # The number of lines to draw

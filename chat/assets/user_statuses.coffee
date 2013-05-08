@@ -112,12 +112,15 @@ class UserStatusView extends Backbone.View
   className: "channel-users"
 
   renderUserStatus: (user) =>
-    Util.mustache(@userStatusTemplate, user.attributes)
+    Util.$mustache(@userStatusTemplate, user.attributes).tooltip(DefaultTooltip)[0]
 
   renderUserStatusCollection: =>
-    @collection.map(@renderUserStatus).join("")
+    frag = document.createDocumentFragment()
+    for status in @collection.map(@renderUserStatus)
+      frag.appendChild(status)
+    frag
 
   render: =>
-    Util.cleanupTipsy()
+    Util.cleanupTooltips()
     @$el.html(@renderUserStatusCollection())
     @

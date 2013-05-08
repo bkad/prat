@@ -12,7 +12,8 @@ class window.ChannelView extends Backbone.View
 
   render: =>
     @$el.html(Util.mustache(@template, name: @name))
-    @$el.find(".leave").click(=> @trigger("leaveChannel", @name))
+    @$el.find(".leave").tooltip(DefaultTooltip)
+      .click(=> @trigger("leaveChannel", @name))
     @$el.hover((=> @$el.addClass("hover")), => @$el.removeClass("hover"))
 
   onClick: =>
@@ -42,8 +43,8 @@ class window.ChannelViewCollection extends Backbone.View
     @$el.disableSelection()
 
     @newChannelState = "hidden"
-    $('.add-channel-container').on "click", @toggleNewChannel
-    $(".new-channel-name").on("click", (e) -> e.stopPropagation())
+    $(".add-channel-container").click(@toggleNewChannel)
+    $(".new-channel-name").click((e) -> e.stopPropagation())
       .on("keydown.esc", => @hideNewChannel())
       .on("keydown.return", @onSubmitChannel)
       .on("blur", => @hideNewChannel() if @newChannelState is "shown")
@@ -64,8 +65,6 @@ class window.ChannelViewCollection extends Backbone.View
       placeholder: "channel-button-placeholder"
       handle: ".reorder"
       axis: "y"
-      start: => $.fn.tipsy.disable()
-      stop: => $.fn.tipsy.enable()
       update: @updateChannelOrder
 
   updateChannelOrder: =>
@@ -125,7 +124,7 @@ class window.ChannelViewCollection extends Backbone.View
     @channels = _.without(@channels, channel)
     @channelsHash[channel].$el.remove()
     delete @channelsHash[channel]
-    Util.cleanupTipsy()
+    Util.cleanupTooltips()
     MessageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
     $("button.channel").first().click() if channel is CurrentChannel and @channels.length > 0

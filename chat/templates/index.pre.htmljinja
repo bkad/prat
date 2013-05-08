@@ -36,6 +36,7 @@
       CurrentUserEmail = [[ email|tojson|safe ]]
       CurrentChannel = [[ last_selected_channel|tojson|safe ]]
       var initialChannels = [[ channels|tojson|safe ]]
+      DefaultTooltip = { animation: false, container: "body" }
 
       Channels = new ChannelViewCollection({ channels: initialChannels })
       Users.init(initialChannels)
@@ -65,12 +66,10 @@
 
       MessageHub.deferDequeue(messagesViewCollection.appendInitialMessages, Users.updateAllChannels)
 
-      // Load up tipsy tooltips
-      var default_tipsy_options = { opacity: 0.95, live: true };
-      $(".north[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "n"}));
-      $(".south[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "s"}));
-      $(".east[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "e"}));
-      $(".west[rel=tipsy]").tipsy($.extend({}, default_tipsy_options, {gravity: "w"}));
+      var sideButtons = ["logout", "user-info-button", "settings-button"]
+      sideButtons.forEach(function(e) {
+        $("#" + e).tooltip(DefaultTooltip)
+      })
     })
   </script>
 </head>
@@ -78,14 +77,14 @@
   <div class="left-sidebar [[ "closed" if left_sidebar_closed else "" ]]">
     <header>
       <div class="control-button-container">
-        <button id="user-info-button" class="west" rel="tipsy" title="User guide">
+        <button id="user-info-button" data-placement="right" title="User guide">
           <span class="ss-standard">question</span>
         </button>
-        <button id="settings-button" class="west" rel="tipsy" title="Preferences">
+        <button id="settings-button" data-placement="right" title="Preferences">
           <span class="ss-standard">gear</span>
         </button>
         <a href="{{ url_for("auth.logout") }}">
-          <button id="logout" class="west" rel="tipsy" title="Logout">
+          <button id="logout" data-placement="right" title="Logout">
             <span class="ss-standard">logout</span>
           </button>
         </a>

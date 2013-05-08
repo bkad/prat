@@ -21,10 +21,10 @@ vendor_js_files = [
   "bootstrap-transition.js",
   "bootstrap-alert.js",
   "bootstrap-modal.js",
+  "bootstrap-tooltip.js",
   "mustache.js",
   "underscore-1.3.3-min.js",
   "backbone-0.9.2-min.js",
-  "jquery.tipsy.js",
   "jquery.hotkeys.js",
   "spin.min.js",
 ]
@@ -32,7 +32,7 @@ vendor_js_files = [
 coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
     "datetime", "sound", "alert", "user_statuses", "preferences"]
 
-stylus_files = ["style", "pygments", "tipsy_styles"]
+stylus_files = ["style", "pygments", "tooltip"]
 
 @frontend.route('')
 def index():
