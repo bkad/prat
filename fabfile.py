@@ -49,6 +49,9 @@ def cleanup():
           ]
   local("rm -f {0}".format(" ".join(files)))
 
+  # Remove all *.pyc files recursively
+  local("find . -name \"*.pyc\" -exec rm -rf {} \\;")
+
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
   return local("./node_modules/.bin/uglifyjs {0} -c".format(" ".join(vendor_files)), capture=True)
