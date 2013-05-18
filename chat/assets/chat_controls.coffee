@@ -43,14 +43,13 @@ class window.ChatControls
         $('#chat-text').focus()
   ]
 
-  @init: (leftSidebarClosed, rightSidebarClosed) =>
+  @init: (options) =>
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
     @currentAutocompletion = null
-    rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
-    leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
-    $(".toggle-right-sidebar").one("click", rightToggle)
-    $(".toggle-left-sidebar").one("click", leftToggle)
+    for direction in ["left", "right"]
+      $(".toggle-#{direction}-sidebar").one("click",
+        @sidebarAccordian(placement: direction, expand: options["#{direction}SidebarClosed"]))
     @chatText = $("#chat-text")
     @chatText.on("keydown.shift_return", (e) => @onReturn(e, true))
     @chatText.on("keydown.return", (e) => @onReturn(e, false))
@@ -168,45 +167,20 @@ class window.ChatControls
     $("#message-preview").modal("hide")
     @onChatSubmit(preventDefault: ->)
 
-  @onExpandRightSidebar: (event) =>
-    rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find("span")
-                      .removeClass("icon-chevron-left")
-                      .addClass("icon-chevron-right")
-    $(".right-sidebar").removeClass("closed")
-    $(".chat-column").removeClass("collapse-right")
-    rightSidebarButton.one("click", @onCollapseRightSidebar)
-    document.cookie = "rightSidebar=open"
-
-  @onCollapseRightSidebar: (event) =>
-    rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find("span")
-                      .removeClass("icon-chevron-right")
-                      .addClass("icon-chevron-left")
-    $(".right-sidebar").addClass("closed")
-    $(".chat-column").addClass("collapse-right")
-    rightSidebarButton.one("click", @onExpandRightSidebar)
-    document.cookie = "rightSidebar=closed"
-
-  @onExpandLeftSidebar: (event) =>
-    leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find("span")
-                     .removeClass("icon-chevron-left")
-                     .addClass("icon-chevron-right")
-    $(".left-sidebar").removeClass("closed")
-    $(".main-content").removeClass("collapse-left")
-    leftSidebarButton.one("click", @onCollapseLeftSidebar)
-    document.cookie = "leftSidebar=open"
-
-  @onCollapseLeftSidebar: (event) =>
-    leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find("span")
-                     .removeClass("icon-chevron-right")
-                     .addClass("icon-chevron-left")
-    $(".left-sidebar").addClass("closed")
-    $(".main-content").addClass("collapse-left")
-    leftSidebarButton.one("click", @onExpandLeftSidebar)
-    document.cookie = "leftSidebar=closed"
+  @sidebarAccordian: (options) =>
+    (event) =>
+      placement = options.placement
+      expand = options.expand
+      button = $(".toggle-#{placement}-sidebar")
+      classCondition = ((placement is "left" and expand) or (placement is "right" and not expand))
+      iconClass = "icon-chevron-" + if classCondition then "left" else "right"
+      button.find("span").attr("class", iconClass)
+      classAttrMethod = "#{if expand then "remove" else "add"}Class"
+      $(".#{placement}-sidebar")[classAttrMethod]("closed")
+      centerColumn = if placement is "left" then ".main-content" else ".chat-column"
+      $(centerColumn)[classAttrMethod]("collapse-#{placement}")
+      button.one("click", @sidebarAccordian(placement: placement, expand: not expand))
+      document.cookie = "#{placement}Sidebar=#{if expand then "closed" else "open"}"
 
   @initKeyBindings: =>
     for b in @globalBindings
