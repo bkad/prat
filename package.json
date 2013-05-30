@@ -2,7 +2,7 @@
   "name": "oochat",
   "version": "1.0.0",
   "dependencies": {
-    "stylus": "0.31.x",
+    "stylus": "0.32.x",
     "nib": "0.9.1",
     "uglify-js": "2.2.5"
   }
