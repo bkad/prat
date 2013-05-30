@@ -1,6 +1,6 @@
 * **What is this project?**
 
-  Prat is an open-source chat program. You can see the project [on Github](//github.com/bkad/oochat).
+  Prat is an open-source chat program. You can see the project [on Github](//github.com/bkad/prat).
 
 * **What does it mean when a username in the right-hand column is grayed out?**
 
@@ -12,7 +12,7 @@
 
 * **Why are there no emoji?**
 
-  [We know, we know.](//github.com/bkad/oochat/issues/17)
+  [We know, we know.](//github.com/bkad/prat/issues/17)
 
 * **Does Prat work in browsers other than Chrome?**
 

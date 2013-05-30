@@ -36,7 +36,7 @@ push_socket = context.socket(zmq.PUSH)
 push_socket.connect("tcp://localhost:5666")
 redis = StrictRedis()
 mongo_client = MongoClient(tz_aware=True)
-db = mongo_client.oochat
+db = mongo_client.prat
 
 while True:
   user_channel_map = {}

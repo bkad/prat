@@ -8,19 +8,26 @@ from bson.objectid import ObjectId, InvalidId
 from redis import StrictRedis
 import base64
 
+def app_name():
+  return current_app.config["APP_NAME"]
+
 def get_db():
-  connection = getattr(current_app, "oochat_db", None)
+  connection = getattr(current_app, app_name() + "_db", None)
   if connection is None:
-    connection = current_app.oochat_db = MongoClient(host=current_app.config["MONGO_HOST"],
-                                                     port=current_app.config["MONGO_PORT"],
-                                                     tz_aware=True)
+    print "creating new mongo connection"
+    connection = MongoClient(host=current_app.config["MONGO_HOST"],
+                             port=current_app.config["MONGO_PORT"],
+                             tz_aware=True)
+    setattr(current_app, app_name() + "_db", connection)
   return getattr(connection, current_app.config["MONGO_DB_NAME"])
 
 def get_redis_connection():
-  connection = getattr(current_app, "oochat_redis", None)
+  connection = getattr(current_app, app_name() + "_redis", None)
   if connection is None:
-    connection = current_app.oochat_redis = StrictRedis(host=current_app.config["REDIS_HOST"],
-                                                        port=current_app.config["REDIS_PORT"])
+    print "creating new redis connection"
+    connection = StrictRedis(host=current_app.config["REDIS_HOST"],
+                             port=current_app.config["REDIS_PORT"])
+    setattr(current_app, app_name() + "_redis", connection)
   return connection
 
 def get_recent_messages(channel):

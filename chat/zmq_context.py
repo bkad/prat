@@ -2,16 +2,25 @@ from flask import _app_ctx_stack, current_app
 import zmq.green as zmq
 from werkzeug.local import LocalProxy
 
+def app_name():
+  return current_app.config["APP_NAME"]
+
 def get_or_create_zmq_context():
-  if getattr(current_app, "oochat_zmq", None) is None:
-    current_app.oochat_zmq = zmq.Context()
-  return current_app.oochat_zmq
+  ctx = getattr(current_app, app_name() + "_zmq", None)
+  if ctx is None:
+    print "creating new context"
+    ctx = zmq.Context()
+    setattr(current_app, app_name() + "_zmq", ctx)
+  return ctx
 
 def get_or_create_zmq_push_socket():
-  if getattr(current_app, "oochat_zmq_push_socket", None) is None:
-    current_app.oochat_zmq_push_socket = zmq_context.socket(zmq.PUSH)
-    current_app.oochat_zmq_push_socket.connect(current_app.config["PUSH_ADDRESS"])
-  return current_app.oochat_zmq_push_socket
+  socket = getattr(current_app, app_name() + "_zmq_push_socket", None)
+  if socket is None:
+    print "creating new socket"
+    socket = zmq_context.socket(zmq.PUSH)
+    socket.connect(current_app.config["PUSH_ADDRESS"])
+    setattr(current_app, app_name() + "_zmq_push_socket", socket)
+  return socket
 
 zmq_context = LocalProxy(get_or_create_zmq_context)
 push_socket = LocalProxy(get_or_create_zmq_push_socket)

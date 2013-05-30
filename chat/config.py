@@ -11,7 +11,7 @@ class DefaultConfig(object):
 
   MONGO_HOST = "127.0.0.1"
   MONGO_PORT = 27017
-  MONGO_DB_NAME = "oochat"
+  MONGO_DB_NAME = "prat"
 
   REDIS_HOST = "localhost"
   REDIS_PORT = 6379
