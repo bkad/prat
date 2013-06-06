@@ -1,5 +1,4 @@
 from chat.views.frontend import vendor_js_files, coffee_files, write_main_template
-import uuid
 from os import path
 import hashlib
 from fabric.operations import local
@@ -20,10 +19,11 @@ if env.hosts == []:
 
 config_template = """
 from chat.config import DefaultConfig
+import os
 
 class Config(DefaultConfig):
   DEBUG = False
-  SECRET_KEY = "{secret}"
+  SECRET_KEY = os.environ.get("PRAT_SECRET", "seeeecrets")
   COMPILED_JS = "{compiled_coffee_assets}"
   COMPILED_CSS = "{compiled_stylus_assets}"
   REWRITE_MAIN_TEMPLATE = False
@@ -72,10 +72,7 @@ def write_config():
   stylus_command = "cat chat/assets/*.styl | stylus --use {0}".format(nib_path)
   css_filename = compile_assets_file(stylus_command, "css")
 
-  secret = str(uuid.uuid4())
-
-  compiled_config = config_template.format(secret=secret,
-                                           compiled_coffee_assets=js_filename,
+  compiled_config = config_template.format(compiled_coffee_assets=js_filename,
                                            compiled_stylus_assets=css_filename)
 
   with open("config.py", "w") as config_file:
