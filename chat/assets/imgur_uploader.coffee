@@ -4,14 +4,20 @@ class window.ImgurUploader
     @initImageUpload()
 
   @initImageUpload: () =>
-      $.event.props.push('dataTransfer')
-      $(document).on('drop', @handleDrop)
+      $('#chat-text').on('dragover', (e) =>
+        console.log("DRAGOVER")
+        e.preventDefault()
+        false
+      )
+      $('#chat-text').on('drop', @handleDrop)
 
   @handleDrop: (event) =>
     event.stopPropagation();
     event.preventDefault();
 
-    files = event.dataTransfer.files
+    # Fixes issue with chrome on ubuntu 12.XX
+    files = event.dataTransfer.files || event.originalEvent.dataTransfer.files
+
     for file in files
       if file.type.match(/image.*/)
         fd = new FormData()
