@@ -10,7 +10,7 @@ from redis import StrictRedis
 from pymongo import MongoClient
 
 def zmq_channel_key(channel_name):
-  return base64.b64encode(channel_name.encode("utf-8"))
+  return "channel:" + base64.b64encode(channel_name.encode("utf-8"))
 
 def send_user_offline(user, channel, socket):
   keyed_channel = zmq_channel_key(channel)
@@ -36,7 +36,7 @@ push_socket = context.socket(zmq.PUSH)
 push_socket.connect("tcp://localhost:5666")
 redis = StrictRedis()
 mongo_client = MongoClient(tz_aware=True)
-db = mongo_client.oochat
+db = mongo_client.prat
 
 while True:
   user_channel_map = {}

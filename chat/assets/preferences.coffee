@@ -1,8 +1,14 @@
 window.Preferences =
   prefs:
-    "alert-sounds": { type: "boolean", default: true }
-    "swap-enter": { type: "boolean", default: false }
-    "hide-images": { type: "boolean", default: false }
+    "alert-sounds":
+      type: "boolean"
+      default: true
+    "swap-enter":
+      type: "boolean"
+      default: false
+    "hide-images":
+      type: "boolean"
+      default: false
 
   get: (name) -> @prefs[name]?.value
 
@@ -10,9 +16,6 @@ window.Preferences =
     for name, pref of @prefs
       pref.value = if name of initialPrefs then initialPrefs[name] else pref.default
 
-    $template = $(Mustache.render($("#preferences-template").html()))
-    $("body").append($template)
-    $("#preferences").modal()
     $("#save-preferences").on "click", =>
       @save()
       $("#preferences").modal("hide")
@@ -36,7 +39,7 @@ window.Preferences =
       continue unless match
       name = match[1]
       continue unless name of @prefs
-      @prefs[name].value = ($(checkbox).attr("checked") == "checked")
+      @prefs[name].value = ($(checkbox).attr("checked") is "checked")
 
   setPrefsFromServer: ->
     $.get "/api/user/preferences", (result) =>
@@ -45,7 +48,7 @@ window.Preferences =
         if name of serverPrefs
           switch pref.type
             when "boolean"
-              pref.value = (serverPrefs[name] == true)
+              pref.value = (serverPrefs[name] is true)
       @setCheckboxesFromPrefs()
 
   pushPrefsToServer: ->

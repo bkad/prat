@@ -2,3 +2,5 @@
 # TODO: don't ignore node_modules, use node shrinkwrap instead
 /node_modules/*
 /build/
+chat/templates/info.mustache
+chat/templates/index.htmljinja

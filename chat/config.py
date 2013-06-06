@@ -13,7 +13,7 @@ class DefaultConfig(object):
 
   MONGO_HOST = "127.0.0.1"
   MONGO_PORT = 27017
-  MONGO_DB_NAME = "oochat"
+  MONGO_DB_NAME = "prat"
 
   REDIS_HOST = "localhost"
   REDIS_PORT = 6379
@@ -36,4 +36,12 @@ class DefaultConfig(object):
   # in production, we concatenate our assets and minify them
   COMPILED_JS = False
   COMPILED_CSS = False
-  COMPILED_VENDOR_JS = False
+
+  # During development, we reconstruct the main template on each render just in case something changed.
+  REWRITE_MAIN_TEMPLATE = True
+
+  # The email address to send exceptions to
+  ADMIN_EMAIL = "foo@bar.com"
+
+  # The email address to send exceptions from
+  ERROR_EMAIL = "bar@foo.com"

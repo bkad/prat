@@ -1,64 +1,64 @@
 class window.ChatControls
   @globalBindings: [
-      keys: ['shift_/'],
-      help: "Show this help dialog",
-      showHelp: true,
+      keys: ['shift_/']
+      help: "Show this help dialog"
+      showHelp: true
       action: -> UserGuide.showShortcuts()
     ,
-      keys: ['j'],
-      help: "Next message",
-      showHelp: true,
+      keys: ['j']
+      help: "Next message"
+      showHelp: true
       action: -> Util.scrollMessagesDown()
     ,
-      keys: ['k'],
-      help: "Previous message",
-      showHelp: true,
+      keys: ['k']
+      help: "Previous message"
+      showHelp: true
       action: -> Util.scrollMessagesUp()
     ,
-      keys: ['shift_n'],
-      help: "Next channel",
-      showHelp: true,
+      keys: ['shift_n']
+      help: "Next channel"
+      showHelp: true
       action: -> Channels.cycleChannel(1)
     ,
-      keys: ['shift_p'],
-      help: "Previous channel",
-      showHelp: true,
+      keys: ['shift_p']
+      help: "Previous channel"
+      showHelp: true
       action: -> Channels.cycleChannel(-1)
     ,
-      keys: ['shift_j'],
-      help: "Join a new channel",
-      showHelp: true,
-      action: -> $(".add-channel-container").click()
+      keys: ['shift_j']
+      help: "Join a new channel"
+      showHelp: true
+      action: -> Channels.showNewChannel()
     ,
-      keys: ['shift_g'],
-      help: "Scroll to bottom",
-      showHelp: true,
-      action: => Util.scrollToBottom()
+      keys: ['shift_g']
+      help: "Scroll to bottom"
+      showHelp: true
+      action: -> Util.scrollToBottom()
     ,
-      keys: ['return', '/'],
-      help: "Focus chat box",
-      showHelp: true,
+      keys: ['return', '/']
+      help: "Focus chat box"
+      showHelp: true
       action: (e) ->
         e.preventDefault()
         $('#chat-text').focus()
   ]
 
-  @init: (leftSidebarClosed, rightSidebarClosed) =>
+  @init: (options) =>
     # When @currentAutocompletion is not null, it is a the tuple [list of matching usernames,
     # index of current match].
     @currentAutocompletion = null
-    rightToggle = if rightSidebarClosed then @onExpandRightSidebar else @onCollapseRightSidebar
-    leftToggle = if leftSidebarClosed then @onExpandLeftSidebar else @onCollapseLeftSidebar
-    $(".toggle-right-sidebar").one("click", rightToggle)
-    $(".toggle-left-sidebar").one("click", leftToggle)
+    for direction in ["left", "right"]
+      $(".toggle-#{direction}-sidebar").one("click",
+        @sidebarAccordian(placement: direction, expand: options["#{direction}SidebarClosed"]))
     @chatText = $("#chat-text")
     @chatText.on("keydown.shift_return", (e) => @onReturn(e, true))
     @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
-    @chatText.on("keydown.esc", (e) -> $('#chat-text').blur())
+    # TODO(kle): figure out why we have to close over blur
+    @chatText.on("keydown.esc", => @chatText.blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
-    $(document).on("keydown.esc", (e) -> $('#info').modal('hide'); $('#message-preview').modal('hide');)
+    $(document).on("keydown.esc", @hideModals)
     @chatText.on "keydown", @onChatAutocomplete
     MessageHub.on("force_refresh", @refreshPage)
     $(".chat-submit").click(@onChatSubmit)
@@ -68,10 +68,11 @@ class window.ChatControls
     @chatHistoryOffset = -1
     @initKeyBindings()
 
-  @onReturn: (e, shift) -> @onChatSubmit(e) if shift == Preferences.get("swap-enter")
+  @onReturn: (e, shift) ->
+    @onChatSubmit(e) if shift is Preferences.get("swap-enter")
 
   @onChatAutocomplete: (event) =>
-    if event.which != 9
+    if event.which isnt 9
       # If not a tab, cancel any current autocomplete.
       @currentAutocompletion = null
       return
@@ -87,29 +88,29 @@ class window.ChatControls
       users.push([model.attributes.username, model.attributes.name])
 
     # If there's nothing we're currently matching, then do a fresh autocomplete based on the current word.
-    if @currentAutocompletion == null
+    if @currentAutocompletion is null
       # Get the current word
       matches = /\s([^\s]*)$/.exec(currentLine)
       currentWord = if matches? then matches[1] else currentLine
 
       # Don't do anything unless the current word starts with '@'
-      return unless currentWord.length > 0 && currentWord[0] == "@"
+      return unless currentWord.length > 0 and currentWord[0] is "@"
       currentWord = currentWord.substring(1)
 
       exactMatches = []
       inexactMatches = []
       for user in users
         # First check an exact match against the username
-        if user[0].indexOf(currentWord) == 0
+        if user[0].indexOf(currentWord) is 0
           exactMatches.push(user[0])
           continue
         # Now try a case-insensitive match against the username and real name
         lower = currentWord.toLowerCase()
-        if user[0].toLowerCase().indexOf(lower) == 0 || user[1].toLowerCase().indexOf(lower) == 0
+        if user[0].toLowerCase().indexOf(lower) is 0 or user[1].toLowerCase().indexOf(lower) is 0
           inexactMatches.push(user[0])
 
       allMatches = exactMatches.concat(inexactMatches)
-      return if allMatches.length == 0
+      return if allMatches.length is 0
 
       @currentAutocompletion = [allMatches, 0]
       chosen = allMatches[0] + " "
@@ -155,37 +156,20 @@ class window.ChatControls
     $("#message-preview").modal("hide")
     @onChatSubmit(preventDefault: ->)
 
-  @onExpandRightSidebar: (event) =>
-    rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find(".ss-standard").html("right")
-    $(".right-sidebar").removeClass("closed")
-    $(".chat-column").removeClass("collapse-right")
-    rightSidebarButton.one("click", @onCollapseRightSidebar)
-    document.cookie = "rightSidebar=open"
-
-  @onCollapseRightSidebar: (event) =>
-    rightSidebarButton = $(".toggle-right-sidebar")
-    rightSidebarButton.find(".ss-standard").html("left")
-    $(".right-sidebar").addClass("closed")
-    $(".chat-column").addClass("collapse-right")
-    rightSidebarButton.one("click", @onExpandRightSidebar)
-    document.cookie = "rightSidebar=closed"
-
-  @onExpandLeftSidebar: (event) =>
-    leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find(".ss-standard").html("left")
-    $(".left-sidebar").removeClass("closed")
-    $(".main-content").removeClass("collapse-left")
-    leftSidebarButton.one("click", @onCollapseLeftSidebar)
-    document.cookie = "leftSidebar=open"
-
-  @onCollapseLeftSidebar: (event) =>
-    leftSidebarButton = $(".toggle-left-sidebar")
-    leftSidebarButton.find(".ss-standard").html("right")
-    $(".left-sidebar").addClass("closed")
-    $(".main-content").addClass("collapse-left")
-    leftSidebarButton.one("click", @onExpandLeftSidebar)
-    document.cookie = "leftSidebar=closed"
+  @sidebarAccordian: (options) =>
+    (event) =>
+      placement = options.placement
+      expand = options.expand
+      button = $(".toggle-#{placement}-sidebar")
+      classCondition = ((placement is "left" and expand) or (placement is "right" and not expand))
+      iconClass = "icon-chevron-" + if classCondition then "left" else "right"
+      button.find("span").attr("class", iconClass)
+      classAttrMethod = "#{if expand then "remove" else "add"}Class"
+      $(".#{placement}-sidebar")[classAttrMethod]("closed")
+      centerColumn = if placement is "left" then ".main-content" else ".chat-column"
+      $(centerColumn)[classAttrMethod]("collapse-#{placement}")
+      button.one("click", @sidebarAccordian(placement: placement, expand: not expand))
+      document.cookie = "#{placement}Sidebar=#{if expand then "closed" else "open"}"
 
   @initKeyBindings: =>
     for b in @globalBindings
@@ -230,3 +214,7 @@ class window.ChatControls
     @setChatHistory(history)
     @chatHistoryOffset = -1
     @currentMessage = ""
+
+  @hideModals: ->
+    $("#info").modal("hide")
+    $("#message-preview").modal("hide")

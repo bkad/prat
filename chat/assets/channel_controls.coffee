@@ -11,8 +11,9 @@ class window.ChannelView extends Backbone.View
     @channelButton = @$el.find(".channel")
 
   render: =>
-    @$el.html(Mustache.render(@template, name: @name))
-    @$el.find(".leave").click(=> @trigger("leaveChannel", @name))
+    @$el.html(Util.mustache(@template, name: @name))
+    @$el.find(".leave").tooltip(DefaultTooltip)
+      .click(=> @trigger("leaveChannel", @name))
     @$el.hover((=> @$el.addClass("hover")), => @$el.removeClass("hover"))
 
   onClick: =>
@@ -42,11 +43,11 @@ class window.ChannelViewCollection extends Backbone.View
     @$el.disableSelection()
 
     @newChannelState = "hidden"
-    $('.add-channel-container').on "click", => @toggleNewChannel()
-    $(".new-channel-name").on("click", (e) -> e.stopPropagation())
+    $(".add-channel-container").click(@toggleNewChannel)
+    $(".new-channel-name").click((e) -> e.stopPropagation())
       .on("keydown.esc", => @hideNewChannel())
       .on("keydown.return", @onSubmitChannel)
-      .on("blur", => @hideNewChannel() if @newChannelState == "shown")
+      .on("blur", => @hideNewChannel() if @newChannelState is "shown")
     @render()
 
   onSubmitChannel: (event) =>
@@ -64,8 +65,6 @@ class window.ChannelViewCollection extends Backbone.View
       placeholder: "channel-button-placeholder"
       handle: ".reorder"
       axis: "y"
-      start: => $.fn.tipsy.disable()
-      stop: => $.fn.tipsy.enable()
       update: @updateChannelOrder
 
   updateChannelOrder: =>
@@ -125,7 +124,7 @@ class window.ChannelViewCollection extends Backbone.View
     @channels = _.without(@channels, channel)
     @channelsHash[channel].$el.remove()
     delete @channelsHash[channel]
-    Util.cleanupTipsy()
+    Util.cleanupTooltips()
     MessageHub.leaveChannel(channel)
     @trigger("leaveChannel", channel)
     $("button.channel").first().click() if channel is CurrentChannel and @channels.length > 0
@@ -152,7 +151,7 @@ class window.ChannelViewCollection extends Backbone.View
     toAdd = $(event.currentTarget).attr("data-channelname")
     @joinChannel(toAdd).onClick()
 
-  # offset == -1 for previous channel
+  # offset is -1 for previous channel
   cycleChannel: (offset = 1) =>
     currentChannelIndex = @$el.children().index(@channelsHash[CurrentChannel].el)
     len = @channels.length

@@ -1,9 +1,8 @@
 from flask import Blueprint, g, render_template, request, session, redirect, current_app
-from flaskext.openid import OpenID
+from flask.ext.openid import OpenID
 from hashlib import md5
 from chat.datastore import db, add_user_to_channel
-from chat.zmq_context import zmq_context
-import zmq.green as zmq
+from chat.zmq_context import zmq_context, push_socket
 from chat.views.eventhub import send_join_channel
 import urllib
 import uuid
@@ -14,14 +13,17 @@ oid = OpenID()
 @auth.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
+  args = request.args.get("args")
+  query_string = ("?" + urllib.unquote(args)) if args else ""
+  next_url = oid.get_next_url() + query_string
   if g.authed is True:
-    return redirect(oid.get_next_url())
+    return redirect(next_url)
   if request.method == 'POST':
     openid = request.form.get('openid_identifier')
     if openid:
       return oid.try_login(openid, ask_for=['email', 'fullname', 'nickname'])
   return render_template('login.htmljinja',
-                         next=oid.get_next_url(),
+                         next=next_url,
                          error=oid.fetch_error())
 
 @oid.after_login
@@ -47,12 +49,9 @@ def create_or_login(resp):
         "secret": str(uuid.uuid4()),
     }
     db.users.save(user_object)
-    push_socket = zmq_context.socket(zmq.PUSH)
-    push_socket.connect(current_app.config["PUSH_ADDRESS"])
     for channel in default_channels:
       add_user_to_channel(user_object, channel)
       send_join_channel(channel, user_object, push_socket)
-    push_socket.close()
     g.user = user_object
   return redirect(oid.get_next_url())
 

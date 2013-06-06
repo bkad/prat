@@ -85,7 +85,7 @@ button, select
           color: accent-blue
           opacity: 1
         margin: 2px 0px
-        font-size: 20px
+        font-size: 22px
     &:hover
       button
         opacity: 1
@@ -107,16 +107,15 @@ button, select
         cursor: ns-resize
         color: #bbb
         display: none
-        font-size: 8px
+        font-size: 10px
         position: relative
         top: -2px
         left: -20px
       .leave
         display: none
         color: #888
-        font-size: 16px
+        font-size: 20px
         position: relative
-        top: 2px
         left: -8px
       &.hover .reorder
         display: inline-block
@@ -204,6 +203,7 @@ button, select
     width: 100%
     overflow-y: auto
     .user-status
+      cursor: default
       background-repeat: no-repeat
       background-position: 5px 3px
       padding: 0 5px 0 (18px + 5px + 5px)
@@ -311,7 +311,7 @@ button, select
   &:not(.current)
     // We should just have 'display: none' here, but doing this instead is a workaround for an extremely
     // strange bug where the input box hangs before deleting the first character. See
-    // https://github.com/bkad/oochat/issues/70.
+    // https://github.com/bkad/prat/issues/70.
     // TODO(caleb): Figure out the real root cause, remove this hack.
     opacity: 0
     pointer-events: none
@@ -436,10 +436,6 @@ button, select
   .its-you
     color: accent-blue
   display: inline
-
-.margin-hack
-  width: 100%
-  height: 1px
 
 .message-separator
   &:first-child
@@ -592,23 +588,24 @@ button, select
     &.selected
       opacity: 1
       pointer-events: all
-    &.keyboard-shortcuts
-      tr
-        line-height: 20px
-      span
-        padding: 2px 6px
-        margin: 2px 0
-        display: inline-block
-      .keys
-        font-family: mono-font-family
-        background: accent-blue
-        color: light-grey
-        border-radius: 2px
-        text-shadow: 1px 1px 0 #222
-        box-shadow: inset 1px 1px 1px #444
-      td:first-child
-        text-align: right
-        padding-right: 14px
+
+#keyboard-shortcuts
+  tr
+    line-height: 20px
+  span
+    padding: 2px 6px
+    margin: 2px 0
+    display: inline-block
+  .keys
+    font-family: mono-font-family
+    background: accent-blue
+    color: light-grey
+    border-radius: 2px
+    text-shadow: 1px 1px 0 #222
+    box-shadow: inset 1px 1px 1px #444
+  td:first-child
+    text-align: right
+    padding-right: 14px
 
 #preferences
   label

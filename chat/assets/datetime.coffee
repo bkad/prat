@@ -17,9 +17,9 @@ class window.DateTime
     if @hours > 12
       am = false
       @hours -= 12
-    else if @hours == 12
+    else if @hours is 12
       am = false
-    else if @hours == 0
+    else if @hours is 0
       @hours = 12
 
     @amPM = if am then "AM" else "PM"
@@ -34,27 +34,25 @@ class window.DateTime
     time = "#{@hours}:#{@minutes} #{@amPM}"
 
     if diffMinutes < 1 then "a moment ago"
-    else if diffMinutes == 1 then "a minute ago"
+    else if diffMinutes is 1 then "a minute ago"
     else if diffMinutes < 60 then "#{diffMinutes} minutes ago"
-    else if diffHours == 1 then "an hour ago"
+    else if diffHours is 1 then "an hour ago"
     else if diffHours < 11 then "#{diffHours} hours ago"
-    else if @date == now.getDate() then time
-    else if @date == now.getDate() - 1 then "yesterday at #{time}"
+    else if @date is now.getDate() then time
+    else if @date is now.getDate() - 1 then "yesterday at #{time}"
     else if daysBetween < 7 then "#{@weekday} at #{time}"
     else if daysBetween < 365 then "#{@date} #{@month} #{time}"
     else "#{@date} #{@month} #{time}"
 
 class window.DateTimeHelper
   constructor: ->
-    @init()
-
-  init: ->
     @setUpdateTimestampsInterval(60000)
 
   bindOne: (timeContainer) ->
     timeContainer.data("datetime", new DateTime(parseInt(timeContainer.attr("data-time"))))
 
-  removeBindings: (timeContainer) -> timeContainer.removeData("datetime")
+  removeBindings: (timeContainer) ->
+    timeContainer.removeData("datetime")
 
   updateTimestamps: =>
     $(".author-container .time").each((index, timeContainer) => @updateTimestamp($(timeContainer)))
@@ -65,4 +63,5 @@ class window.DateTimeHelper
   setUpdateTimestampsInterval: (interval) ->
     @intervalID = setInterval(@updateTimestamps, interval)
 
-  clearUpdateTimestampsTimeout: -> clearInterval(@intervalID?)
+  clearUpdateTimestampsTimeout: ->
+    clearInterval(@intervalID?)

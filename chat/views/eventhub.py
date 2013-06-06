@@ -7,9 +7,10 @@ from chat.datastore import (db, message_dict_from_event_object, remove_user_from
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
                             get_user_channel_status, reorder_user_channels, refresh_user_client)
-from chat.zmq_context import zmq_context
+from chat.zmq_context import zmq_context, push_socket
 from chat import markdown
 import uuid
+import socket
 
 eventhub = Blueprint("eventhub", __name__)
 
@@ -18,8 +19,6 @@ def eventhub_client():
   websocket = request.environ.get('wsgi.websocket')
   if not websocket:
     return
-  push_socket = zmq_context.socket(zmq.PUSH)
-  push_socket.connect(current_app.config["PUSH_ADDRESS"])
   subscribe_socket = zmq_context.socket(zmq.SUB)
   client_id = str(uuid.uuid4())
 
@@ -63,7 +62,7 @@ def eventhub_client():
         message = subscribe_socket.recv()
 
         # the message is prepended by the channel_id (for PUB/SUB reasons)
-        channel_id, packed = message.split(" ", 1)
+        _, packed = message.split(" ", 1)
 
         unpacked = json.loads(packed)
 
@@ -98,6 +97,9 @@ def eventhub_client():
           handle_ping(websocket, push_socket, client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
+  except socket.error, e:
+    pass
+
 
   remove_from_user_clients(g.user, client_id)
   if get_active_clients_count(g.user) == 0:
@@ -106,9 +108,7 @@ def eventhub_client():
       send_user_status_update(g.user, channel, push_socket, "offline")
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
-  push_socket.close()
   subscribe_socket.close()
-  websocket.close()
   return ""
 
 
@@ -182,7 +182,9 @@ def send_join_channel(channel, user, push_socket):
 
 
 def handle_join_channel(channel, subscribe_socket, push_socket, client_id):
-  channel_id = add_user_to_channel(g.user, channel)
+  add_user_to_channel(g.user, channel)
+  set_user_channel_status(g.user, channel, "active")
+  channel_id = zmq_channel_key(channel)
 
   send_join_channel(channel, g.user, push_socket)
 

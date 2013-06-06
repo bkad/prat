@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+  <title>{{ config["APP_NAME"] }}</title>
+  {% if config["COMPILED_CSS"] %}
+    <link rel="stylesheet" href="{{ config["COMPILED_CSS"]|safe }}"></link>
+  {% else %}
+    {% for stylus_file in stylus_files %}
+    <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
+    {% endfor %}
+  {% endif %}
+  <link rel="stylesheet" href="/static/vendor/fontawesome/font-awesome.css"></link>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link href='//fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic|Oswald:700'
+        rel='stylesheet'>
+  {% if config["COMPILED_JS"] %}
+  <script src="{{ config["COMPILED_JS"] }}"></script>
+  {% else %}
+    {% for vendor_js in vendor_js_files %}
+    <script src="/static/vendor/js/{{ vendor_js|safe }}"></script>
+    {% endfor %}
+    {% for coffee_file in coffee_files %}
+    <script src="{{ asset_url(coffee_file + ".coffee")|safe }}"></script>
+    {% endfor %}
+  {% endif %}
+  {% if config["DEBUG"] %}
+  <script src="/static/vendor/js/livecss.js"></script>
+  {% endif %}
+  {% for template_id, template_content in mustache_templates %}
+  <script id="{{ template_id }}" type="text/x-mustache-template">
+    {{ template_content|safe }}
+  </script>
+  {% endfor %}
+  <script charset="utf-8">
+    $(function() {
+      CurrentUserEmail = [[ email|tojson|safe ]]
+      CurrentChannel = [[ last_selected_channel|tojson|safe ]]
+      var initialChannels = [[ channels|tojson|safe ]]
+      DefaultTooltip = { animation: false, container: "body" }
+
+      Channels = new ChannelViewCollection({ channels: initialChannels })
+      Users.init(initialChannels)
+
+      ChatControls.init({ leftSidebarClosed: [[ left_sidebar_closed|tojson ]],
+                          rightSidebarClosed: [[ right_sidebar_closed|tojson ]] })
+
+      ImgurUploader.init({{ config["IMGUR_CLIENT_ID"]|tojson|safe }})
+
+      UserGuide.init()
+      Preferences.init([[ preferences|tojson|safe ]])
+      sound = new Sound("/static/audio/ping.mp3")
+
+      dateTimeHelper = new DateTimeHelper()
+
+      messagesViewCollection =
+        new MessagesViewCollection({ sound: sound,
+                                     channels: initialChannels,
+                                     username: [[ username|tojson|safe ]],
+                                     dateTimeHelper: dateTimeHelper,
+                                     collapseTimeWindow: {{ config["COLLAPSED_MESSAGE_TIME_WINDOW"] }},
+                                     title: {{ config["APP_NAME"]|tojson|safe }},
+                                   })
+
+      var websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
+      MessageHub.init(websocketProtocol + "://" + document.location.host + "/eventhub",
+                      4000,
+                      {{ config["WEBSOCKET_KEEP_ALIVE_INTERVAL"] }},
+                      new AlertHelper())
+
+      MessageHub.deferDequeue(messagesViewCollection.appendInitialMessages, Users.updateAllChannels)
+
+      var sideButtons = ["logout", "user-info-button", "settings-button"]
+      sideButtons.forEach(function(e) {
+        $("#" + e).tooltip(DefaultTooltip)
+      })
+    })
+  </script>
+</head>
+<body>
+  <div class="left-sidebar [[ "closed" if left_sidebar_closed else "" ]]">
+    <header>
+      <div class="control-button-container">
+        <button id="user-info-button" data-placement="right" title="User guide">
+          <span class="icon-question-sign"></span>
+        </button>
+        <button id="settings-button" data-placement="right" title="Preferences">
+          <span class="icon-cog"></span>
+        </button>
+        <a href="{{ url_for("auth.logout") }}">
+          <button id="logout" data-placement="right" title="Logout">
+            <span class="icon-signout"></span>
+          </button>
+        </a>
+      </div>
+      <div class="logo-title">
+        <div>{{ config["APP_NAME"] }}</div>
+      </div>
+    </header>
+    <div class="channel-controls-container">
+      <div class="add-channel-container">
+        <div class="plus-label">+</div>
+        <input type="text" class="new-channel-name" />
+      </div>
+    </div>
+  </div>
+  <div class="main-content [[ "collapse-left" if left_sidebar_closed else "" ]]">
+    <div class="chat-column [[ "collapse-right" if right_sidebar_closed else "" ]]">
+      <div id="spin-overlay"></div>
+      <div class="alert-container"></div>
+      <div class="chat-controls">
+        <button class="toggle-left-sidebar">
+          <span class="icon-chevron-[[ "right" if left_sidebar_closed else "left" ]]"></span>
+        </button>
+        <button class="toggle-right-sidebar">
+          <span class="icon-chevron-[[ "left" if left_sidebar_closed else "right" ]]"></span>
+        </button>
+        <div class="channel-name">[[ last_selected_channel ]]</div>
+      </div>
+      <div class="input-container">
+        <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
+        <div id="message-preview" class="modal fade" tabindex="-1" style="display:none">
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3 id="message-preview-header-label">Message Preview</h3>
+          </div>
+          <div class="modal-body">
+            <div class="message"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+            <button id="preview-submit" class="btn">Send</button>
+          </div>
+        </div>
+        <div class="input-controls">
+          <button class="chat-submit">Send</button>
+          <button class="chat-preview">Preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-sidebar [[ "closed" if right_sidebar_closed else "" ]]">
+  </div>
+  {{ preferences_snippet|safe }}
+</body>
+</html>

@@ -5,6 +5,12 @@ from chat.views.auth import oid
 from chat.datastore import db
 from chat.crypto import check_request
 import gevent.monkey
+import urllib
+from urlparse import urlparse
+import logging
+from logging.handlers import SMTPHandler
+from logging import Formatter
+
 gevent.monkey.patch_all()
 
 DEFAULT_APP = "chat"
@@ -38,7 +44,9 @@ def check_login():
   if getattr(g, "user", None) is None:
     if using_api_key_auth():
       return "Invalid signature", 400
-    return redirect(url_for("auth.login"))
+    redirect_query_string = urllib.urlencode([("next", request.path),
+                                              ("args", urlparse(request.url).query)])
+    return redirect(url_for("auth.login") + "?" +  redirect_query_string)
 
 def using_api_key_auth():
   return all(arg in request.args for arg in ["api_key", "signature", "expires"])
@@ -70,6 +78,22 @@ def configure_before_handlers(app):
         g.authed = True
 
 def configure_error_handlers(app):
+  if not app.debug:
+    mail_handler = SMTPHandler("127.0.0.1", app.config["ERROR_EMAIL"], app.config["ADMIN_EMAIL"],
+        "Prat Error")
+    mail_handler.setFormatter(Formatter("""
+    Message type: %(levelname)s
+    Location: %(pathname)s:%(lineno)d
+    Module: %(module)s
+    Function: %(funcName)s
+    Time: %(asctime)s
+
+    Message:
+
+    %(message)s
+    """))
+    mail_handler.setLevel(logging.ERROR)
+    app.logger.addHandler(mail_handler)
   @app.errorhandler(404)
   def page_not_found(error):
     if request.is_xhr:

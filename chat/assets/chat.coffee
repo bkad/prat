@@ -1,7 +1,6 @@
 class window.MessagesView extends Backbone.View
   tagName: "div"
   className: "chat-messages"
-  render: => @$el.append("<div class='margin-hack'></div>")
 
 class window.MessagesViewCollection extends Backbone.View
   tagName: "div"
@@ -34,11 +33,11 @@ class window.MessagesViewCollection extends Backbone.View
 
   render: =>
     @$el.children().detach()
-    @$el.append(@channelHash[channel].render()) for channel in @channels
+    @$el.append(@channelHash[channel].el) for channel in @channels
 
   addChannel: (channel) =>
     @channelHash[channel] = newView = new MessagesView()
-    @$el.append(newView.render())
+    @$el.append(newView.el)
     $.ajax
       url: "/api/messages/#{encodeURIComponent(channel)}"
       dataType: "json"
@@ -90,7 +89,7 @@ class window.MessagesViewCollection extends Backbone.View
 
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $("#message-preview .message")
-    $messageContainer = $(Mustache.render(@messagePartialTemplate, messageObject))
+    $messageContainer = Util.$mustache(@messagePartialTemplate, messageObject)
     messagePreviewDiv.replaceWith($messageContainer)
     $("#message-preview").modal("show")
 
@@ -125,7 +124,7 @@ class window.MessagesViewCollection extends Backbone.View
     (recentMessage.datetime - @findMessageTime(oldMessage)) <= @collapseTimeWindow
 
   renderMessagePartial: (message) =>
-    mustached = $(Mustache.render(@messagePartialTemplate, message))
+    mustached = Util.$mustache(@messagePartialTemplate, message)
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
     mustached.find("img").replaceWith ->
@@ -161,9 +160,9 @@ class window.MessagesViewCollection extends Backbone.View
       timeContainer.attr("data-time", message["datetime"])
       @dateTimeHelper.removeBindings(timeContainer)
     else
-      $messageContainer = $(Mustache.render(@messageContainerTemplate, message))
+      $messageContainer = Util.$mustache(@messageContainerTemplate, message)
       $messageContainer.filter(".message-container").append(messagePartial)
-      messagesList.find(".margin-hack").before($messageContainer)
+      $messageContainer.appendTo(messagesList)
       timeContainer = $messageContainer.find(".time")
     @dateTimeHelper.bindOne(timeContainer)
     @dateTimeHelper.updateTimestamp(timeContainer)

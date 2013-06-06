@@ -5,7 +5,7 @@ class window.AlertHelper
 
   newAlert: (type, message) ->
     @delAlert()
-    rendered = Mustache.render($("#alert-template").html(), type: type, message: message)
+    rendered = Util.mustache($("#alert-template").html(), type: type, message: message)
     $(".alert-container").append(rendered)
 
   delAlert: ->

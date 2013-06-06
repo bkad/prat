@@ -8,19 +8,26 @@ from bson.objectid import ObjectId, InvalidId
 from redis import StrictRedis
 import base64
 
+def app_name():
+  return current_app.config["APP_NAME"]
+
 def get_db():
-  connection = getattr(current_app, "oochat_db", None)
+  connection = getattr(current_app, app_name() + "_db", None)
   if connection is None:
-    connection = current_app.oochat_db = MongoClient(host=current_app.config["MONGO_HOST"],
-                                                     port=current_app.config["MONGO_PORT"],
-                                                     tz_aware=True)
+    print "creating new mongo connection"
+    connection = MongoClient(host=current_app.config["MONGO_HOST"],
+                             port=current_app.config["MONGO_PORT"],
+                             tz_aware=True)
+    setattr(current_app, app_name() + "_db", connection)
   return getattr(connection, current_app.config["MONGO_DB_NAME"])
 
 def get_redis_connection():
-  connection = getattr(current_app, "oochat_redis", None)
+  connection = getattr(current_app, app_name() + "_redis", None)
   if connection is None:
-    connection = current_app.oochat_redis = StrictRedis(host=current_app.config["REDIS_HOST"],
-                                                        port=current_app.config["REDIS_PORT"])
+    print "creating new redis connection"
+    connection = StrictRedis(host=current_app.config["REDIS_HOST"],
+                             port=current_app.config["REDIS_PORT"])
+    setattr(current_app, app_name() + "_redis", connection)
   return connection
 
 def get_recent_messages(channel):
@@ -76,7 +83,7 @@ def get_channel_users(channel):
 
 # Helper function to translate channel name into a prefix for zmq messages (for pubsub)
 def zmq_channel_key(channel_name):
-  return base64.b64encode(channel_name.encode("utf-8"))
+  return "channel:" + base64.b64encode(channel_name.encode("utf-8"))
 
 def redis_channel_key(channel_name):
   return "channel:" + channel_name
@@ -85,10 +92,8 @@ def add_user_to_channel(user, channel_name):
   if channel_name not in user["channels"]:
     user["channels"].append(channel_name)
     db.users.save(user)
-
-  set_user_channel_status(user, channel_name, "active")
-
-  return zmq_channel_key(channel_name)
+    return True
+  return False
 
 def remove_user_from_channel(user, channel_name):
   if channel_name in user["channels"]:
