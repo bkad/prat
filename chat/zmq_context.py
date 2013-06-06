@@ -8,7 +8,6 @@ def app_name():
 def get_or_create_zmq_context():
   ctx = getattr(current_app, app_name() + "_zmq", None)
   if ctx is None:
-    print "creating new context"
     ctx = zmq.Context()
     setattr(current_app, app_name() + "_zmq", ctx)
   return ctx
@@ -16,7 +15,6 @@ def get_or_create_zmq_context():
 def get_or_create_zmq_push_socket():
   socket = getattr(current_app, app_name() + "_zmq_push_socket", None)
   if socket is None:
-    print "creating new socket"
     socket = zmq_context.socket(zmq.PUSH)
     socket.connect(current_app.config["PUSH_ADDRESS"])
     setattr(current_app, app_name() + "_zmq_push_socket", socket)

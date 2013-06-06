@@ -14,7 +14,6 @@ def app_name():
 def get_db():
   connection = getattr(current_app, app_name() + "_db", None)
   if connection is None:
-    print "creating new mongo connection"
     connection = MongoClient(host=current_app.config["MONGO_HOST"],
                              port=current_app.config["MONGO_PORT"],
                              tz_aware=True)
@@ -24,7 +23,6 @@ def get_db():
 def get_redis_connection():
   connection = getattr(current_app, app_name() + "_redis", None)
   if connection is None:
-    print "creating new redis connection"
     connection = StrictRedis(host=current_app.config["REDIS_HOST"],
                              port=current_app.config["REDIS_PORT"])
     setattr(current_app, app_name() + "_redis", connection)
