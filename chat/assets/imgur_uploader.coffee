@@ -16,7 +16,8 @@ class window.ImgurUploader
     event.preventDefault();
 
     # Fixes issue with chrome on ubuntu 12.XX
-    files = event.dataTransfer.files || event.originalEvent.dataTransfer.files
+    dataTransfer = event.dataTransfer || event.originalEvent.dataTransfer
+    files = dataTransfer.files
 
     for file in files
       if file.type.match(/image.*/)
