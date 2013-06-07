@@ -11,7 +11,6 @@ bpython==0.10.1
 chaussette==0.9
 circus==0.8.1
 greenlet==0.4.0
-gunicorn==0.17.2
 iowait==0.1
 paramiko==1.10.1
 prat-gevent==1.0dev
