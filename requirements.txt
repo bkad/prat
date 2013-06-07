@@ -8,12 +8,16 @@ PyExecJS==1.0.4
 Pygments==1.6
 Werkzeug==0.8.3
 bpython==0.10.1
+chaussette==0.9
+circus==0.8.1
 greenlet==0.4.0
 gunicorn==0.17.2
+iowait==0.1
 paramiko==1.10.1
 prat-gevent==1.0dev
 prat-geventwebsocket==0.3.7
 prat-misaka==1.0.5
+psutil==0.7.1
 pycrypto==2.6
 pymongo==2.4.1
 python-openid==2.2.5
