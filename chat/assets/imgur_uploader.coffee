@@ -1,5 +1,5 @@
 class window.ImgurUploader
-  @init: (imgurClientId) =>
+  @init: (imgurClientId, @alertHelper) =>
     @imgurClientId = imgurClientId
     @initImageUpload()
 
@@ -23,20 +23,19 @@ class window.ImgurUploader
       if file.type.match(/image.*/)
         fd = new FormData()
         fd.append("image", file)
+        @alertHelper.newAlert("alert-info", "Uploading image...")
         $.ajax("https://api.imgur.com/3/image",
           {
             type:'POST',
             headers: { 'Authorization': 'Client-ID ' + @imgurClientId },
-            error: @onError,
             data: fd,
             processData: false,
             crossDomain: true,
             contentType : false,
             success: (resp, textStatus, jqXHR) =>
               Util.insertTextAtCursor($("#chat-text")[0], '!['+file.name+']('+resp.data.link+')')
+              @alertHelper.delAlert()
+            error: (jqXHR, textStatus, errorThrown) =>
+              @alertHelper.timedAlert("alert-error", "Image upload failed: " + errorThrown, 2000)
           }
         )
-
-  @onError: (jqXHR, textStatus, errorThrown) =>
-    console.log(textStatus)
-    console.log(errorThrown)
