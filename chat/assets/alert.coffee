@@ -8,5 +8,11 @@ class window.AlertHelper
     rendered = Util.mustache($("#alert-template").html(), type: type, message: message)
     $(".alert-container").append(rendered)
 
+  timedAlert: (type, message, time) ->
+    @delAlert()
+    rendered = Util.mustache($("#alert-template").html(), type: type, message: message)
+    $(".alert-container").append(rendered)
+    window.setTimeout(delAlert, time)
+
   delAlert: ->
     $(".alert").remove()

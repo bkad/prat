@@ -138,18 +138,7 @@ class window.ChatControls
       @chatText[0].setSelectionRange(position - currentMatch.length - 1, position)
 
     # Now we have the substitute word, and the replacement text is highlighted.
-    @insertTextAtCursor(@chatText[0], chosen)
-
-  # http://stackoverflow.com/questions/7553430/javascript-textarea-undo-redo
-  # This could also be done via the 'usual' method, which is basically copying all the text from the box,
-  # manipulating it, pasting it all back in, and then putting the cursor in the right place.
-  # Pros: This is way easier than that. undo/redo works with this method.
-  # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
-  # in Firefox. Whatevs.
-  @insertTextAtCursor: (element, text) ->
-    event = document.createEvent("TextEvent")
-    event.initTextEvent("textInput", true, true, null, text)
-    element.dispatchEvent(event)
+    Util.insertTextAtCursor(@chatText[0], chosen)
 
   @onPreviewSubmit: (event) =>
     message = @chatText.val()

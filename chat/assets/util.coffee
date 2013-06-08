@@ -2,6 +2,17 @@ window.Util =
   scrollingToBottom: 0
   scrolling: 0
 
+  # http://stackoverflow.com/questions/7553430/javascript-textarea-undo-redo
+  # This could also be done via the 'usual' method, which is basically copying all the text from the box,
+  # manipulating it, pasting it all back in, and then putting the cursor in the right place.
+  # Pros: This is way easier than that. undo/redo works with this method.
+  # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
+  # in Firefox. Whatevs.
+  insertTextAtCursor: (element, text) ->
+    event = document.createEvent("TextEvent")
+    event.initTextEvent("textInput", true, true, null, text)
+    element.dispatchEvent(event)
+
   scrolledToBottom: ->
     # if a scrolling animation is taking place, we are at the bottom
     return true if @scrollingToBottom > 0

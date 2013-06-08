@@ -7,6 +7,8 @@ class DefaultConfig(object):
   DEBUG = True
   SECRET_KEY = "secret"
 
+  IMGUR_CLIENT_ID = "df8c7d107087408"
+
   APP_NAME = u"prat"
 
   MONGO_HOST = "127.0.0.1"

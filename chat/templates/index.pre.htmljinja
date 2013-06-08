@@ -40,8 +40,11 @@
 
       Channels = new ChannelViewCollection({ channels: initialChannels })
       Users.init(initialChannels)
+
       ChatControls.init({ leftSidebarClosed: [[ left_sidebar_closed|tojson ]],
                           rightSidebarClosed: [[ right_sidebar_closed|tojson ]] })
+
+      ImgurUploader.init({{ config["IMGUR_CLIENT_ID"]|tojson|safe }}, new AlertHelper())
 
       UserGuide.init()
       Preferences.init([[ preferences|tojson|safe ]])
