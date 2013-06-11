@@ -29,6 +29,8 @@ class Config(DefaultConfig):
   REWRITE_MAIN_TEMPLATE = False
 """
 
+uglify, stylus, coffee = ["./node_modules/.bin/" + command for command in ["uglifyjs", "stylus", "coffee"]]
+
 def write_asset_contents(contents, extension):
   fingerprint = hashlib.md5(contents).hexdigest()
   target_filename = "/static/app_{1}_{0}.{1}".format(fingerprint, extension)
@@ -54,7 +56,7 @@ def cleanup():
 
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
-  return local("./node_modules/.bin/uglifyjs {0} -c".format(" ".join(vendor_files)), capture=True)
+  return local("{0} {1} -c".format(uglify, " ".join(vendor_files)), capture=True)
 
 def write_config():
   cleanup()
@@ -62,14 +64,14 @@ def write_config():
   vendor_js = compile_vendor_js()
 
   coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
-  coffee_command = "coffee -cp {0} | ./node_modules/.bin/uglifyjs - -c -m".format(coffee_paths)
+  coffee_command = "{0} -cp {1} | {2} - -c -m".format(coffee, coffee_paths, uglify)
   coffee_js = local(coffee_command, capture=True)
 
   all_js = vendor_js + coffee_js
   js_filename = write_asset_contents(all_js, "js")
 
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
-  stylus_command = "cat chat/assets/*.styl | stylus --use {0}".format(nib_path)
+  stylus_command = "cat chat/assets/*.styl | {0} --use {1}".format(stylus, nib_path)
   css_filename = compile_assets_file(stylus_command, "css")
 
   compiled_config = config_template.format(compiled_coffee_assets=js_filename,
