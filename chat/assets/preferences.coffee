@@ -39,7 +39,7 @@ window.Preferences =
       continue unless match
       name = match[1]
       continue unless name of @prefs
-      @prefs[name].value = ($(checkbox).attr("checked") is "checked")
+      @prefs[name].value = checkbox.checked
 
   setPrefsFromServer: ->
     $.get "/api/user/preferences", (result) =>
