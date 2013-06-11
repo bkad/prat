@@ -5,7 +5,6 @@ class window.ImgurUploader
 
   @initImageUpload: () =>
       $('#chat-text').on('dragover', (e) =>
-        console.log("DRAGOVER")
         e.preventDefault()
         false
       )
