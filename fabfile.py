@@ -19,11 +19,9 @@ if env.hosts == []:
 
 config_template = """
 from chat.config import DefaultConfig
-import os
 
 class Config(DefaultConfig):
   DEBUG = False
-  SECRET_KEY = os.environ.get("PRAT_SECRET", "seeeecrets")
   COMPILED_JS = "{compiled_coffee_assets}"
   COMPILED_CSS = "{compiled_stylus_assets}"
   REWRITE_MAIN_TEMPLATE = False

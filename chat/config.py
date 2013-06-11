@@ -1,11 +1,12 @@
 # coding=utf-8
 
 from chat import string_filters
+import os
 
 class DefaultConfig(object):
   """Default configuration for chat app"""
   DEBUG = True
-  SECRET_KEY = "secret"
+  SECRET_KEY = os.environ.get("PRAT_SECRET", "seeeecrets")
 
   IMGUR_CLIENT_ID = "df8c7d107087408"
 
