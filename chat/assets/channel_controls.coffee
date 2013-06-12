@@ -75,6 +75,7 @@ class window.ChannelViewCollection extends Backbone.View
     MessageHub.reorderChannels(@channels)
 
   onChannelChange: (nextCurrentChannel) =>
+    return if nextCurrentChannel is CurrentChannel
     @channelsHash[CurrentChannel]?.setInactive()
     window.CurrentChannel = nextCurrentChannel
     @trigger("changeCurrentChannel", nextCurrentChannel)
