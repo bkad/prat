@@ -69,7 +69,7 @@ def write_config():
   js_filename = write_asset_contents(all_js, "js")
 
   nib_path = path.join(path.dirname(path.abspath(__file__)), "node_modules/nib/lib/nib")
-  stylus_command = "cat chat/assets/*.styl | {0} --use {1}".format(stylus, nib_path)
+  stylus_command = "cat chat/assets/*.styl | {0} --compress --use {1}".format(stylus, nib_path)
   css_filename = compile_assets_file(stylus_command, "css")
 
   compiled_config = config_template.format(compiled_coffee_assets=js_filename,
