@@ -103,38 +103,37 @@
       </div>
     </div>
   </div>
-  <div class="main-content [[ "collapse-left" if left_sidebar_closed else "" ]]">
-    <div class="chat-column [[ "collapse-right" if right_sidebar_closed else "" ]]">
-      <div id="spin-overlay"></div>
-      <div class="alert-container"></div>
-      <div class="chat-controls">
-        <button class="toggle-left-sidebar">
-          <span class="icon-chevron-[[ "right" if left_sidebar_closed else "left" ]]"></span>
-        </button>
-        <button class="toggle-right-sidebar">
-          <span class="icon-chevron-[[ "left" if left_sidebar_closed else "right" ]]"></span>
-        </button>
-        <div class="channel-name">[[ last_selected_channel ]]</div>
+  <div class="chat-column [[ "collapse-left" if left_sidebar_closed else "" ]]
+    [[ "collapse-right" if right_sidebar_closed else "" ]]">
+    <div id="spin-overlay"></div>
+    <div class="alert-container"></div>
+    <div class="chat-controls">
+      <button class="toggle-left-sidebar">
+        <span class="icon-chevron-[[ "right" if left_sidebar_closed else "left" ]]"></span>
+      </button>
+      <button class="toggle-right-sidebar">
+        <span class="icon-chevron-[[ "left" if right_sidebar_closed else "right" ]]"></span>
+      </button>
+      <div class="channel-name">[[ last_selected_channel ]]</div>
+    </div>
+    <div class="input-container">
+      <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
+      <div id="message-preview" class="modal fade" tabindex="-1" style="display:none">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">×</a>
+          <h3 id="message-preview-header-label">Message Preview</h3>
+        </div>
+        <div class="modal-body">
+          <div class="message"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal">Close</button>
+          <button id="preview-submit" class="btn">Send</button>
+        </div>
       </div>
-      <div class="input-container">
-        <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
-        <div id="message-preview" class="modal fade" tabindex="-1" style="display:none">
-          <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            <h3 id="message-preview-header-label">Message Preview</h3>
-          </div>
-          <div class="modal-body">
-            <div class="message"></div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn" data-dismiss="modal">Close</button>
-            <button id="preview-submit" class="btn">Send</button>
-          </div>
-        </div>
-        <div class="input-controls">
-          <button class="chat-submit">Send</button>
-          <button class="chat-preview">Preview</button>
-        </div>
+      <div class="input-controls">
+        <button class="chat-submit">Send</button>
+        <button class="chat-preview">Preview</button>
       </div>
     </div>
   </div>

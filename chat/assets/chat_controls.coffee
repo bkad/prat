@@ -166,8 +166,7 @@ class window.ChatControls
       button.find("span").attr("class", iconClass)
       classAttrMethod = "#{if expand then "remove" else "add"}Class"
       $(".#{placement}-sidebar")[classAttrMethod]("closed")
-      centerColumn = if placement is "left" then ".main-content" else ".chat-column"
-      $(centerColumn)[classAttrMethod]("collapse-#{placement}")
+      $(".chat-column")[classAttrMethod]("collapse-#{placement}")
       button.one("click", @sidebarAccordian(placement: placement, expand: not expand))
       document.cookie = "#{placement}Sidebar=#{if expand then "open" else "closed"}"
 
