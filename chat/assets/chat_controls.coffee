@@ -169,7 +169,7 @@ class window.ChatControls
       centerColumn = if placement is "left" then ".main-content" else ".chat-column"
       $(centerColumn)[classAttrMethod]("collapse-#{placement}")
       button.one("click", @sidebarAccordian(placement: placement, expand: not expand))
-      document.cookie = "#{placement}Sidebar=#{if expand then "closed" else "open"}"
+      document.cookie = "#{placement}Sidebar=#{if expand then "open" else "closed"}"
 
   @initKeyBindings: =>
     for b in @globalBindings
