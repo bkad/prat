@@ -26,8 +26,7 @@ class window.Users
         console.log "Error updating channels: #{textStatus}, #{errorThrown}"
 
   @resetUserStatuses: (channelsHash) =>
-    for channel, users of channelsHash
-      continue unless @views[channel]
+    for channel, users of channelsHash when @views[channel]
       @views[channel].collection.reset(users)
 
   @addUserStatusesIfNecessary: (users, channel) =>

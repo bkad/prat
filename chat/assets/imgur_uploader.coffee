@@ -18,9 +18,7 @@ class window.ImgurUploader
     dataTransfer = event.dataTransfer or event.originalEvent.dataTransfer
     files = dataTransfer.files
 
-    for file in files
-      continue unless file.type.match(/image.*/)
-
+    for file in files when file.type.match(/image.*/)
       fd = new FormData()
       fd.append("image", file)
       @alertHelper.newAlert("alert-info", "Uploading image...")
