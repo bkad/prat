@@ -2,7 +2,7 @@ from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
 from chat.views.auth import oid
-from chat.datastore import db
+from chat.datastore import get_user
 from chat.crypto import check_request
 import gevent.monkey
 import urllib
@@ -64,7 +64,7 @@ def configure_before_handlers(app):
 
     # Catch logged in users
     if using_api_key_auth():
-      user = db.users.find_one({"api_key": request.args["api_key"]})
+      user = get_user(api_key=request.args["api_key"])
       if user is None:
         return
       if check_request(request, user["secret"]):
@@ -72,7 +72,7 @@ def configure_before_handlers(app):
         g.authed = True
         session["email"] = user["email"]
     elif "email" in session:
-      user = db.users.find_one({"email": session["email"]})
+      user = get_user(email=session["email"])
       if user is not None:
         g.user =  user
         g.authed = True

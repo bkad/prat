@@ -23,7 +23,9 @@ class DefaultConfig(object):
   COLLAPSED_MESSAGE_TIME_WINDOW = 5 * 60 # seconds
 
   PUSH_ADDRESS = "tcp://localhost:5666"
+  PULL_ADDRESS = "tcp://*:5666"
   SUBSCRIBE_ADDRESS = "tcp://localhost:5667"
+  PUBLISH_ADDRESS = "tcp://*:5667"
   DEFAULT_CHANNELS = ["general"]
   STRING_FILTERS =  [
                       string_filters.replace_shas_with_barkeep_links,

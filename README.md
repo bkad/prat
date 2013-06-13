@@ -18,6 +18,6 @@ to create mongo capped collection (while mongod is running)
 
 running the servers:
 
+`python -m chat.scripts.event_server`
 `python run_server.py`
-`python eventhub_server/event_server.py`
 and make sure mongod and redis-server is running

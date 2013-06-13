@@ -1,7 +1,7 @@
 from flask import Blueprint, g, render_template, request, session, redirect, current_app
 from flask.ext.openid import OpenID
 from hashlib import md5
-from chat.datastore import db, add_user_to_channel
+from chat.datastore import db, add_user_to_channel, get_user
 from chat.zmq_context import zmq_context, push_socket
 from chat.views.eventhub import send_join_channel
 import urllib
@@ -30,7 +30,7 @@ def login():
 def create_or_login(resp):
   user = None
   session["email"] = resp.email
-  user = db.users.find_one({ "email" : resp.email })
+  user = get_user(email=resp.email)
   if user is not None:
     g.user = user
   else:

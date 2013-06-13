@@ -8,6 +8,19 @@ from bson.objectid import ObjectId, InvalidId
 from redis import StrictRedis
 import base64
 
+def pipelinable(fn):
+  """Decorator for actions on Redis. If the arguments to the decorated function call contains pipe=X, the
+  inner function will be called with pipe=X, otherwise it will be called with pipe=redis_db.
+
+  Useful with Redis pipelines
+  """
+  def inner(*args, **kwargs):
+    fn(*args, pipe=(kwargs.get("pipe") or redis_db))
+  return inner
+
+def get_user(**args):
+  return db.users.find_one(args)
+
 def app_name():
   return current_app.config["APP_NAME"]
 
@@ -58,11 +71,14 @@ def message_dict_from_event_object(event_object):
            },
          }
 
+def get_user_statuses(channel):
+  return redis_db.hgetall(redis_channel_key(channel)).iteritems()
+
 def get_channel_users(channel):
-  user_statuses = redis_db.hgetall(redis_channel_key(channel))
+  user_statuses = get_user_statuses(channel)
   user_list = []
-  for email, status in user_statuses.iteritems():
-    mongo_user = db.users.find_one({ "email": email })
+  for email, status in user_statuses:
+    mongo_user = get_user(email=email)
     if mongo_user is None:
       mongo_user = {
         "name": "Not Found",
@@ -107,25 +123,32 @@ def reorder_user_channels(user, channels):
   user["channels"] = channels
   db.users.save(user)
 
-def get_user_channel_status(user, channel_name):
+@pipelinable
+def get_user_channel_status(user, channel_name, pipe):
   channel_key = redis_channel_key(channel_name)
-  return redis_db.hget(channel_key, user["email"])
+  return pipe.hget(channel_key, user["email"])
 
-def set_user_channel_status(user, channel_name, status):
+@pipelinable
+def set_user_channel_status(user, channel_name, status, pipe):
   channel_key = redis_channel_key(channel_name)
-  redis_db.hset(channel_key, user["email"], status)
+  return pipe.hset(channel_key, user["email"], status)
 
 def user_clients_key(user):
-  return "user-client:" + user["email"] + ":"
+  if isinstance(user, (str, unicode)):
+    email = user
+  else:
+    email = user["email"]
+  return "user-client:" + email + ":"
 
 def add_to_user_clients(user, client_id):
   redis_key = user_clients_key(user) + client_id
   timeout = current_app.config["REDIS_USER_CLIENT_TIMEOUT"]
   redis_db.pipeline().set(redis_key, 1).expire(redis_key, timeout).execute()
 
-def remove_from_user_clients(user, client_id):
+@pipelinable
+def remove_from_user_clients(user, client_id, pipe):
   redis_key = user_clients_key(user) + client_id
-  redis_db.delete(redis_key)
+  pipe.delete(redis_key)
 
 def refresh_user_client(user, client_id):
   redis_key = user_clients_key(user) + client_id

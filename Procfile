@@ -1,2 +1,2 @@
 web: ./bin/run_web.bash
-job: python eventhub_server/event_server.py
+events: python -m chat.scripts.event_server
