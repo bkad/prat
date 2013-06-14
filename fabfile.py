@@ -54,7 +54,7 @@ def cleanup():
 
 def compile_vendor_js():
   vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
-  return local("{0} {1} -c".format(uglify, " ".join(vendor_files)), capture=True)
+  return local("{0} {1} -c --screw-ie8".format(uglify, " ".join(vendor_files)), capture=True)
 
 def write_config():
   cleanup()
@@ -62,7 +62,7 @@ def write_config():
   vendor_js = compile_vendor_js()
 
   coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
-  coffee_command = "{0} -cp {1} | {2} - -c -m".format(coffee, coffee_paths, uglify)
+  coffee_command = "{0} -cp {1} | {2} - -c -m --screw-ie8".format(coffee, coffee_paths, uglify)
   coffee_js = local(coffee_command, capture=True)
 
   all_js = vendor_js + coffee_js

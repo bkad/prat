@@ -5,7 +5,7 @@
     "coffee-script": "1.6.x",
     "stylus": "0.32.x",
     "nib": "0.9.1",
-    "uglify-js": "2.2.5"
+    "uglify-js": "2.3.6"
   }
 }
 
