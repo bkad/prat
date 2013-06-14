@@ -16,6 +16,10 @@ to create mongo capped collection (while mongod is running)
 
 `mongo prat reset_db.js`
 
+to install javascript/css dependencies
+
+`bower install`
+
 running the servers:
 
 `python -m chat.scripts.event_server`

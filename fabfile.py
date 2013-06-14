@@ -53,7 +53,7 @@ def cleanup():
   local("find . -name \"*.pyc\" -exec rm -rf {} \\;")
 
 def compile_vendor_js():
-  vendor_files = ["chat/static/vendor/js/{0}".format(filename) for filename in vendor_js_files]
+  vendor_files = ["chat/static/components/{0}".format(filename) for filename in vendor_js_files]
   return local("{0} {1} -c --screw-ie8".format(uglify, " ".join(vendor_files)), capture=True)
 
 def write_config():
