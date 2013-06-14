@@ -1,11 +1,13 @@
 {
   "name": "prat",
   "version": "1.0.0",
+  "repository": "git://github.com/bkad/prat.git",
   "dependencies": {
     "coffee-script": "1.6.x",
     "stylus": "0.32.x",
     "nib": "0.9.1",
-    "uglify-js": "2.3.6"
+    "uglify-js": "2.3.6",
+    "bower": "0.9.2"
   }
 }
 
