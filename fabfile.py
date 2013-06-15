@@ -54,7 +54,7 @@ def cleanup():
 
 def compile_vendor_js():
   vendor_files = ["chat/static/components/{0}".format(filename) for filename in vendor_js_files]
-  return local("{0} {1} -c --screw-ie8".format(uglify, " ".join(vendor_files)), capture=True)
+  return local("{0} {1} -c -m --screw-ie8".format(uglify, " ".join(vendor_files)), capture=True)
 
 def write_config():
   cleanup()
