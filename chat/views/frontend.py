@@ -64,8 +64,11 @@ def index():
 
   if current_app.config["REWRITE_MAIN_TEMPLATE"]:
     write_main_template()
+  headers = {
+    "Cache-Control": "no-store",
+  }
 
-  return render_square_bracket_template("index.htmljinja", context)
+  return (render_square_bracket_template("index.htmljinja", context), 200, headers)
 
 def get_mustache_templates():
   write_info_template()
