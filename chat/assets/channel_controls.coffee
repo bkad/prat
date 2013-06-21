@@ -8,11 +8,11 @@ class window.ChannelView extends Backbone.View
     @name = options.name
     @template = $("#channel-button-template").html()
     @render()
-    @channelButton = @$el.find(".channel")
+    @channelButton = @$(".channel")
 
   render: =>
     @$el.html(Util.mustache(@template, name: @name))
-    @$el.find(".leave").tooltip(DefaultTooltip)
+    @$(".leave").tooltip(DefaultTooltip)
       .click(=> @trigger("leaveChannel", @name))
     @$el.hover((=> @$el.addClass("hover")), => @$el.removeClass("hover"))
 
