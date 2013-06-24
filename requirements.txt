@@ -7,7 +7,7 @@ MarkupSafe==0.18
 PyExecJS==1.0.4
 Pygments==1.6
 Werkzeug==0.9
-bpython==0.10.1
+bpython==0.12
 chaussette==0.9
 circus==0.8.1
 greenlet==0.4.0
@@ -19,9 +19,9 @@ prat-geventwebsocket==0.3.7
 prat-misaka==1.0.5
 psutil==0.7.1
 pycrypto==2.6
-pymongo==2.4.1
+pymongo==2.5.2
 python-openid==2.2.5
-pyzmq==2.2.0.1
-redis==2.6.0
+pyzmq==13.1.0
+redis==2.7.6
 stylus==0.1.0
 wsgiref==0.1.2
