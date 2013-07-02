@@ -85,8 +85,7 @@ def write_main_template():
       coffee_files=coffee_files,
       stylus_files=stylus_files,
       asset_url=asset_url,
-      vendor_js_files=vendor_js_files,
-      preferences_snippet=read_template("preferences.html"))
+      vendor_js_files=vendor_js_files)
   with codecs.open("chat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:
     template_file.write(template)
 
