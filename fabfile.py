@@ -42,7 +42,6 @@ def compile_assets_file(command, extension):
 
 def cleanup():
   files = ["chat/static/app_js_*.js",
-           "chat/static/vendor_*.js",
            "chat/static/app_css_*.css",
            "config.py",
            "chat/templates/index.htmljinja",
