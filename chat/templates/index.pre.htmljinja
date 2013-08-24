@@ -158,7 +158,7 @@
       </label>
       <label>
         <input type="checkbox" id="pref-hide-images" />
-        <span>Auto-hide all images in new messages.</span>
+        <span>Auto-hide all images/YouTube videos in new messages.</span>
       </label>
     </div>
     <div class="modal-footer">
