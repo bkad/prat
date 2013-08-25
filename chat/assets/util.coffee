@@ -118,7 +118,7 @@ window.Util =
 
   createNotification: (icon, title, msg) ->
     wn = window.webkitNotifications
-    if not wn or not Preferences.get("webkit-nots") #or document.hasFocus()
+    if not wn or not Preferences.get("webkit-nots") or document.hasFocus()
       return false
     if wn.checkPermission() == 0
       # Permission allowed
