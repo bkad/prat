@@ -3,6 +3,9 @@ window.Preferences =
     "alert-sounds":
       type: "boolean"
       default: true
+    "webkit-nots":
+      type: "boolean"
+      default: false
     "swap-enter":
       type: "boolean"
       default: false
@@ -21,6 +24,10 @@ window.Preferences =
       $("#preferences").modal("hide")
     $("#preferences").on "hidden", => @setCheckboxesFromPrefs()
     $("#settings-button").on "click", @show
+    $("#pref-webkit-nots").on "click", ->
+      if $(this).prop("checked")
+        window.webkitNotifications.requestPermission()
+
     @setCheckboxesFromPrefs()
 
   show: ->

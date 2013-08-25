@@ -83,6 +83,7 @@ class window.MessagesViewCollection extends Backbone.View
     @checkAndNotify(messagePartial, messageObject.user.name)
     $message = @appendMessage(messageObject, messagePartial)
     return unless $message?
+    Util.createNotification(null, messageObject.user.name + ' says...', messageObject.message)
     if bottom
       Util.scrollToBottom(animate: true)
       $message.find("img").one("load", -> Util.scrollToBottom(animate: true))

@@ -153,6 +153,10 @@
         <span>Play an alert sound when you are mentioned and the chat window is not focused.</span>
       </label>
       <label>
+        <input type="checkbox" id="pref-webkit-nots" />
+        <span>Show a notification when a new message is received.</span>
+      </label>
+      <label>
         <input type="checkbox" id="pref-swap-enter" />
         <span>In the input box, <code>enter</code> inserts a newline and <code>shift</code>+<code>enter</code> sends a message.</span>
       </label>
