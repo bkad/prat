@@ -10,12 +10,9 @@ from ..config import DefaultConfig
 
 def main(args):
     config = DefaultConfig()
-    dbclient = MongoClient(host=config.MONGO_HOST,
-                           port=config.MONGO_PORT,
-                           tz_aware=True)
-    db = dbclient[config.MONGO_DB_NAME]
-    event_collection = db["events"]
 
+    event_collection = mongo_collection(config.MONGO_HOST, config.MONGO_PORT,
+                                        config.MONGO_DB_NAME, "events")
     backup_date = datetime.datetime.strptime(args["backup_date"], "%Y-%m-%d")
     next_day = backup_date + datetime.timedelta(days=1)
 
@@ -34,6 +31,13 @@ def main(args):
 
     for file_handle in channel_files.values():
         file_handle.close()
+
+def mongo_collection(host, port, db, collection_name):
+    dbclient = MongoClient(host=host,
+                           port=port,
+                           tz_aware=True)
+    db = dbclient[db]
+    return db[collection_name]
 
 def valid_filename(filename):
     """Strips out any characters that aren't ascii letters or digits"""
