@@ -90,6 +90,7 @@ class window.MessagesViewCollection extends Backbone.View
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $("#message-preview .message")
     $messageContainer = Util.$mustache(@messagePartialTemplate, messageObject)
+    $messageContainer.find("img").each((index, elem) => @renderMessageMedia($(elem), true))
     messagePreviewDiv.replaceWith($messageContainer)
     $("#message-preview").modal("show")
 
@@ -128,7 +129,7 @@ class window.MessagesViewCollection extends Backbone.View
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
 
-    mustached.find("img").each((index, elem) => @renderMessageMedia($(elem), mustached))
+    mustached.find("img").each((index, elem) => @renderMessageMedia($(elem)))
 
     if Preferences.get("hide-images")
       mustached.find(".image").addClass("closed")
@@ -138,7 +139,7 @@ class window.MessagesViewCollection extends Backbone.View
       Util.scrollToBottom() if atBottom
     mustached
 
-  renderMessageMedia: (image, mustached) =>
+  renderMessageMedia: (image, bodyOnly=false) =>
     imageSrc = image.attr("src")
     matches = imageSrc.match(/^.*youtube.com\/watch\?.*v=([^#\&\?]*)/)
     if matches
@@ -151,15 +152,17 @@ class window.MessagesViewCollection extends Backbone.View
     else
       imageType = "Image"
       imageBody = image.get(0).outerHTML
-
-    image.replaceWith ->
-      """
-      <div class='image'>
-        <button class='hide-image'></button>
-        <span>#{imageType} hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
-        #{imageBody}
-      </div>
-      """
+    if bodyOnly
+      image.replaceWith -> "#{imageBody}"
+    else
+      image.replaceWith ->
+        """
+        <div class='image'>
+          <button class='hide-image'></button>
+          <span>#{imageType} hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
+          #{imageBody}
+        </div>
+        """
 
   appendMessage: (message, messagePartial) =>
     return if $("#" + message.message_id).length > 0
