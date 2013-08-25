@@ -36,7 +36,8 @@ def main(args):
         file_handle.close()
 
 def valid_filename(filename):
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    """Strips out any characters that aren't ascii letters or digits"""
+    valid_chars = "-_.() {0}{1}".format(string.ascii_letters, string.digits)
     filename = ''.join(c for c in filename if c in valid_chars)
     return filename
 
