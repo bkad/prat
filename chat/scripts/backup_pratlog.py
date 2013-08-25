@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import os
 from pymongo import MongoClient
 import string
 import sys
@@ -25,8 +26,13 @@ def main(args):
     channel_files = {}
     for event in days_events:
         channel = event["channel"]
-        filename = "pratlog.{0}.{1}.txt".format(valid_filename(channel), backup_date.strftime("%Y-%m-%d"))
-        output_file = channel_files.setdefault(channel, open(filename, "w"))
+        if channel not in channel_files:
+            filename = "pratlog.{0}.{1}.txt".format(valid_filename(channel),
+                                                    backup_date.strftime("%Y-%m-%d"))
+            output_file = open(os.path.join(args["log_directory"], filename), "w")
+            channel_files[channel] = output_file
+        else:
+            output_file = channel_files[channel]
 
         print >> output_file, "{2} {0} <{1}>: {3}".format(
             event["author"], event["email"],
@@ -57,6 +63,8 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--backup-date", default=yesterday)
     parser.add_argument("-c", "--config", default=None,
                         help="eg. 'config.MyConfig'")
+    parser.add_argument("-l", "--log-directory", default=".",
+                        help="eg. '/var/log/prat'")
     args = vars(parser.parse_args())
 
     main(args)
