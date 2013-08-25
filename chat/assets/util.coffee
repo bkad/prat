@@ -128,9 +128,6 @@ window.Util =
         notification.cancel()
       , 5000)
 
-  requestNotsPermission: ->
-    window.webkitNotifications.requestPermission()
-
 window.onbeforeunload = ->
   if $("#chat-text").val().length > 0
     "You have an unsent message."

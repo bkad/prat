@@ -25,7 +25,7 @@ window.Preferences =
     $("#preferences").on "hidden", => @setCheckboxesFromPrefs()
     $("#settings-button").on "click", @show
     $("#pref-webkit-nots").on "click", ->
-      if $(this).prop("checked")
+      if window.webkitNotifications && $(this).prop("checked")
         window.webkitNotifications.requestPermission()
 
     @setCheckboxesFromPrefs()
