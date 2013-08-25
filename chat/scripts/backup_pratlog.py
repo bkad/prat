@@ -1,3 +1,8 @@
+"""
+Backup script to backup the specified days worth of pratlogs.
+If no arguments are given, the default config and yesterday's pratlog are
+backed up into the current directory
+"""
 import argparse
 import datetime
 import json
@@ -59,8 +64,9 @@ if __name__ == "__main__":
     yesterday = datetime.datetime.combine(
         datetime.date.today() - datetime.timedelta(days=1),
         datetime.time()).strftime("%Y-%m-%d")
-    parser = argparse.ArgumentParser(description="Extract ip/header features")
-    parser.add_argument("-d", "--backup-date", default=yesterday)
+    parser = argparse.ArgumentParser(description = __doc__)
+    parser.add_argument("-d", "--backup-date", default=yesterday,
+                        help="As 'YYYY-mm-dd'")
     parser.add_argument("-c", "--config", default=None,
                         help="eg. 'config.MyConfig'")
     parser.add_argument("-l", "--log-directory", default=".",
