@@ -6,10 +6,14 @@ import string
 import sys
 
 from ..config import DefaultConfig
-
+from .utils import get_config
 
 def main(args):
     config = DefaultConfig()
+    if args["config"] is not None:
+        config = get_config(args["config"])
+        if (config is None):
+            sys.exit("Could not load config")
 
     event_collection = mongo_collection(config.MONGO_HOST, config.MONGO_PORT,
                                         config.MONGO_DB_NAME, "events")
@@ -51,6 +55,8 @@ if __name__ == "__main__":
         datetime.time()).strftime("%Y-%m-%d")
     parser = argparse.ArgumentParser(description="Extract ip/header features")
     parser.add_argument("-d", "--backup-date", default=yesterday)
+    parser.add_argument("-c", "--config", default=None,
+                        help="eg. 'config.MyConfig'")
     args = vars(parser.parse_args())
 
     main(args)
