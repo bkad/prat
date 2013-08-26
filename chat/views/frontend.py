@@ -37,6 +37,9 @@ coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "c
 
 stylus_files = ["style", "pygments", "tooltip"]
 
+mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
+    "boolean_preference"]
+
 @frontend.route('')
 def index():
   join_channel = request.args.get("channel")
@@ -73,7 +76,7 @@ def index():
 def get_mustache_templates():
   write_info_template()
   mustache_templates = []
-  for template in ["message_container", "message_partial", "alert", "user_status", "channel_button", "info"]:
+  for template in mustache_files:
     template_id = template.replace("_", "-") + "-template"
     template_content = read_template(template + ".mustache")
     mustache_templates.append((template_id, template_content))

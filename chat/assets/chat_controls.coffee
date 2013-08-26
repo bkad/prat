@@ -217,3 +217,7 @@ class window.ChatControls
   @hideModals: ->
     $("#info").modal("hide")
     $("#message-preview").modal("hide")
+
+  @appendUserName: (username) =>
+    currentMessage = @chatText.val().trim()
+    @chatText.focus().val((currentMessage + " @" + username).trim())

@@ -91,6 +91,7 @@ class window.MessagesViewCollection extends Backbone.View
   onPreviewMessage: (event, messageObject) =>
     messagePreviewDiv = $("#message-preview .message")
     $messageContainer = Util.$mustache(@messagePartialTemplate, messageObject)
+    $messageContainer.find("img").each((index, elem) => @renderMessageMedia($(elem), true))
     messagePreviewDiv.replaceWith($messageContainer)
     $("#message-preview").modal("show")
 
@@ -128,14 +129,9 @@ class window.MessagesViewCollection extends Backbone.View
     mustached = Util.$mustache(@messagePartialTemplate, message)
     mustached.find(".user-mention[data-username='#{@username}']").addClass("its-you")
     mustached.find(".channel-mention").on("click", Channels.joinChannelClick)
-    mustached.find("img").replaceWith ->
-      """
-      <div class='image'>
-        <button class='hide-image'></button>
-        <span>Image hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
-        #{@.outerHTML}
-      </div>
-      """
+
+    mustached.find("img").each((index, elem) => @renderMessageMedia($(elem)))
+
     if Preferences.get("hide-images")
       mustached.find(".image").addClass("closed")
     mustached.find("button.hide-image").on "click", (e) ->
@@ -143,6 +139,31 @@ class window.MessagesViewCollection extends Backbone.View
       $(e.target).parent().toggleClass("closed")
       Util.scrollToBottom() if atBottom
     mustached
+
+  renderMessageMedia: (image, bodyOnly=false) =>
+    imageSrc = image.attr("src")
+    matches = imageSrc.match(/^.*youtube.com\/watch\?.*v=([^#\&\?]*)/)
+    if matches
+      embedId = matches[1]
+      imageType = "Video"
+      imageBody = """
+        <iframe type="text/html" width="600" height="400"
+                src="http://www.youtube.com/embed/#{embedId}" frameborder="0"/>
+        """
+    else
+      imageType = "Image"
+      imageBody = image.get(0).outerHTML
+    if bodyOnly
+      image.replaceWith -> "#{imageBody}"
+    else
+      image.replaceWith ->
+        """
+        <div class='image'>
+          <button class='hide-image'></button>
+          <span>#{imageType} hidden (<a href='#{@.src}' target='_blank'>link</a>)</span>
+          #{imageBody}
+        </div>
+        """
 
   appendMessage: (message, messagePartial) =>
     return if $("#" + message.message_id).length > 0

@@ -107,8 +107,15 @@ class UserStatusView extends Backbone.View
   initialize: ->
     @userStatusTemplate = $("#user-status-template").html()
 
+  events: 
+    "click .user-status" : "insertUserName"
+
   tagname: "div"
   className: "channel-users"
+
+  insertUserName: (e) =>
+    username = $(e.currentTarget).attr("data-original-title")
+    ChatControls.appendUserName(username)
 
   renderUserStatus: (user) =>
     Util.$mustache(@userStatusTemplate, user.attributes).tooltip(DefaultTooltip)[0]
