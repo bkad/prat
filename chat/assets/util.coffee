@@ -116,6 +116,18 @@ window.Util =
   $mustache: (template, locals) ->
     $(Util.mustache(template, locals))
 
+  createNotification: (icon, title, msg) ->
+    wn = window.webkitNotifications
+    if not wn or not Preferences.get("webkit-nots") or document.hasFocus()
+      return false
+    if wn.checkPermission() == 0
+      # Permission allowed
+      notification = wn.createNotification(icon, title, msg)
+      notification.show()
+      setTimeout(->
+        notification.cancel()
+      , 5000)
+
 window.onbeforeunload = ->
   if $("#chat-text").val().length > 0
     "You have an unsent message."

@@ -29,6 +29,9 @@ window.Preferences =
     "alert-sounds":
       default: true
       description: "Play an alert sound when you are mentioned and the chat window is not focused."
+    "webkit-nots":
+      default: false
+      description: "Show a notification when a new message is received."
     "swap-enter":
       default: false
       description: "In the input box, <code>enter</code> inserts a newline and <code>shift</code>+<code>enter</code> sends a message."
@@ -48,6 +51,9 @@ window.Preferences =
       $("#preferences .modal-body").append(view.render().el)
 
     $("#settings-button").on "click", @show
+    $("#pref-webkit-nots").on "click", ->
+      if $(@).prop("checked")
+        webkitNotifications?.requestPermission()
 
   show: ->
     $("#preferences").modal("toggle")
