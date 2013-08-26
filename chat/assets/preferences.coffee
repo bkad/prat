@@ -52,8 +52,8 @@ window.Preferences =
 
     $("#settings-button").on "click", @show
     $("#pref-webkit-nots").on "click", ->
-      if window.webkitNotifications && $(this).prop("checked")
-        window.webkitNotifications.requestPermission()
+      if $(@).prop("checked")
+        webkitNotifications?.requestPermission()
 
   show: ->
     $("#preferences").modal("toggle")
