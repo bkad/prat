@@ -34,7 +34,7 @@ vendor_js_files = [
 ]
 
 coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
-    "datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader"]
+    "datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
 
 stylus_files = ["style", "pygments", "tooltip"]
 
@@ -64,6 +64,10 @@ def index():
     "right_sidebar_closed": right_sidebar_closed,
     "left_sidebar_closed": left_sidebar_closed,
     "preferences": get_user_preferences(g.user),
+    "imgur_client_id": current_app.config["IMGUR_CLIENT_ID"],
+    "collapse_time_window": current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
+    "name": current_app.config["APP_NAME"],
+    "websocket_keep_alive_interval": current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
   }
 
   if current_app.config["REWRITE_MAIN_TEMPLATE"]:
@@ -72,7 +76,7 @@ def index():
     "Cache-Control": "no-store",
   }
 
-  return (render_square_bracket_template("index.htmljinja", context), 200, headers)
+  return (render_square_bracket_template("index.htmljinja", { "initial": context }), 200, headers)
 
 def get_mustache_templates():
   write_info_template()

@@ -13,6 +13,9 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='//fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic|Oswald:700'
         rel='stylesheet'>
+  <script charset="utf-8">
+    Initial = [[ initial|tojson|safe ]]
+  </script>
   {% if config["COMPILED_JS"] %}
   <script src="{{ config["COMPILED_JS"] }}"></script>
   {% else %}
@@ -31,50 +34,6 @@
     {{ template_content|safe }}
   </script>
   {% endfor %}
-  <script charset="utf-8">
-    $(function() {
-      CurrentUserEmail = [[ email|tojson|safe ]]
-      CurrentChannel = [[ last_selected_channel|tojson|safe ]]
-      var initialChannels = [[ channels|tojson|safe ]]
-      DefaultTooltip = { animation: false, container: "body" }
-
-      Channels = new ChannelViewCollection({ channels: initialChannels })
-      Users.init(initialChannels)
-
-      ChatControls.init({ leftSidebarClosed: [[ left_sidebar_closed|tojson ]],
-                          rightSidebarClosed: [[ right_sidebar_closed|tojson ]] })
-
-      ImgurUploader.init({{ config["IMGUR_CLIENT_ID"]|tojson|safe }}, new AlertHelper())
-
-      UserGuide.init()
-      Preferences.init([[ preferences|tojson|safe ]])
-      sound = new Sound("/static/audio/ping.mp3")
-
-      dateTimeHelper = new DateTimeHelper()
-
-      messagesViewCollection =
-        new MessagesViewCollection({ sound: sound,
-                                     channels: initialChannels,
-                                     username: [[ username|tojson|safe ]],
-                                     dateTimeHelper: dateTimeHelper,
-                                     collapseTimeWindow: {{ config["COLLAPSED_MESSAGE_TIME_WINDOW"] }},
-                                     title: {{ config["APP_NAME"]|tojson|safe }},
-                                   })
-
-      var websocketProtocol = "https:" == document.location.protocol ? "wss" : "ws"
-      MessageHub.init(websocketProtocol + "://" + document.location.host + "/eventhub",
-                      4000,
-                      {{ config["WEBSOCKET_KEEP_ALIVE_INTERVAL"] }},
-                      new AlertHelper())
-
-      MessageHub.deferDequeue(messagesViewCollection.appendInitialMessages, Users.updateAllChannels)
-
-      var sideButtons = ["logout", "user-info-button", "settings-button"]
-      sideButtons.forEach(function(e) {
-        $("#" + e).tooltip(DefaultTooltip)
-      })
-    })
-  </script>
 </head>
 <body>
   <div class="left-sidebar [[ "closed" if left_sidebar_closed else "" ]]">
