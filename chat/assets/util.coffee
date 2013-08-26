@@ -117,16 +117,19 @@ window.Util =
     $(Util.mustache(template, locals))
 
   createNotification: (icon, title, msg) ->
-    wn = window.webkitNotifications
-    if not wn or not Preferences.get("webkit-nots") or document.hasFocus()
+    console.log icon
+    unless webkitNotifications? and Preferences.get("webkit-notifications") and not document.hasFocus()
       return false
-    if wn.checkPermission() == 0
+    if webkitNotifications.checkPermission() is 0
       # Permission allowed
-      notification = wn.createNotification(icon, title, msg)
+      notification = webkitNotifications.createNotification(icon, title, msg)
       notification.show()
       setTimeout(->
         notification.cancel()
       , 5000)
+
+  gravatar: (email, size) ->
+    "//www.gravatar.com/avatar/#{md5(email)}?s=#{size}"
 
 window.onbeforeunload = ->
   if $("#chat-text").val().length > 0
