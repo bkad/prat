@@ -25,7 +25,7 @@ vendor_js_files = [
   "prat-bootstrap/js/bootstrap-alert.js",
   "prat-bootstrap/js/bootstrap-modal.js",
   "prat-bootstrap/js/bootstrap-tooltip.js",
-  "blueimp-md5/js/md5.js",
+  "js-md5/js/md5.js",
   "mustache/mustache.js",
   "underscore/underscore.js",
   "backbone/backbone.js",
