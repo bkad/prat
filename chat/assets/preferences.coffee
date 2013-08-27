@@ -1,6 +1,4 @@
 class BooleanPreferenceView extends Backbone.View
-  _.extend @::, Backbone.Events
-
   events:
     "change input": "setValue"
 

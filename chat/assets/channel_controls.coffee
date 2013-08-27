@@ -1,6 +1,4 @@
 class window.ChannelView extends Backbone.View
-  _.extend @::, Backbone.Events
-
   tagName: "div"
   className: "channel-button-container"
 
