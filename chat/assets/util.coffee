@@ -117,7 +117,6 @@ window.Util =
     $(Util.mustache(template, locals))
 
   createNotification: (icon, title, msg) ->
-    console.log icon
     unless webkitNotifications? and Preferences.get("webkit-notifications") and not document.hasFocus()
       return false
     if webkitNotifications.checkPermission() is 0
