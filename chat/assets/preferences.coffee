@@ -40,6 +40,9 @@ class window.Preferences extends Backbone.Events
     "hide-images":
       default: false
       description: "Auto-hide all images/YouTube videos in new messages."
+    "show-offline":
+      default: true
+      description: "Show offline users in the sidebar"
 
   @get: (name) -> @prefs[name].view.value
 

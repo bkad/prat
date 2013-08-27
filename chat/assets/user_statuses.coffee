@@ -41,6 +41,7 @@ class window.Users
     $(".right-sidebar").append(usersView.$el)
     usersCollection.on("sort add remove reset", usersView.render)
     usersView.render()
+    usersView.listenTo(Preferences, "change:show-offline", usersView.render)
     @views[channel] = usersView
 
   @populateNewUserStatusesView: (channel) =>
@@ -118,7 +119,10 @@ class UserStatusView extends Backbone.View
     ChatControls.appendUserName(username)
 
   renderUserStatus: (user) =>
-    Util.$mustache(@userStatusTemplate, user.attributes).tooltip(DefaultTooltip)[0]
+    hide = user.get("status") is "offline" and not Preferences.get("show-offline")
+    options = $.extend({}, user.attributes, hide: hide)
+
+    Util.$mustache(@userStatusTemplate, options).tooltip(DefaultTooltip)[0]
 
   renderUserStatusCollection: =>
     frag = document.createDocumentFragment()
