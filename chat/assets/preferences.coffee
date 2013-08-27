@@ -60,7 +60,7 @@ class window.Preferences extends Backbone.Events
   @show: ->
     $("#preferences").modal("toggle")
 
-  @change: (name, value) =>
+  @handleChange: (name, value) =>
     if name is "webkit-notifications" and value
       webkitNotifications?.requestPermission()
 
