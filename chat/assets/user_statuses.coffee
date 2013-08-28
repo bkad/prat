@@ -116,7 +116,6 @@ class UserStatusView extends Backbone.View
   insertUserName: (e) =>
     username = $(e.currentTarget).attr("data-original-title")
     ChatControls.appendUserName(username)
-    #console.log(username)
 
   renderUserStatus: (user) =>
     Util.$mustache(@userStatusTemplate, user.attributes).tooltip(DefaultTooltip)[0]
