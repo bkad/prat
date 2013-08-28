@@ -37,3 +37,7 @@ $ ->
 
   for btn in ["logout", "user-info-button", "settings-button"]
     $("##{btn}").tooltip(DefaultTooltip)
+
+  window.onbeforeunload = ->
+    if $("#chat-text").val().length > 0
+      "You have an unsent message."

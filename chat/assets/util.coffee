@@ -138,7 +138,3 @@ window.Util =
 
   gravatar: (email, size) ->
     "//www.gravatar.com/avatar/#{md5(email)}?s=#{size}"
-
-window.onbeforeunload = ->
-  if $("#chat-text").val().length > 0
-    "You have an unsent message."
