@@ -120,7 +120,7 @@ window.Util =
   # 1) document.hasFocus
   # 2) !document.hidden
   pageIsVisible: ->
-    document.hasFocus() and (document.hidden ? document.webkitHidden ? document.mozHidden)
+    document.hasFocus() and not (document.hidden ? document.webkitHidden ? document.mozHidden)
 
   createNotification: (icon, title, msg) ->
     shouldNotify = webkitNotifications? and
