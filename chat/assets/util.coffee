@@ -116,30 +116,31 @@ window.Util =
   $mustache: (template, locals) ->
     $(Util.mustache(template, locals))
 
-  createNotification: (icon, title, msg) ->
-    # Creates a webkitNotification if:
-    # 1) The document does not have focus, and
-    # 2) The page is not "hidden", by pageVisibility definition
+  # Checks if
+  # 1) document.hasFocus
+  # 2) !document.hidden
+  pageIsVisible: ->
+    result = document.hasFocus()
 
-    shouldNotify = webkitNotifications? and Preferences.get("webkit-notifications") and webkitNotifications.checkPermission() is 0
-
-    # pageIsVisible ultimately will mean: "can the user see this page?"
-    pageIsVisible = document.hasFocus()
-
-    # documentHidden means: "Is this tab selected?"
     if document.hidden?
       documentHidden = document.hidden
     else
       documentHidden = document.webkitHidden
 
     if documentHidden?
-      pageIsVisible &&= not documentHidden
+      result &&= not documentHidden
 
-    if pageIsVisible?
-      shouldNotify &&= not pageIsVisible
+    return result
+
+  createNotification: (icon, title, msg) ->
+    shouldNotify = webkitNotifications? and Preferences.get("webkit-notifications") and webkitNotifications.checkPermission() is 0
+
+    pageVisible = @pageIsVisible()
+
+    shouldNotify &&= not pageVisible
 
     if shouldNotify
-      # Permission allowed
+      # Let's show a notification!
       notification = webkitNotifications.createNotification(icon, title, msg)
       notification.show()
       setTimeout(->
