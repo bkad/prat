@@ -116,11 +116,20 @@ window.Util =
   $mustache: (template, locals) ->
     $(Util.mustache(template, locals))
 
+  # Checks if
+  # 1) document.hasFocus
+  # 2) !document.hidden
+  pageIsVisible: ->
+    document.hasFocus() and not (document.hidden ? document.webkitHidden ? document.mozHidden)
+
   createNotification: (icon, title, msg) ->
-    unless webkitNotifications? and Preferences.get("webkit-notifications") and not document.hasFocus()
-      return false
-    if webkitNotifications.checkPermission() is 0
-      # Permission allowed
+    shouldNotify = webkitNotifications? and
+                   Preferences.get("webkit-notifications") and
+                   webkitNotifications.checkPermission() is 0 and
+                   not @pageIsVisible()
+
+    if shouldNotify
+      # Let's show a notification!
       notification = webkitNotifications.createNotification(icon, title, msg)
       notification.show()
       setTimeout(->
