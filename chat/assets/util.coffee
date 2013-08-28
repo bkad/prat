@@ -120,24 +120,13 @@ window.Util =
   # 1) document.hasFocus
   # 2) !document.hidden
   pageIsVisible: ->
-    result = document.hasFocus()
-
-    if document.hidden?
-      documentHidden = document.hidden
-    else
-      documentHidden = document.webkitHidden
-
-    if documentHidden?
-      result &&= not documentHidden
-
-    return result
+    document.hasFocus() and (document.hidden ? document.webkitHidden ? document.mozHidden)
 
   createNotification: (icon, title, msg) ->
-    shouldNotify = webkitNotifications? and Preferences.get("webkit-notifications") and webkitNotifications.checkPermission() is 0
-
-    pageVisible = @pageIsVisible()
-
-    shouldNotify &&= not pageVisible
+    shouldNotify = webkitNotifications? and
+                   Preferences.get("webkit-notifications") and
+                   webkitNotifications.checkPermission() is 0 and
+                   not pageVisible
 
     if shouldNotify
       # Let's show a notification!
