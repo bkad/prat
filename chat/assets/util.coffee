@@ -126,7 +126,7 @@ window.Util =
     shouldNotify = webkitNotifications? and
                    Preferences.get("webkit-notifications") and
                    webkitNotifications.checkPermission() is 0 and
-                   not pageVisible
+                   not @pageVisible()
 
     if shouldNotify
       # Let's show a notification!
