@@ -139,7 +139,18 @@ button, select
       background: accent-blue
       color: white
     .unread
-      box-shadow: 0px 0px 3px 1px lighten(accent-blue, 40%)
+      animation-duration: 1.5s
+      animation-name: slowblink
+      animation-iteration-count: infinite
+      animation-direction: alternate
+    @keyframes slowblink {
+      from {
+        box-shadow: 0px 0px 5px 1px accent-blue
+      }
+      to {
+        box-shadow: 0px 0px 5px 1px lighten(accent-blue, 55%)	
+      }
+    }
     div.add-channel-container
       font-size: 14px
       font-weight: bold
