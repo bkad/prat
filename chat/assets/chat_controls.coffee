@@ -55,6 +55,8 @@ class window.ChatControls
     @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
+    @chatText.on("keydown.pageup", () => @onPageScrollChat(true))
+    @chatText.on("keydown.pagedown", () => @onPageScrollChat(false))
     # TODO(kle): figure out why we have to close over blur
     @chatText.on("keydown.esc", => @chatText.blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
@@ -71,6 +73,9 @@ class window.ChatControls
   @onReturn: (e, shift) ->
     @onChatSubmit(e) if shift is Preferences.get("swap-enter")
 
+  @onPageScrollChat: (up) ->
+    Util.scrollMessagesPage(up)
+    
   @onChatAutocomplete: (event) =>
     if event.which isnt 9
       # If not a tab, cancel any current autocomplete.
