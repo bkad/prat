@@ -20,6 +20,11 @@ window.Util =
     difference = messages[0].scrollHeight - messages.scrollTop() - messages.outerHeight()
     difference <= 1
 
+  scrollMessagesPage: (options) =>
+    messageList = $(".chat-messages.current")
+    offset = if options.direction is "up" then -500 else 500
+    messageList.scrollTop(messageList.scrollTop() + offset)
+
   scrollMessagesUp: (options = animate: true) =>
     messageList = $(".chat-messages.current")
     messages = messageList.children(".message-container")
