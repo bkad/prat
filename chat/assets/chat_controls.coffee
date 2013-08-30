@@ -55,8 +55,8 @@ class window.ChatControls
     @chatText.on("keydown.return", (e) => @onReturn(e, false))
     @chatText.on("keydown.up", @onPreviousChatHistory)
     @chatText.on("keydown.down", @onNextChatHistory)
-    @chatText.on("keydown.pageup", => Util.scrollMessagesPage(true))
-    @chatText.on("keydown.pagedown", => Util.scrollMessagesPage(false))
+    @chatText.on("keydown.pageup", => Util.scrollMessagesPage(direction: "up"))
+    @chatText.on("keydown.pagedown", => Util.scrollMessagesPage(direction: "down"))
     # TODO(kle): figure out why we have to close over blur
     @chatText.on("keydown.esc", => @chatText.blur())
     # Fix for jquery hotkeys messing up bootstrap modal dismissal
