@@ -319,6 +319,8 @@ button, select
     text-align: center
 
 .chat-messages
+  &.current
+    z-index: 500
   &:not(.current)
     // We should just have 'display: none' here, but doing this instead is a workaround for an extremely
     // strange bug where the input box hangs before deleting the first character. See
