@@ -38,8 +38,8 @@ class window.DateTime
     else if diffMinutes < 60 then "#{diffMinutes} minutes ago"
     else if diffHours is 1 then "an hour ago"
     else if diffHours < 11 then "#{diffHours} hours ago"
-    else if @date is now.getDate() then time
-    else if @date is now.getDate() - 1 then "yesterday at #{time}"
+    else if diffHours < 24 and @date is now.getDate() then time
+    else if diffHours < 48 and @date is now.getDate() - 1 then "yesterday at #{time}"
     else if daysBetween < 7 then "#{@weekday} at #{time}"
     else if daysBetween < 365 then "#{@date} #{@month} #{time}"
     else "#{@date} #{@month} #{time}"
