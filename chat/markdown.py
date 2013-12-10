@@ -21,7 +21,7 @@ class HtmlPygmentsRenderer(HtmlRenderer):
                           escaped_text)
     # mark up channel names (#channelname). Channel name must have at least one letter to avoid the common
     # case of '#123'.
-    escaped_text = re.sub(r'{0}#(?P<channel>[\w.-]*[a-zA-Z]+){1}'.format(prefix, suffix),
+    escaped_text = re.sub(r'{0}#(?P<channel>[\w.-]*[a-zA-Z]+\w*){1}'.format(prefix, suffix),
                           r'<span class="channel-mention" data-channelname="\g<channel>">#\g<channel></span>',
                           escaped_text)
 
