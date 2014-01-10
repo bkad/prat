@@ -660,6 +660,68 @@
           "resolved": "https://registry.npmjs.org/p-throttler/-/p-throttler-0.0.1.tgz"
         }
       }
+    },
+    "ngmin": {
+      "version": "0.4.0",
+      "from": "ngmin@",
+      "dependencies": {
+        "astral": {
+          "version": "0.1.0",
+          "from": "astral@~0.1.0"
+        },
+        "astral-angular-annotate": {
+          "version": "0.0.2",
+          "from": "astral-angular-annotate@~0.0.1",
+          "dependencies": {
+            "astral-pass": {
+              "version": "0.1.0",
+              "from": "astral-pass@~0.1.0"
+            }
+          }
+        },
+        "escodegen": {
+          "version": "0.0.28",
+          "from": "escodegen@~0.0.15",
+          "resolved": "https://registry.npmjs.org/escodegen/-/escodegen-0.0.28.tgz",
+          "dependencies": {
+            "estraverse": {
+              "version": "1.3.2",
+              "from": "estraverse@~1.3.0",
+              "resolved": "https://registry.npmjs.org/estraverse/-/estraverse-1.3.2.tgz"
+            },
+            "source-map": {
+              "version": "0.1.31",
+              "from": "source-map@>= 0.1.2",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.31.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "0.1.0",
+                  "from": "amdefine@>=0.0.4"
+                }
+              }
+            }
+          }
+        },
+        "esprima": {
+          "version": "1.0.4",
+          "from": "esprima@~1.0.2"
+        },
+        "commander": {
+          "version": "1.1.1",
+          "from": "commander@~1.1.1",
+          "dependencies": {
+            "keypress": {
+              "version": "0.1.0",
+              "from": "keypress@0.1.x"
+            }
+          }
+        },
+        "clone": {
+          "version": "0.1.11",
+          "from": "clone@~0.1.6",
+          "resolved": "https://registry.npmjs.org/clone/-/clone-0.1.11.tgz"
+        }
+      }
     }
   }
 }
