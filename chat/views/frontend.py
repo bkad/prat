@@ -15,6 +15,9 @@ def read_template(template_name):
 
 vendor_js_files = [
   "jquery/jquery.js",
+  "angular/angular.js",
+  "angular-route/angular-route.js",
+  "angular-animate/angular-animate.js",
   "jquery-ui/ui/jquery.ui.core.js",
   "jquery-ui/ui/jquery.ui.widget.js",
   "jquery-ui/ui/jquery.ui.mouse.js",
@@ -33,13 +36,15 @@ vendor_js_files = [
   "spin.js/spin.js",
 ]
 
-coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
-    "datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
+#coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
+    #"datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
+coffee_files = ["angular/app"]
 
 stylus_files = ["style", "pygments", "tooltip"]
 
-mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
-    "boolean_preference"]
+#mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
+    #"boolean_preference"]
+template_files = ["main"]
 
 @frontend.route('')
 def index():
@@ -78,18 +83,17 @@ def index():
 
   return (render_square_bracket_template("index.htmljinja", { "initial": context }), 200, headers)
 
-def get_mustache_templates():
-  write_info_template()
-  mustache_templates = []
-  for template in mustache_files:
-    template_id = template.replace("_", "-") + "-template"
-    template_content = read_template(template + ".mustache")
-    mustache_templates.append((template_id, template_content))
-  return mustache_templates
+def get_templates():
+  #write_info_template()
+  templates = []
+  for template_name in template_files:
+    template_content = read_template(template_name + ".html")
+    templates.append((template_name + "-template", template_content))
+  return templates
 
 def write_main_template():
   template = render_template("index.pre.htmljinja",
-      mustache_templates=get_mustache_templates(),
+      templates=get_templates(),
       coffee_files=coffee_files,
       stylus_files=stylus_files,
       asset_url=asset_url,
