@@ -1,36 +1,36 @@
 $ ->
-  window.CurrentUserEmail = Initial.email
-  window.CurrentChannel = Initial.last_selected_channel
+  window.CurrentUserEmail = INITIAL.email
+  window.CurrentChannel = INITIAL.last_selected_channel
   window.DefaultTooltip = animation: false, container: "body"
 
-  window.Channels = new ChannelViewCollection(channels: Initial.channels)
-  Users.init(Initial.channels)
+  window.Channels = new ChannelViewCollection(channels: INITIAL.channels)
+  Users.init(INITIAL.channels)
 
   ChatControls.init
-    leftSidebarClosed: Initial.left_sidebar_closed
-    rightSidebarClosed: Initial.right_sidebar_closed
+    leftSidebarClosed: INITIAL.left_sidebar_closed
+    rightSidebarClosed: INITIAL.right_sidebar_closed
 
-  ImgurUploader.init(Initial.imgur_client_id, new AlertHelper())
+  ImgurUploader.init(INITIAL.imgur_client_id, new AlertHelper())
 
   UserGuide.init()
-  Preferences.init(Initial.preferences)
+  Preferences.init(INITIAL.preferences)
   sound = new Sound("/static/audio/ping.mp3")
 
   dateTimeHelper = new DateTimeHelper()
 
   messagesViewCollection = new MessagesViewCollection
     sound: sound
-    channels: Initial.channels
-    username: Initial.username
+    channels: INITIAL.channels
+    username: INITIAL.username
     dateTimeHelper: dateTimeHelper
-    collapseTimeWindow: Initial.collapse_time_window
-    title: Initial.name
+    collapseTimeWindow: INITIAL.collapse_time_window
+    title: INITIAL.name
 
 
   websocketProtocol = if "https:" is document.location.protocol then "wss" else "ws"
   MessageHub.init("#{websocketProtocol}://#{document.location.host}/eventhub",
                   4000,
-                  Initial.websocket_keep_alive_interval,
+                  INITIAL.websocket_keep_alive_interval,
                   new AlertHelper())
 
   MessageHub.deferDequeue(messagesViewCollection.appendInitialMessages, Users.updateAllChannels)

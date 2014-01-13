@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
     {% endfor %}
   {% endif %}
-  <link rel="stylesheet" href="/static/components/font-awesome/css/font-awesome.css"></link>
+  <link rel="stylesheet" href="{{ url_for('static', filename='components/font-awesome/css/font-awesome.css') }}"></link>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link href='//fonts.googleapis.com/css?family=Cousine:400,700,400italic,700italic|Oswald:700'
         rel='stylesheet'>
   <script charset="utf-8">
-    Initial = [[ initial|tojson|safe ]]
+    INITIAL = [[ initial|tojson|safe ]]
   </script>
   {% if config["COMPILED_JS"] %}
   <script src="{{ config["COMPILED_JS"] }}"></script>

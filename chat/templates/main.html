@@ -26,34 +26,40 @@
 </div>
 
 <div class="chat-column" ng-class="{'collapse-left': leftSidebarClosed, 'collapse-right': rightSidebarClosed}">
-  <div id="spin-overlay"></div>
+  <!--<div id="spin-overlay"></div>-->
   <div class="alert-container"></div>
   <div class="chat-controls">
-    <button class="toggle-left-sidebar">
+    <button class="toggle-left-sidebar" ng-click="toggleSidebar('left')">
       <span ng-class="{'icon-chevron-right': leftSidebarClosed, 'icon-chevron-left': !leftSidebarClosed}"></span>
     </button>
-    <button class="toggle-right-sidebar">
+    <button class="toggle-right-sidebar" ng-click="toggleSidebar('right')">
       <span ng-class="{'icon-chevron-left': rightSidebarClosed, 'icon-chevron-right': !rightSidebarClosed}"></span>
     </button>
-    <div class="channel-name">PLACEHOLDER</div>
+    <div class="channel-name">{{channelMap[activeChannel].name}}</div>
   </div>
-  <div class="input-container">
-    <div class="chat-text-wrapper"><textarea id="chat-text"></textarea></div>
-    <div id="message-preview" class="modal fade" tabindex="-1" style="display:none">
-      <div class="modal-header">
-        <a class="close" data-dismiss="modal">×</a>
-        <h3 id="message-preview-header-label">Message Preview</h3>
-      </div>
-      <div class="modal-body">
-        <div class="message"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal">Close</button>
-        <button id="preview-submit" class="btn">Send</button>
+  <div class="chat-messages-container" ng-show="channel == activeChannel" ng-repeat="channel in channels">
+    <div class="message-container" ng-repeat="messageGroup in channel.messageGroups">
+      <div class="message" ng-repeat="message in messageGroup">
+        <div class="metadata">
+          <div class="author-container">
+            <img class="gravatar" ng-src="{{message.user.gravatar}}"></img>
+            <div class="author">
+              {{message.user.name}}
+              <span class="username">{{message.user.username}}</span>
+            </div>
+          </div>
+          <div class="time">PLACEHOLDER</div>
+        </div>
       </div>
     </div>
+  </div>
+  <div class="input-container" ng-show="channel == activeChannel" ng-repeat="channel in channels"
+      ng-init="input = {message: ''}">
+    <div class="chat-text-wrapper">
+      <textarea ng-model="input.message" ui-keypress="{enter: 'sendMessage(input, channel, $event)'}"></textarea>
+    </div>
     <div class="input-controls">
-      <button class="chat-submit">Send</button>
+      <button class="chat-submit" ng-click="sendMessage(input, channel)">Send</button>
       <button class="chat-preview">Preview</button>
     </div>
   </div>
@@ -61,12 +67,4 @@
 
 <div class="right-sidebar" ng-class="{closed: rightSidebarClosed}">
 </div>
-
-<div id="preferences" data-show="false" class="modal fade" tabindex="-1" style="display: none">
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">×</a>
-    <h3>Preferences</h3>
-  </div>
-  <div class="modal-body">
-  </div>
 </div>

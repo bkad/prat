@@ -18,27 +18,28 @@ vendor_js_files = [
   "angular/angular.js",
   "angular-route/angular-route.js",
   "angular-animate/angular-animate.js",
-  "jquery-ui/ui/jquery.ui.core.js",
-  "jquery-ui/ui/jquery.ui.widget.js",
-  "jquery-ui/ui/jquery.ui.mouse.js",
-  "jquery-ui/ui/jquery.ui.sortable.js",
-  "jquery-caret/jquery.caret.js",
-  "jquery.scrollTo/jquery.scrollTo.js",
-  "prat-bootstrap/js/bootstrap-transition.js",
-  "prat-bootstrap/js/bootstrap-alert.js",
-  "prat-bootstrap/js/bootstrap-modal.js",
-  "prat-bootstrap/js/bootstrap-tooltip.js",
+  "angular-ui-utils/ui-utils.js",
+  #"jquery-ui/ui/jquery.ui.core.js",
+  #"jquery-ui/ui/jquery.ui.widget.js",
+  #"jquery-ui/ui/jquery.ui.mouse.js",
+  #"jquery-ui/ui/jquery.ui.sortable.js",
+  #"jquery-caret/jquery.caret.js",
+  #"jquery.scrollTo/jquery.scrollTo.js",
+  #"prat-bootstrap/js/bootstrap-transition.js",
+  #"prat-bootstrap/js/bootstrap-alert.js",
+  #"prat-bootstrap/js/bootstrap-modal.js",
+  #"prat-bootstrap/js/bootstrap-tooltip.js",
   "js-md5/js/md5.js",
-  "mustache/mustache.js",
+  #"mustache/mustache.js",
   "underscore/underscore.js",
   "backbone/backbone.js",
-  "jquery.hotkeys/jquery.hotkeys.js",
-  "spin.js/spin.js",
+  #"jquery.hotkeys/jquery.hotkeys.js",
+  #"spin.js/spin.js",
 ]
 
 #coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
     #"datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
-coffee_files = ["angular/app"]
+coffee_files = ["angular/app", "angular/services", "angular/event-hub"]
 
 stylus_files = ["style", "pygments", "tooltip"]
 
