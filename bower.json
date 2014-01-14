@@ -17,6 +17,7 @@
     "angular": "~1.2.7",
     "angular-route": "~1.2.8",
     "angular-animate": "~1.2.8",
-    "angular-ui-utils": "~0.1.0"
+    "angular-ui-utils": "~0.1.0",
+    "angular-ui-bootstrap-bower": "~0.10.0"
   }
 }

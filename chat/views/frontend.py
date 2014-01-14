@@ -19,6 +19,7 @@ vendor_js_files = [
   "angular-route/angular-route.js",
   "angular-animate/angular-animate.js",
   "angular-ui-utils/ui-utils.js",
+  "angular-ui-bootstrap-bower/ui-bootstrap-tpls.js",
   #"jquery-ui/ui/jquery.ui.core.js",
   #"jquery-ui/ui/jquery.ui.widget.js",
   #"jquery-ui/ui/jquery.ui.mouse.js",

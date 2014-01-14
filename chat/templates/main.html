@@ -18,6 +18,13 @@
     </div>
   </header>
   <div class="channel-controls-container">
+    <div class="channel-button-container" ng-repeat="channel in channels">
+      <button class="channel" ng-click="switchChannel(channel)" ng-class="{current: activeChannel == channel}">
+        {{channel}}
+      </button>
+      <span class="reorder icon-reorder"></span>
+      <a class="leave icon-trash" tooltip="Remove" tooltip-placement="right"></a>
+    </div>
     <div class="add-channel-container">
       <div class="plus-label">+</div>
       <input type="text" class="new-channel-name" />
@@ -33,7 +40,7 @@
     <button class="toggle-right-sidebar" ng-click="toggleSidebar('right')">
       <span ng-class="{'icon-chevron-left': rightSidebarClosed, 'icon-chevron-right': !rightSidebarClosed}"></span>
     </button>
-    <div class="channel-name">{{channelMap[activeChannel].name}}</div>
+    <div class="channel-name">{{activeChannel}}</div>
   </div>
   <div class="chat-messages-container" ng-show="channel == activeChannel" ng-repeat="channel in channels">
     <div class="message-container" ng-repeat="messageGroup in channel.messageGroups">

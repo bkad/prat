@@ -1,4 +1,4 @@
-module = angular.module "prat", ["ngRoute", "ui.keypress", "prat.services"]
+module = angular.module "prat", ["ngRoute", "ui.keypress", "ui.bootstrap", "prat.services"]
 
 module.config ($routeProvider) ->
   $routeProvider.when "/",
@@ -9,11 +9,13 @@ module.config ($routeProvider) ->
 module.controller "mainCtrl", ($scope, eventHub) ->
   $scope.leftSidebarClosed = INITIAL.leftSidebarClosed
   $scope.rightSidebarClosed = INITIAL.rightSidebarClosed
-  $scope.activeChannel = "general"
-  $scope.channels = ["general"]
-  $scope.channelMap =
-    general:
-      name: "general"
+  $scope.activeChannel = INITIAL.lastSelectedChannel
+  $scope.channels = INITIAL.channels
+
+  $scope.channelMap = {}
+  for channel in $scope.channels
+    $scope.channelMap[channel] =
+      name: channel
       messageGroups: []
 
   $scope.messageGroups = []
@@ -36,3 +38,6 @@ module.controller "mainCtrl", ($scope, eventHub) ->
           #channel: "general"
       input.message = ""
       event?.preventDefault()
+
+  $scope.switchChannel = (channel) ->
+    $scope.activeChannel = channel
