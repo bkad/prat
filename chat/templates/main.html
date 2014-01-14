@@ -1,4 +1,4 @@
-<div class="left-sidebar" ng-class="{closed: leftSideBarClosed}">
+<div class="left-sidebar" ng-class="{closed: leftSidebarClosed}">
   <header>
     <div class="control-button-container">
       <button id="user-info-button" data-placement="right" title="User guide">
@@ -7,7 +7,7 @@
       <button id="settings-button" data-placement="right" title="Preferences">
         <span class="icon-cog"></span>
       </button>
-      <a href="{{ url_for("auth.logout") }}">
+      <a href="/auth/logout">
         <button id="logout" data-placement="right" title="Logout">
           <span class="icon-signout"></span>
         </button>
@@ -26,8 +26,6 @@
 </div>
 
 <div class="chat-column" ng-class="{'collapse-left': leftSidebarClosed, 'collapse-right': rightSidebarClosed}">
-  <!--<div id="spin-overlay"></div>-->
-  <div class="alert-container"></div>
   <div class="chat-controls">
     <button class="toggle-left-sidebar" ng-click="toggleSidebar('left')">
       <span ng-class="{'icon-chevron-right': leftSidebarClosed, 'icon-chevron-left': !leftSidebarClosed}"></span>

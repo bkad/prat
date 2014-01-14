@@ -66,14 +66,14 @@ def index():
     "username": username,
     "email": g.user["email"],
     "channels": channels,
-    "last_selected_channel": last_selected_channel,
-    "right_sidebar_closed": right_sidebar_closed,
-    "left_sidebar_closed": left_sidebar_closed,
+    "lastSelectedChannel": last_selected_channel,
+    "rightSidebarClosed": right_sidebar_closed,
+    "leftSidebarClosed": left_sidebar_closed,
     "preferences": get_user_preferences(g.user),
-    "imgur_client_id": current_app.config["IMGUR_CLIENT_ID"],
-    "collapse_time_window": current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
+    "imgurClientId": current_app.config["IMGUR_CLIENT_ID"],
+    "collapseTimeWindow": current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
     "name": current_app.config["APP_NAME"],
-    "websocket_keep_alive_interval": current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
+    "websocketKeepAliveInterval": current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
   }
 
   if current_app.config["REWRITE_MAIN_TEMPLATE"]:

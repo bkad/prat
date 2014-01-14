@@ -22,7 +22,9 @@ module.controller "mainCtrl", ($scope, eventHub) ->
     if direction not in ["left", "right"]
       console.log "ERROR: toggleSidebar only accepts 'left' or 'right'"
       return
-    $scope["#{direction}SidebarClosed"] = not $scope["#{direction}SidebarClosed"]
+    closed = not $scope["#{direction}SidebarClosed"]
+    document.cookie = "#{direction}Sidebar=#{if closed then "closed" else "open"}"
+    $scope["#{direction}SidebarClosed"] = closed
 
   $scope.sendMessage = (input, channel, event) ->
     if input.message?.replace(/\s*$/, "") isnt ""
