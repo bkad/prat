@@ -16,7 +16,7 @@ itsdangerous==0.21
 paramiko==1.10.1
 prat-gevent==1.0dev
 prat-geventwebsocket==0.3.7
-prat-misaka==1.0.5
+prat-misaka==1.1.5
 psutil==0.7.1
 pycrypto==2.6
 pymongo==2.5.2
