@@ -15,14 +15,15 @@ accent-blue = #4782B4
 sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
 mono-font-family = "Cousine", monospace
 
-* {
+*
   margin: 0
   padding: 0
-}
 
 // Unfortunately nib has no selection mixin
-::selection { background: lighten(accent-blue, 80%) }
-::-moz-selection { background: lighten(accent-blue, 80%) }
+::selection
+  background: lighten(accent-blue, 80%)
+::-moz-selection
+  background: lighten(accent-blue, 80%)
 
 body
   font: 14px/18px sans-font-family
@@ -34,7 +35,8 @@ body
 a
   text-decoration: none
   color: accent-blue
-  &:hover { color: lighten(accent-blue, 20%) }
+  &:hover
+    color: lighten(accent-blue, 20%)
 
 button
   cursor: pointer
@@ -50,18 +52,21 @@ button, select
   border: border-grey
   border-radius: 2px
   &:hover
-    box-shadow: 0px 1px 1px rgba(0,0,0,.1)
+    box-shadow: 0 1px 1px rgba(0,0,0,.1)
     border: 1px solid dark-hover-grey
   &:active
     background: dark-active-grey
 
 .left-sidebar
-  absolute: top left
+  position: absolute
+  top: 0
+  left: 0
   height: 100%
   width: 200px
   border-right: border-grey
   overflow-y: auto
-  &.closed { display: none }
+  &.closed
+    display: none
   header
     text-align: center
     margin: 8px 0 15px 0
@@ -69,7 +74,8 @@ button, select
     width: 100%
     .logo-title
       text-align: left
-      div { padding: 34px 0 0 30px }
+      div
+        padding: 34px 0 0 30px
       display: table-cell
       font: bold 30px "Oswald", sans-serif
     .control-button-container
@@ -85,7 +91,7 @@ button, select
         color: dark-grey
         opacity: 0.2
         transition: opacity 100ms linear
-        margin: 2px 0px
+        margin: 2px 0
         font-size: 22px
         &:hover
           box-shadow: none
@@ -133,8 +139,8 @@ button, select
     button
       width: 150px
       height: 36px
-      margin: 4px 0px
-      padding: 0px 5px 0px 10px
+      margin: 4px 0
+      padding: 0 5px 0 10px
       text-align: left
       font-size: 14px
       overflow: ellipsis
@@ -147,11 +153,11 @@ button, select
       animation-name: slowblink
       animation-iteration-count: infinite
       animation-direction: alternate
-    @keyframes slowblink 
-      from 
-        box-shadow: 0px 0px 5px 1px accent-blue
+    @keyframes slowblink
+      from
+        box-shadow: 0 0 5px 1px accent-blue
       to
-        box-shadow: 0px 0px 5px 1px lighten(accent-blue, 55%)
+        box-shadow: 0 0 5px 1px lighten(accent-blue, 55%)
     div.add-channel-container
       font-size: 14px
       font-weight: bold
@@ -160,13 +166,13 @@ button, select
       border: border-grey
       border-radius: 2px
       &:hover
-        box-shadow: 0px 1px 1px rgba(0,0,0,.1)
+        box-shadow: 0 1px 1px rgba(0,0,0,.1)
         border: 1px solid dark-hover-grey
       &:active
         background: dark-active-grey
       width: 15px
-      margin: 4px 0px
-      padding: 0px 5px 0px 10px
+      margin: 4px 0
+      padding: 0 5px 0 10px
       text-align: left
       .plus-label
         height: 36px
@@ -180,8 +186,10 @@ button, select
         &.rotated, &.unrotated
           -webkit-transition: all 150ms linear
           -webkit-transform-origin: 5px 19px
-        &.rotated { -webkit-transform: rotate(45deg) }
-        &.unrotated { -webkit-transform: rotate(0deg) }
+        &.rotated
+          -webkit-transform: rotate(45deg)
+        &.unrotated
+          -webkit-transform: rotate(0deg)
       .new-channel-name
         width: 85%
         font-family: inherit
@@ -195,13 +203,17 @@ button, select
 
 
 .right-sidebar
-  absolute: top right
+  position: absolute
+  top: 0
+  right: 0
   height: 100%
   width: 200px
   overflow-y: auto
-  &.closed { display: none }
+  &.closed
+    display: none
   .channel-users
-    &:not(.current) { display: none }
+    &:not(.current)
+      display: none
     width: 100%
     overflow-y: auto
     .user-status
@@ -213,8 +225,10 @@ button, select
       line-height: 26px
       position: relative
       .overlay
+        position: absolute
+        top: 0
+        left: 0
         pointer-events: none
-        absolute: top left
         width: 100%
         height: 100%
         background-color: white
@@ -222,7 +236,8 @@ button, select
         z-index: 100
       &.offline
         font-style: italic
-        .overlay { opacity: 0.7 }
+        .overlay
+          opacity: 0.7
       &.hide
         display: none
 
@@ -230,21 +245,26 @@ button, select
   position: absolute
   width: 100%
   top: 30px
-  bottom: 0px
+  bottom: 0
   background-color: black
   opacity: 0.4
   z-index: 10
 
 .chat-column
+  position: absolute
+  top: 0
+  left: 0
   background: white
-  absolute: top left
   min-width: 300px
   height: 100%
-  &.collapse-left { left: 0px }
-  &.collapse-right { right: 0px }
+  &.collapse-left
+    left: 0
+  &.collapse-right
+    right: 0
   &:not(.collapse-right)
     right: 200px
-    .message-container { margin-right: 0px }
+    .message-container
+      margin-right: 0
     .chat-controls
       border-radius: bottom right 2px
       border-right: border-grey
@@ -253,7 +273,8 @@ button, select
       border-right: border-grey
   &:not(.collapse-left)
     left: 200px
-    .message-container { margin-left: 0px }
+    .message-container
+      margin-left: 0
     .chat-controls
       border-radius: bottom left 2px
       border-left: border-grey
@@ -290,8 +311,10 @@ button, select
   text-shadow: 0 1px 0 white
   opacity: 0.2
 .chat-controls
-  absolute: top left
-  right: 0px
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
   height: 29px
   background: light-grey
   border-bottom: border-grey
@@ -305,9 +328,13 @@ button, select
       color: accent-blue
       box-shadow: none
   .toggle-left-sidebar
-    absolute: top left
+    position: absolute
+    top: 0
+    left: 0
   .toggle-right-sidebar
-    absolute: top right
+    position: absolute
+    top: 0
+    right: 0
   .toggle-right-sidebar, .toggle-left-sidebar
     margin: 2px 0
     font-size: 13px
@@ -323,6 +350,16 @@ button, select
     text-align: center
 
 .chat-messages
+  position: absolute
+  top: 30px
+  left: 0
+  bottom: 81px
+  width: 100%
+  background: white
+  overflow-y: auto
+  overflow-x: hidden
+  padding-top: 5px
+
   &.current
     z-index: 9
   &:not(.current)
@@ -332,13 +369,6 @@ button, select
     // TODO(caleb): Figure out the real root cause, remove this hack.
     opacity: 0
     pointer-events: none
-  absolute: top 30px left
-  bottom: 81px
-  width: 100%
-  background: white
-  overflow-y: auto
-  overflow-x: hidden
-  padding-top: 5px
 
 .message-container
   &:first-child
@@ -390,15 +420,19 @@ button, select
       max-width: 600px
       max-height: 600px
     button.hide-image
+      position: absolute
+      top: 10px
+      left: 10px
       opacity: 0
       transition: opacity 100ms linear
-      absolute: top 10px left 10px
       font-size: 18px
       height: 30px
       width: 30px
-      &:after { content: "×" }
+      &:after
+        content: "×"
     &:hover
-      button.hide-image { opacity: 1 }
+      button.hide-image
+        opacity: 1
     &.closed
       height: 30px
       width: 180px
@@ -408,12 +442,15 @@ button, select
         display: inline-block
         padding: 0 10px
         font-style: italic
-      img { display: none }
-      iframe { display: none }
+      img
+        display: none
+      iframe
+        display: none
       button
         position: static
         opacity: 1
-        &:after { content: "+" }
+        &:after
+          content: "+"
   strong
     font-weight: bold
   em
@@ -435,7 +472,7 @@ button, select
     border-top: 1px dashed #ddd
     margin: 10px 50px
   code
-    padding: 0px 2px
+    padding: 0 2px
     // TODO(kle): figure out why mac and ubuntu render line height differently for code
     font: 12px/14px mono-font-family
     background: lighten(accent-blue, 85%)
@@ -470,8 +507,10 @@ button, select
   padding-amount = 10px
   input-controls-width = 75px
   container-height = 80px
-  absolute: bottom left
-  right: 0px
+  position: absolute
+  bottom: 0
+  left: 0
+  right: 0
   height: container-height
   background: light-grey
   border-top: border-grey
@@ -489,12 +528,16 @@ button, select
       font-size: 14px
       resize: none
   .chat-text-wrapper
-    absolute: top padding-amount left padding-amount
+    position: absolute
+    top: padding-amount
+    left: padding-amount
     right: input-controls-width + padding-amount
     height: container-height - (2 * padding-amount)
   .input-controls
-    absolute: top right
-    bottom: 0px
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
     padding: padding-amount 0
     width: input-controls-width
     button
@@ -515,7 +558,8 @@ button, select
   &.fade
     opacity: 0
     transition: opacity 100ms linear
-    &.in { opacity: 0.4 }
+    &.in
+      opacity: 0.4
 
 .modal
   position: fixed
@@ -597,7 +641,8 @@ button, select
     &:not(.selected):hover
       background-color: darken(light-grey, 3%)
 
-#info-contents { position: relative }
+#info-contents
+  position: relative
 
 #info-body
   height: 350px
