@@ -1,4 +1,4 @@
-from chat.views.frontend import vendor_js_files, coffee_files, write_main_template
+from chat.views.frontend import vendor_js_files, coffee_files, sass_files, write_main_template
 from os import path
 import hashlib
 from fabric.operations import local
@@ -23,11 +23,11 @@ from chat.config import DefaultConfig
 class Config(DefaultConfig):
   DEBUG = False
   COMPILED_JS = "{compiled_coffee_assets}"
-  COMPILED_CSS = "{compiled_stylus_assets}"
+  COMPILED_CSS = "{compiled_sass_assets}"
   REWRITE_MAIN_TEMPLATE = False
 """
 
-uglify, stylus, coffee = ["./node_modules/.bin/" + command for command in ["uglifyjs", "stylus", "coffee"]]
+uglify, coffee = ["./node_modules/.bin/" + command for command in ["uglifyjs", "coffee"]]
 
 def write_asset_contents(contents, extension):
   fingerprint = hashlib.md5(contents).hexdigest()
@@ -67,11 +67,13 @@ def write_config():
   all_js = vendor_js + coffee_js
   js_filename = write_asset_contents(all_js, "js")
 
-  stylus_command = "cat chat/assets/*.styl | {0} --compress --use {1}".format(stylus, "nib/lib/nib")
-  css_filename = compile_assets_file(stylus_command, "css")
+  compiled = ""
+  for name in sass_files:
+    compiled += local("sass -t compressed chat/assets/stylesheets/{}.sass".format(name), capture=True)
+  css_filename = write_asset_contents(compiled, "css")
 
   compiled_config = config_template.format(compiled_coffee_assets=js_filename,
-                                           compiled_stylus_assets=css_filename)
+                                           compiled_sass_assets=css_filename)
 
   with open("config.py", "w") as config_file:
     config_file.write(compiled_config)

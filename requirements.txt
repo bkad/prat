@@ -11,7 +11,6 @@ prat-misaka==1.1.5
 pymongo==2.5.2
 pyzmq==14.1.0
 redis==2.9.1
-stylus==0.1.1
 
 # ancillary packages for gevent-websocket
 ujson==1.33

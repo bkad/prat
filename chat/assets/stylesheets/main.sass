@@ -1,42 +1,34 @@
-@import "nib"
+@import "bourbon/bourbon"
+@import "reset"
+@import "pygments"
+@import "tooltip"
 
-flex-version = flex
-
-global-reset()
-reset-html5()
-
-light-grey = #FAFAFA
-med-grey = #C9C9C9
-dark-grey = #333333
-dark-hover-grey = #B3B3B3
-dark-active-grey = #DDD
-border-grey = 1px solid med-grey
-accent-blue = #4782B4
-sans-font-family = "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
-mono-font-family = "Cousine", monospace
-
-*
-  margin: 0
-  padding: 0
+$light-grey: #fafafa
+$med-grey: #c9c9c9
+$dark-grey: #333333
+$dark-hover-grey: #b3b3b3
+$dark-active-grey: #ddd
+$border-grey: 1px solid med-grey
+$accent-blue: #4782b4
+$sans-font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif
+$mono-font-family: "Cousine", monospace
 
 // Unfortunately nib has no selection mixin
-::selection
-  background: lighten(accent-blue, 80%)
-::-moz-selection
-  background: lighten(accent-blue, 80%)
+::selection, ::-moz-selection
+  background: tint($accent-blue, 80%)
 
 body
-  font: 14px/18px sans-font-family
-  color: dark-grey
+  font: 14px/18px $sans-font-family
+  color: $dark-grey
   width: 100%
   height: 100%
   overflow: hidden
 
 a
   text-decoration: none
-  color: accent-blue
+  color: $accent-blue
   &:hover
-    color: lighten(accent-blue, 20%)
+    color: tint($accent-blue, 20%)
 
 button
   cursor: pointer
@@ -44,18 +36,16 @@ button
     outline: none
 
 button, select
-  font-family: sans-font-family
-  font-size: 12px
-  font-weight: bold
+  font: bold 12px $sans-font-family
   color: #444
   background: whiteSmoke
-  border: border-grey
+  border: $border-grey
   border-radius: 2px
   &:hover
-    box-shadow: 0 1px 1px rgba(0,0,0,.1)
-    border: 1px solid dark-hover-grey
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1)
+    border: 1px solid $dark-hover-grey
   &:active
-    background: dark-active-grey
+    background: $dark-active-grey
 
 .left-sidebar
   position: absolute
@@ -63,7 +53,7 @@ button, select
   left: 0
   height: 100%
   width: 200px
-  border-right: border-grey
+  border-right: $border-grey
   overflow-y: auto
   &.closed
     display: none
@@ -88,14 +78,14 @@ button, select
         padding: 0 3px
         border: none
         background: transparent
-        color: dark-grey
+        color: $dark-grey
         opacity: 0.2
-        transition: opacity 100ms linear
+        +transition(opacity 100ms linear)
         margin: 2px 0
         font-size: 22px
         &:hover
           box-shadow: none
-          color: accent-blue
+          color: $accent-blue
           opacity: 1
         &:focus
           outline: none
@@ -145,31 +135,31 @@ button, select
       font-size: 14px
       overflow: ellipsis
     .current
-      border-color: darken(med-grey, 40%)
-      background: accent-blue
+      border-color: shade($med-grey, 40%)
+      background: $accent-blue
       color: white
     .unread
-      animation-duration: 1.5s
-      animation-name: slowblink
-      animation-iteration-count: infinite
-      animation-direction: alternate
+      +animation-duration(1.5s)
+      +animation-name(slowblink)
+      +animation-iteration-count(infinite)
+      +animation-direction(alternate)
     @keyframes slowblink
       from
-        box-shadow: 0 0 5px 1px accent-blue
+        box-shadow: 0 0 5px 1px $accent-blue
       to
-        box-shadow: 0 0 5px 1px lighten(accent-blue, 55%)
+        box-shadow: 0 0 5px 1px lighten($accent-blue, 55%)
     div.add-channel-container
       font-size: 14px
       font-weight: bold
       color: #444
       background: whiteSmoke
-      border: border-grey
+      border: $border-grey
       border-radius: 2px
       &:hover
-        box-shadow: 0 1px 1px rgba(0,0,0,.1)
-        border: 1px solid dark-hover-grey
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .1)
+        border: 1px solid $dark-hover-grey
       &:active
-        background: dark-active-grey
+        background: $dark-active-grey
       width: 15px
       margin: 4px 0
       padding: 0 5px 0 10px
@@ -180,22 +170,22 @@ button, select
         width: 10px
         text-align: center
         font-size: 16px
-        user-select: none
+        +user-select(none)
         cursor: pointer
         display: inline-block
         &.rotated, &.unrotated
-          -webkit-transition: all 150ms linear
-          -webkit-transform-origin: 5px 19px
+          +transition(all 150ms linear)
+          +transform-origin(5px 19px)
         &.rotated
-          -webkit-transform: rotate(45deg)
+          +transform(rotate(45deg))
         &.unrotated
-          -webkit-transform: rotate(0deg)
+          +transform(rotate(0deg))
       .new-channel-name
         width: 85%
         font-family: inherit
         font-size: 14px
         display: none
-        border: border-grey
+        border: $border-grey
         height: 24px
         outline: none
         border-radius: 2px
@@ -267,20 +257,20 @@ button, select
       margin-right: 0
     .chat-controls
       border-radius: bottom right 2px
-      border-right: border-grey
+      border-right: $border-grey
     .input-container
       border-radius: top right 2px
-      border-right: border-grey
+      border-right: $border-grey
   &:not(.collapse-left)
     left: 200px
     .message-container
       margin-left: 0
     .chat-controls
       border-radius: bottom left 2px
-      border-left: border-grey
+      border-left: $border-grey
     .input-container
       border-radius: top left 2px
-      border-left: border-grey
+      border-left: $border-grey
 .alert-container
   relative: top
   margin-top: 32px
@@ -290,18 +280,20 @@ button, select
 .alert
   padding: 8px 35px 8px 14px
   margin-bottom: 18px
-  color: #C09853
+  color: #c09853
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5)
-  background-color: #FCF8E3
-  border: 1px solid #FBEED5
+  background-color: #fcf8e3
+  border: 1px solid #fbeed5
   border-radius: 4px
   .close
-    relative: top -2px right -21px
+    position: relative
+    top: -2px
+    right: -21px
     line-height: 18px
   &.alert-error
-    color: #B94A48
-    background-color: #F2DEDE
-    border-color: #EED3D7
+    color: #b94a48
+    background-color: #f2dede
+    border-color: #eed3d7
 .close
   float: right
   font-size: 20px
@@ -316,8 +308,8 @@ button, select
   left: 0
   right: 0
   height: 29px
-  background: light-grey
-  border-bottom: border-grey
+  background: $light-grey
+  border-bottom: $border-grey
   button
     height: 25px
     width: 25px
@@ -325,7 +317,7 @@ button, select
     border: none
     color: #888
     &:hover
-      color: accent-blue
+      color: $accent-blue
       box-shadow: none
   .toggle-left-sidebar
     position: absolute
@@ -373,7 +365,7 @@ button, select
 .message-container
   &:first-child
     border-top: none
-  border-top: 1px solid lighten(med-grey, 60%)
+  border-top: 1px solid tint($med-grey, 60%)
   font-size: 14px
   margin: 8px
   padding-top: 8px
@@ -424,7 +416,7 @@ button, select
       top: 10px
       left: 10px
       opacity: 0
-      transition: opacity 100ms linear
+      +transition(opacity 100ms linear)
       font-size: 18px
       height: 30px
       width: 30px
@@ -436,7 +428,7 @@ button, select
     &.closed
       height: 30px
       width: 180px
-      background-color: lighten(accent-blue, 85%)
+      background-color: tint($accent-blue, 85%)
       border-radius: 2px
       span
         display: inline-block
@@ -456,9 +448,9 @@ button, select
   em
     font-style: italic
   blockquote
-    border-left: 5px solid lighten(accent-blue, 60%)
+    border-left: 5px solid tint($accent-blue, 60%)
     padding-left: 4px
-    color: lighten(dark-grey, 15%)
+    color: tint($dark-grey, 15%)
   p, ol, div, ul
     margin-bottom: 5px
   ul, ol
@@ -474,54 +466,54 @@ button, select
   code
     padding: 0 2px
     // TODO(kle): figure out why mac and ubuntu render line height differently for code
-    font: 12px/14px mono-font-family
-    background: lighten(accent-blue, 85%)
+    font: 12px/14px $mono-font-family
+    background: tint($accent-blue, 85%)
   .highlight
     white-space: pre
     padding: 5px
-    font: 12px/16px mono-font-family
-    background: lighten(accent-blue, 93%)
-    border: border-grey
+    font: 12px/16px $mono-font-family
+    background: tint($accent-blue, 93%)
+    border: $border-grey
     border-radius: 2px
     overflow-x: auto
   .channel-mention
-    color: accent-blue
-    border: 1px solid lighten(accent-blue, 60%)
+    color: $accent-blue
+    border: 1px solid tint($accent-blue, 60%)
     padding: 0 2px
     cursor: pointer
     border-radius: 3px
     &:hover
-      background-color: lighten(accent-blue, 97%)
+      background-color: tint($accent-blue, 97%)
   .user-mention
     font-weight: bold
   .its-you
-    color: accent-blue
+    color: $accent-blue
   display: inline
 
 .message-separator
   &:first-child
     display: none
-  border-bottom: 1px solid lighten(med-grey, 60%)
+  border-bottom: 1px solid tint($med-grey, 60%)
 
 .input-container
-  padding-amount = 10px
-  input-controls-width = 75px
-  container-height = 80px
+  $padding-amount: 10px
+  $input-controls-width: 75px
+  $container-height: 80px
   position: absolute
   bottom: 0
   left: 0
   right: 0
-  height: container-height
-  background: light-grey
-  border-top: border-grey
+  height: $container-height
+  background: $light-grey
+  border-top: $border-grey
   .chat-text-wrapper
     background: white
     border-radius: 2px
-    border: border-grey
+    border: $border-grey
     textarea
       padding: 5px
       box-sizing: border-box
-      font-family: sans-font-family
+      font-family: $sans-font-family
       border: none
       width: 100%
       height: 100%
@@ -529,22 +521,22 @@ button, select
       resize: none
   .chat-text-wrapper
     position: absolute
-    top: padding-amount
-    left: padding-amount
-    right: input-controls-width + padding-amount
-    height: container-height - (2 * padding-amount)
+    top: $padding-amount
+    left: $padding-amount
+    right: $input-controls-width + $padding-amount
+    height: $container-height - (2 * $padding-amount)
   .input-controls
     position: absolute
     top: 0
     right: 0
     bottom: 0
-    padding: padding-amount 0
-    width: input-controls-width
+    padding: $padding-amount 0
+    width: $input-controls-width
     button
-      button-margin = 6px
-      height: ((container-height - (2 * padding-amount) - button-margin) / 2)
-      width: input-controls-width - padding-amount
-      margin-bottom: button-margin
+      $button-margin: 6px
+      height: (($container-height - (2 * $padding-amount) - $button-margin) / 2)
+      width: $input-controls-width - $padding-amount
+      margin-bottom: $button-margin
 
 .modal-backdrop
   position: fixed
@@ -557,7 +549,7 @@ button, select
 
   &.fade
     opacity: 0
-    transition: opacity 100ms linear
+    +transition(opacity 100ms linear)
     &.in
       opacity: 0.4
 
@@ -580,11 +572,11 @@ button, select
   outline: none
 
   &.fade
-    opacity 0
-    transition: opacity 100ms linear
+    opacity: 0
+    +transition(opacity 100ms linear)
 
     &.in
-      opacity 1
+      opacity: 1
       top: 10%
 
 .modal-header
@@ -624,35 +616,37 @@ button, select
   width: 150px
   border-right: 1px solid #eee
   padding-top: 15px
-  user-select: none
+  +user-select(none)
   ul > li
     display: block
     width: 80px
     margin: 6px auto
-    color: accent-blue
+    color: $accent-blue
     font-size: 14px
     line-height: 32px
     padding: 0 12px
     border-radius: 2px
     cursor: pointer
     &.selected
-      background-color: accent-blue
-      color: light-grey
+      background-color: $accent-blue
+      color: $light-grey
     &:not(.selected):hover
-      background-color: darken(light-grey, 3%)
+      background-color: shade($light-grey, 3%)
 
 #info-contents
   position: relative
 
 #info-body
-  height: 350px
+  $height: 350px
+  height: $height
   .info-contents-pane
-    padding: 15px
+    $padding: 15px
+    padding: $padding
     position: absolute
-    height: @height - (2 * @padding)
+    height: $height - (2 * $padding)
     overflow-y: auto
     opacity: 0
-    transition: opacity 100ms linear
+    +transition(opacity 100ms linear)
     pointer-events: none
     &.selected
       opacity: 1
@@ -666,9 +660,9 @@ button, select
     margin: 2px 0
     display: inline-block
   .keys
-    font-family: mono-font-family
-    background: accent-blue
-    color: light-grey
+    font-family: $mono-font-family
+    background: $accent-blue
+    color: $light-grey
     border-radius: 2px
     text-shadow: 1px 1px 0 #222
     box-shadow: inset 1px 1px 1px #444
@@ -680,20 +674,20 @@ button, select
   label
     display: block
     margin: 10px 0
-    color: lighten(dark-grey, 20%)
-    user-select: none
+    color: tint($dark-grey, 20%)
+    +user-select(none)
     &:hover
-      color: dark-grey
+      color: $dark-grey
     code
-      background-color: lighten(accent-blue, 85%)
+      background-color: tint($accent-blue, 85%)
       padding: 0 4px
-      font-family: mono-font-family
+      font-family: $mono-font-family
 
 .modal-footer
   padding: 10px 15px
   margin-bottom: 0
   text-align: right
-  background-color: light-grey
+  background-color: $light-grey
   border-top: 1px solid #ddd
   border-radius: 0 0 3px 3px
   box-shadow: inset 0 1px 0 #fff
@@ -708,10 +702,10 @@ button, select
 
   #save-preferences
     width: 100px
-    color: light-grey
-    background-color: accent-blue
-    border-color: lighten(dark-grey, 30%)
+    color: $light-grey
+    background-color: $accent-blue
+    border-color: tint($dark-grey, 30%)
     &:hover
-      border-color: lighten(dark-grey, 20%)
+      border-color: tint($dark-grey, 20%)
     &:active
-      background-color: darken(accent-blue, 10%)
+      background-color: tint($accent-blue, 10%)

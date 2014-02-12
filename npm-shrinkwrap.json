@@ -3,35 +3,15 @@
   "version": "1.0.0",
   "dependencies": {
     "coffee-script": {
-      "version": "1.6.3",
-      "from": "coffee-script@1.6.x"
-    },
-    "stylus": {
-      "version": "0.32.1",
-      "from": "stylus@0.32.x",
-      "resolved": "https://registry.npmjs.org/stylus/-/stylus-0.32.1.tgz",
+      "version": "1.7.1",
+      "from": "coffee-script@1.7.1",
+      "resolved": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.7.1.tgz",
       "dependencies": {
-        "cssom": {
-          "version": "0.2.5",
-          "from": "cssom@0.2.x",
-          "resolved": "https://registry.npmjs.org/cssom/-/cssom-0.2.5.tgz"
-        },
         "mkdirp": {
           "version": "0.3.5",
-          "from": "mkdirp@0.3.x",
-          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.5.tgz"
-        },
-        "debug": {
-          "version": "0.7.2",
-          "from": "debug@*",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-0.7.2.tgz"
+          "from": "mkdirp@~0.3.5"
         }
       }
-    },
-    "nib": {
-      "version": "0.9.1",
-      "from": "nib@0.9.1",
-      "resolved": "https://registry.npmjs.org/nib/-/nib-0.9.1.tgz"
     },
     "uglify-js": {
       "version": "2.3.6",

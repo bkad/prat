@@ -42,7 +42,7 @@ vendor_js_files = [
     #"datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
 coffee_files = ["angular/app", "angular/services", "angular/event-hub"]
 
-stylus_files = ["style", "pygments", "tooltip"]
+sass_files = ["main"]
 
 #mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
     #"boolean_preference"]
@@ -97,7 +97,7 @@ def write_main_template():
   template = render_template("index.pre.htmljinja",
       templates=get_templates(),
       coffee_files=coffee_files,
-      stylus_files=stylus_files,
+      sass_files=sass_files,
       asset_url=asset_url,
       vendor_js_files=vendor_js_files)
   with codecs.open("chat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:

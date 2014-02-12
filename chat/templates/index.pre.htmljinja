@@ -5,8 +5,8 @@
   {% if config["COMPILED_CSS"] %}
     <link rel="stylesheet" href="{{ config["COMPILED_CSS"]|safe }}"></link>
   {% else %}
-    {% for stylus_file in stylus_files %}
-    <link rel="stylesheet" href="{{ asset_url(stylus_file + ".styl")|safe }}"></link>
+    {% for sass_file in sass_files %}
+    <link rel="stylesheet" href="{{ asset_url("stylesheets/" + sass_file + ".sass")|safe }}"></link>
     {% endfor %}
   {% endif %}
   <link rel="stylesheet" href="{{ url_for('static', filename='components/font-awesome/css/font-awesome.css') }}"></link>

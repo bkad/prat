@@ -6,3 +6,4 @@ chat/templates/info.mustache
 chat/templates/index.htmljinja
 chat/static/components
 .vagrant
+.sass-cache

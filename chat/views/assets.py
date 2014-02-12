@@ -1,14 +1,23 @@
 from flask import Blueprint, abort, current_app, make_response, _app_ctx_stack, url_for
 from werkzeug.local import LocalProxy
-from stylus import Stylus
 import coffeescript
 from os import path
 import mimetypes
 from email.utils import formatdate
 from collections import defaultdict, namedtuple
 import hashlib
+from fabric.operations import local
 
 assets = Blueprint("assets", __name__)
+
+def get_coffeescript_compiler():
+  compiler = getattr(current_app, "prat_coffeescript_compiler", None)
+  if compiler is None:
+    with current_app.open_resource("static/vendor/js/coffeescript.js") as f:
+      compiler_js = f.read()
+    runtime = coffeescript.get_runtime()
+    compiler = current_app.prat_coffeescript_compiler = coffeescript.Compiler(compiler_js, runtime)
+  return compiler
 
 def get_assets_cache():
   cache = getattr(current_app, "prat_assets_cache", None)
@@ -16,17 +25,9 @@ def get_assets_cache():
     cache = current_app.prat_assets_cache = defaultdict(lambda: None)
   return cache
 
+coffee_compiler = LocalProxy(get_coffeescript_compiler)
 assets_cache = LocalProxy(get_assets_cache)
 CompiledAsset = namedtuple("CompiledAsset", "content fingerprint last_modified content_type")
-
-def get_stylus_compiler():
-  context = _app_ctx_stack.top
-  compiler = getattr(context, "prat_stylus_compiler", None)
-  if compiler is None:
-    compiler = context.prat_stylus_compiler = Stylus(plugins={ "nib": {} })
-  return compiler
-
-stylus_compiler = LocalProxy(get_stylus_compiler)
 
 
 @assets.route("/<path:asset_path>")
@@ -67,11 +68,11 @@ def compile_asset(asset_path):
   relative_path, absolute_path = get_filesystem_paths(asset_path)
   with current_app.open_resource(relative_path) as fp:
     file_contents = fp.read()
-  if asset_path.endswith(".styl"):
-    content = stylus_compiler.compile(file_contents)
+  if asset_path.endswith(".sass"):
+    content = local("sass --line-numbers --line-comments chat/{}".format(relative_path), capture=True).decode("utf-8")
     content_type = "text/css"
   elif asset_path.endswith(".coffee"):
-    content = coffeescript.compile(file_contents)
+    content = coffee_compiler.compile(file_contents)
     content_type = "application/javascript"
   else:
     content = file_contents
