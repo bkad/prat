@@ -1,4 +1,17 @@
-module = angular.module "prat", ["ngRoute", "ui.keypress", "ui.bootstrap", "prat.services"]
+dependencies = [
+  "ngCookies"
+  "ngRoute"
+  "ngSanitize"
+  "ui.bootstrap"
+  "ui.keypress"
+  "ui.router"
+  "prat.services"
+  "pasvaz.bindonce"
+]
+
+
+
+module = angular.module "prat", dependencies
 
 module.config ($routeProvider) ->
   $routeProvider.when "/",
@@ -6,11 +19,12 @@ module.config ($routeProvider) ->
     controller: "mainCtrl"
     controllerAs: "main"
 
-module.controller "mainCtrl", ($scope, eventHub) ->
-  $scope.leftSidebarClosed = INITIAL.leftSidebarClosed
-  $scope.rightSidebarClosed = INITIAL.rightSidebarClosed
+module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
+  $scope.leftSidebarClosed = $cookieStore.get("leftSidebarClosed") ? false
+  $scope.rightSidebarClosed = $cookieStore.get("rightSidebarClosed") ? false
   $scope.activeChannel = INITIAL.lastSelectedChannel
   $scope.channels = INITIAL.channels
+  collapseTimeWindow = INITIAL.collapseTimeWindow
 
   $scope.channelMap = {}
   for channel in $scope.channels
@@ -18,15 +32,14 @@ module.controller "mainCtrl", ($scope, eventHub) ->
       name: channel
       messageGroups: []
 
-  $scope.messageGroups = []
-
   $scope.toggleSidebar = (direction) ->
     if direction not in ["left", "right"]
       console.log "ERROR: toggleSidebar only accepts 'left' or 'right'"
       return
-    closed = not $scope["#{direction}SidebarClosed"]
-    document.cookie = "#{direction}Sidebar=#{if closed then "closed" else "open"}"
-    $scope["#{direction}SidebarClosed"] = closed
+    property = "#{direction}SidebarClosed"
+    closed = not $scope[property]
+    $cookieStore.put(property, closed)
+    $scope[property] = closed
 
   $scope.sendMessage = (input, channel, event) ->
     if input.message?.replace(/\s*$/, "") isnt ""
@@ -41,3 +54,23 @@ module.controller "mainCtrl", ($scope, eventHub) ->
 
   $scope.switchChannel = (channel) ->
     $scope.activeChannel = channel
+
+  appendMessage: (channel, message) ->
+    messageGroups = $scope.channelMap[channel].messageGroups
+    if messageGroups.length is 0 or (message.datetime - messageGroups.datetime > collapseTimeWindow)
+      messageGroups.push
+        datetime: message.datetime
+        user: message.user
+        messages: [message]
+    else
+      lastGroup = messageGroups[messageGroups.length - 1]
+      lastGroup.datetime = message.datetime
+      lastGroup.messages.push[message]
+
+  fetchInitialMessages = ->
+    $http
+      url: "/api/messages"
+      method: "GET"
+    .success (data, status, headers, config) ->
+      console.log data
+  fetchInitialMessages()

@@ -14,12 +14,16 @@ def read_template(template_name):
     return template.read().decode("utf-8")
 
 vendor_js_files = [
-  "jquery/jquery.js",
+  "jquery/dist/jquery.js",
   "angular/angular.js",
-  "angular-route/angular-route.js",
   "angular-animate/angular-animate.js",
-  "angular-ui-utils/ui-utils.js",
+  "angular-cookies/angular-cookies.js",
+  "angular-sanitize/angular-sanitize.js",
+  "angular-route/angular-route.js",
+  "angular-bindonce/bindonce.js",
   "angular-ui-bootstrap-bower/ui-bootstrap-tpls.js",
+  "angular-ui-router/release/angular-ui-router.js",
+  "angular-ui-utils/ui-utils.js",
   #"jquery-ui/ui/jquery.ui.core.js",
   #"jquery-ui/ui/jquery.ui.widget.js",
   #"jquery-ui/ui/jquery.ui.mouse.js",
@@ -60,16 +64,11 @@ def index():
   last_selected_channel = g.user["last_selected_channel"]
   username = g.user["email"].split("@")[0]
 
-  right_sidebar_closed = (request.args.get("rightSidebar") or request.cookies.get("rightSidebar")) == "closed"
-  left_sidebar_closed = (request.args.get("leftSidebar") or request.cookies.get("leftSidebar")) == "closed"
-
   context = {
     "username": username,
     "email": g.user["email"],
     "channels": channels,
     "lastSelectedChannel": last_selected_channel,
-    "rightSidebarClosed": right_sidebar_closed,
-    "leftSidebarClosed": left_sidebar_closed,
     "preferences": get_user_preferences(g.user),
     "imgurClientId": current_app.config["IMGUR_CLIENT_ID"],
     "collapseTimeWindow": current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],

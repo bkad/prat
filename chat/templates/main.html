@@ -2,14 +2,14 @@
   <header>
     <div class="control-button-container">
       <button id="user-info-button" data-placement="right" title="User guide">
-        <span class="icon-question-sign"></span>
+        <span class="fa fa-question-circle"></span>
       </button>
       <button id="settings-button" data-placement="right" title="Preferences">
-        <span class="icon-cog"></span>
+        <span class="fa fa-cog"></span>
       </button>
       <a href="/auth/logout">
         <button id="logout" data-placement="right" title="Logout">
-          <span class="icon-signout"></span>
+          <span class="fa fa-sign-out"></span>
         </button>
       </a>
     </div>
@@ -22,8 +22,8 @@
       <button class="channel" ng-click="switchChannel(channel)" ng-class="{current: activeChannel == channel}">
         {{channel}}
       </button>
-      <span class="reorder icon-reorder"></span>
-      <a class="leave icon-trash" tooltip="Remove" tooltip-placement="right"></a>
+      <span class="reorder fa fa-reorder"></span>
+      <a class="leave fa fa-trash" tooltip="Remove" tooltip-placement="right"></a>
     </div>
     <div class="add-channel-container">
       <div class="plus-label">+</div>
@@ -35,27 +35,22 @@
 <div class="chat-column" ng-class="{'collapse-left': leftSidebarClosed, 'collapse-right': rightSidebarClosed}">
   <div class="chat-controls">
     <button class="toggle-left-sidebar" ng-click="toggleSidebar('left')">
-      <span ng-class="{'icon-chevron-right': leftSidebarClosed, 'icon-chevron-left': !leftSidebarClosed}"></span>
+      <span class="fa" ng-class="{'fa-chevron-right': leftSidebarClosed, 'fa-chevron-left': !leftSidebarClosed}"></span>
     </button>
     <button class="toggle-right-sidebar" ng-click="toggleSidebar('right')">
-      <span ng-class="{'icon-chevron-left': rightSidebarClosed, 'icon-chevron-right': !rightSidebarClosed}"></span>
+      <span class="fa" ng-class="{'fa-chevron-left': rightSidebarClosed, 'fa-chevron-right': !rightSidebarClosed}"></span>
     </button>
     <div class="channel-name">{{activeChannel}}</div>
   </div>
   <div class="chat-messages-container" ng-show="channel == activeChannel" ng-repeat="channel in channels">
-    <div class="message-container" ng-repeat="messageGroup in channel.messageGroups">
-      <div class="message" ng-repeat="message in messageGroup">
-        <div class="metadata">
-          <div class="author-container">
-            <img class="gravatar" ng-src="{{message.user.gravatar}}"></img>
-            <div class="author">
-              {{message.user.name}}
-              <span class="username">{{message.user.username}}</span>
-            </div>
-          </div>
-          <div class="time">PLACEHOLDER</div>
-        </div>
+    <div class="message-container" ng-repeat="group in channel.messageGroups">
+      <div class="author-container">
+        <img class="gravatar" height="18" width="18" ng-src="{{group.user.gravatar}}">
+        <div class="author">{{group.user.name}} <span class="username">({{group.user.username}})</span></div>
+        <div class="email">{{group.user.email}}</div>
+        <div class="time"> 24 minutes ago</div>
       </div>
+      <div class="message" ng-repeat="message in group.messages" ng-bind-html="message.rendered_message"></div>
     </div>
   </div>
   <div class="input-container" ng-show="channel == activeChannel" ng-repeat="channel in channels"
