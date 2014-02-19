@@ -27,7 +27,7 @@
     </div>
     <div class="add-channel-container">
       <div class="plus-label">+</div>
-      <input type="text" class="new-channel-name" />
+      <input type="text" class="new-channel-name">
     </div>
   </div>
 </div>
@@ -42,13 +42,16 @@
     </button>
     <div class="channel-name">{{activeChannel}}</div>
   </div>
-  <div class="chat-messages-container" ng-show="channel == activeChannel" ng-repeat="channel in channels">
-    <div class="message-container" ng-repeat="group in channel.messageGroups">
+  <div class="chat-messages" ng-show="channel == activeChannel" ng-repeat="channel in channels" ng-class="{current: channel == activeChannel}">
+    <div class="message-container" ng-repeat="group in channelMap[channel]">
       <div class="author-container">
-        <img class="gravatar" height="18" width="18" ng-src="{{group.user.gravatar}}">
-        <div class="author">{{group.user.name}} <span class="username">({{group.user.username}})</span></div>
-        <div class="email">{{group.user.email}}</div>
-        <div class="time"> 24 minutes ago</div>
+        <div>
+          <img class="gravatar" height="18" width="18" ng-src="{{group.user.gravatar}}">
+          <div class="author">{{group.user.name}} <span class="username">({{group.user.username}})</span></div>
+        </div>
+        <div>
+          <div class="time">24 minutes ago</div>
+        </div>
       </div>
       <div class="message" ng-repeat="message in group.messages" ng-bind-html="message.rendered_message"></div>
     </div>

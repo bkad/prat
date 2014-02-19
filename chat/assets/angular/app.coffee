@@ -28,9 +28,7 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
 
   $scope.channelMap = {}
   for channel in $scope.channels
-    $scope.channelMap[channel] =
-      name: channel
-      messageGroups: []
+    $scope.channelMap[channel] = []
 
   $scope.toggleSidebar = (direction) ->
     if direction not in ["left", "right"]
@@ -55,9 +53,9 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
   $scope.switchChannel = (channel) ->
     $scope.activeChannel = channel
 
-  appendMessage: (channel, message) ->
-    messageGroups = $scope.channelMap[channel].messageGroups
-    if messageGroups.length is 0 or (message.datetime - messageGroups.datetime > collapseTimeWindow)
+  appendMessage = (channel, message) ->
+    messageGroups = $scope.channelMap[channel]
+    if messageGroups.length is 0 or ((message.datetime - messageGroups[messageGroups.length - 1].datetime) > collapseTimeWindow)
       messageGroups.push
         datetime: message.datetime
         user: message.user
@@ -65,12 +63,14 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
     else
       lastGroup = messageGroups[messageGroups.length - 1]
       lastGroup.datetime = message.datetime
-      lastGroup.messages.push[message]
+      lastGroup.messages.push(message)
 
   fetchInitialMessages = ->
     $http
       url: "/api/messages"
       method: "GET"
     .success (data, status, headers, config) ->
-      console.log data
+      for channel, messages of data
+        appendMessage(channel, message) for message in messages
+
   fetchInitialMessages()
