@@ -50,12 +50,6 @@ angular.module("prat.services.eventHub", [])
         data:
           channels: channels
 
-    switchChannel: (channel) =>
-      @sendJSON
-        action: "switch_channel"
-        data:
-          channel: channel
-
     sendPreview: (message, channel) =>
       @sendJSON
         action: "preview_message"

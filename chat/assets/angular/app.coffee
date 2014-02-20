@@ -52,6 +52,10 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
 
   $scope.switchChannel = (channel) ->
     $scope.activeChannel = channel
+    eventHub.sendJSON
+      action: "switch_channel"
+      data:
+        channel: channel
 
   appendMessage = (channel, message) ->
     messageGroups = $scope.channelMap[channel]
