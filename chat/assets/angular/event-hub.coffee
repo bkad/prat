@@ -78,6 +78,7 @@ angular.module("prat.services.eventHub", [])
     onConnectionOpened: =>
       #@alertHelper.delAlert()
       @clearAllTimeoutIDs()
+      # TODO(kevin): $interval? maybe unnecessary
       @pingIDs.push(setInterval(@keepAlive, @pingInterval))
       @deferDequeue(@blockingDequeue...) if @reconnect
       @reconnect = false

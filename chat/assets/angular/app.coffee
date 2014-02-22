@@ -23,12 +23,15 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
   $scope.leftSidebarClosed = $cookieStore.get("leftSidebarClosed") ? false
   $scope.rightSidebarClosed = $cookieStore.get("rightSidebarClosed") ? false
   $scope.activeChannel = INITIAL.lastSelectedChannel
-  $scope.channels = INITIAL.channels
+  $scope.channelOrder = INITIAL.channels
   collapseTimeWindow = INITIAL.collapseTimeWindow
 
-  $scope.channelMap = {}
-  for channel in $scope.channels
-    $scope.channelMap[channel] = []
+  $scope.preferences =
+    hideOffline = false
+  $scope.channels = {}
+  for channel in $scope.channelOrder
+    $scope.channels[channel] =
+      messageGroups: []
 
   $scope.toggleSidebar = (direction) ->
     if direction not in ["left", "right"]
@@ -58,7 +61,7 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
         channel: channel
 
   appendMessage = (channel, message) ->
-    messageGroups = $scope.channelMap[channel]
+    messageGroups = $scope.channels[channel].messageGroups
     if messageGroups.length is 0 or ((message.datetime - messageGroups[messageGroups.length - 1].datetime) > collapseTimeWindow)
       messageGroups.push
         datetime: message.datetime
@@ -77,4 +80,21 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
       for channel, messages of data
         appendMessage(channel, message) for message in messages
 
+  fetchInitialStatuses = ->
+    $http
+      url: "/api/user_status"
+      method: "GET"
+    .success (data, status, headers, config) ->
+      for channel, users of data
+        $scope.channels[channel].users = users
+    .error (data, status, headers, config) ->
+      console.log "Error updating channels: #{status}, #{data}"
+
+  $scope.userSort = [
+    "-isCurrentUser"
+    (user) -> user.status isnt "active"
+    "name"
+  ]
+
   fetchInitialMessages()
+  fetchInitialStatuses()
