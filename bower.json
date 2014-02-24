@@ -5,7 +5,7 @@
     "font-awesome": "4.0.3",
     "jquery": "2.1.0",
     "prat-bootstrap": "~2.3.3",
-    "jquery-ui": "~1.10.3",
+    "jquery-ui": "1.10.4",
     "jquery-caret": "latest",
     "jquery.scrollTo": "~1.4.5",
     "mustache": "~0.7.2",
@@ -22,7 +22,8 @@
     "angular-bindonce": "~0.3.1",
     "angular-ui-router": "master",
     "angular-sanitize": "~1.2.13",
-    "angular-cookies": "~1.2.13"
+    "angular-cookies": "~1.2.13",
+    "angular-ui-sortable": "~0.12.1"
   },
   "resolutions": {
     "angular": "1.2.13"

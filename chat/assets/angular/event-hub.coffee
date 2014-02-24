@@ -44,12 +44,6 @@ angular.module("prat.services.eventHub", [])
 
     sendJSON: (messageObject) => @socket.send(JSON.stringify(messageObject))
 
-    reorderChannels: (channels) =>
-      @sendJSON
-        action: "reorder_channels"
-        data:
-          channels: channels
-
     sendPreview: (message, channel) =>
       @sendJSON
         action: "preview_message"

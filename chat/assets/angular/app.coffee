@@ -5,6 +5,7 @@ dependencies = [
   "ui.bootstrap"
   "ui.keypress"
   "ui.router"
+  "ui.sortable"
   "prat.services"
   "pasvaz.bindonce"
 ]
@@ -101,6 +102,16 @@ module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
     (user) -> user.status isnt "active"
     "name"
   ]
+
+  $scope.channelSortable =
+    placeholder: "channel-button-placeholder"
+    handle: ".reorder"
+    axis: "y"
+    stop: (e, ui) ->
+      eventHub.sendJSON
+        action: "reorder_channels"
+        data:
+          channels: $scope.channelOrder
 
   fetchInitialMessages()
   fetchInitialStatuses()
