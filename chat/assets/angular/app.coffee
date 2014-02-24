@@ -13,11 +13,17 @@ dependencies = [
 
 module = angular.module "prat", dependencies
 
-module.config ($routeProvider) ->
+module.config ($routeProvider, $tooltipProvider) ->
   $routeProvider.when "/",
     templateUrl: "main-template"
     controller: "mainCtrl"
     controllerAs: "main"
+
+  $tooltipProvider.options
+    placement: "top"
+    animation: "true"
+    popupDelay: 0
+    appendToBody: true
 
 module.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
   $scope.leftSidebarClosed = $cookieStore.get("leftSidebarClosed") ? false
