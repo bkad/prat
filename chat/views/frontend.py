@@ -45,7 +45,12 @@ vendor_js_files = [
 
 #coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
     #"datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
-coffee_files = ["angular/app", "angular/services", "angular/event-hub"]
+coffee_files = [
+  "angular/app",
+  "angular/services",
+  "angular/services/event-hub",
+  "angular/controllers/main",
+]
 
 sass_files = ["main"]
 
