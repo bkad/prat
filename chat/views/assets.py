@@ -1,12 +1,14 @@
+from collections import defaultdict, namedtuple
+from email.utils import formatdate
+import hashlib
+import mimetypes
+from os import path
+
+import coffeescript
+import fabric.api
+from fabric.operations import local
 from flask import Blueprint, abort, current_app, make_response, _app_ctx_stack, url_for
 from werkzeug.local import LocalProxy
-import coffeescript
-from os import path
-import mimetypes
-from email.utils import formatdate
-from collections import defaultdict, namedtuple
-import hashlib
-from fabric.operations import local
 
 assets = Blueprint("assets", __name__)
 
@@ -69,7 +71,12 @@ def compile_asset(asset_path):
   with current_app.open_resource(relative_path) as fp:
     file_contents = fp.read()
   if asset_path.endswith(".sass"):
-    content = local("sass --line-numbers --line-comments chat/{}".format(relative_path), capture=True).decode("utf-8")
+    with fabric.api.settings(warn_only=True):
+      result = local("sass --line-numbers --line-comments chat/{}".format(relative_path), capture=True)
+    if result.succeeded:
+      content = result.decode("utf-8")
+    else:
+      raise ValueError(result.stderr)
     content_type = "text/css"
   elif asset_path.endswith(".coffee"):
     content = coffee_compiler.compile(file_contents)
