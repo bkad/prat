@@ -52,7 +52,7 @@ coffee_files = [
   "angular/controllers/main",
 ]
 
-sass_files = ["main"]
+sass_files = ["all"]
 
 #mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
     #"boolean_preference"]
