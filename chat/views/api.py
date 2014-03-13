@@ -1,5 +1,5 @@
 from flask import Blueprint, request, g
-import json
+import ujson as json
 from bson import InvalidDocument
 from chat.datastore import (get_channel_users, get_recent_messages, get_messages_since_id,
     get_user_preferences, update_user_preferences)
