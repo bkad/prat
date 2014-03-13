@@ -101,7 +101,6 @@ def eventhub_client():
   except socket.error, e:
     pass
 
-
   remove_from_user_clients(g.user, client_id)
   if get_active_clients_count(g.user) == 0:
     for channel in g.user["channels"]:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
   chat.scripts.cleanup_users
-  ~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Small process that sets users to "offline" if their user-client key has expired in Redis.
 
@@ -12,45 +12,66 @@
 
 from collections import namedtuple
 import time
+import re
+
+from ..app import create_app
 from ..datastore import (zmq_channel_key, db, redis_db, redis_channel_key, user_clients_key, get_user,
     get_active_clients_count, get_user_statuses, set_user_channel_status)
-from ..app import create_app
-from ..zmq_context import push_socket
 from .utils import get_config_or_exit
 from ..views.eventhub import send_user_status_update
+from ..zmq_context import push_socket
 
-UserStatus = namedtuple("UserStatus", ["status", "channels"])
+keyspace_regex_string = "__keyspace@0__:{}.*".format(user_clients_key("(?P<email>[^:]*)"))
+keyspace_regex = re.compile(keyspace_regex_string)
 
-def run_clean_users():
-  while True:
-    user_channel_map = {}
-    channels = (key.split(":")[1] for key in redis_db.keys(redis_channel_key("") + "*"))
-    emails_to_check = []
-    for channel in channels:
-      for email, status in get_user_statuses(channel):
-        if email not in user_channel_map:
-          if status == "active":
-            emails_to_check.append(email)
-          user_channel_map[email] = UserStatus(status, [])
-        user_channel_map[email].channels.append(channel)
+def extract_email(event):
+  match = keyspace_regex.match(event)
+  if match is None:
+    raise ValueError("Keyspace event has no email")
+  return match.groupdict()["email"]
 
-    pipe = []
-    for email in emails_to_check:
-      num_clients = get_active_clients_count(email)
-      if num_clients == 0:
-        pipe.append((email, user_channel_map[email].channels))
+def clean_users_loop():
+  clean_users()
+  pubsub = redis_db.pubsub()
+  pubsub.psubscribe("__keyspace@0__:user-client:*")
+  for item in pubsub.listen():
+    if item["type"] != "pmessage" or item["data"] != "expired":
+      continue
+    try:
+      email = extract_email(item["channel"])
+    except ValueError:
+      print "Failed to extract email from " + item
+    if get_active_clients_count(email) == 0:
+      send_user_offline(email, push_socket)
 
-    pipeline = redis_db.pipeline()
-    for email, channels in pipe:
-      user = get_user(email=email)
-      for channel in channels:
-        set_user_channel_status(user, channel, "offline", pipe=pipeline)
-        send_user_status_update(user, channel, push_socket, "offline")
-    pipeline.execute()
-    time.sleep(30)
+def send_user_offline(email, push_socket, pipe=None):
+  "Starts a Redis Pub/Sub loop and listens for channel expiry events"
+  user = get_user(email=email)
+  for channel in user["channels"]:
+    set_user_channel_status(user, channel, "offline", pipe=pipe)
+    send_user_status_update(user, channel, push_socket, "offline")
+
+def clean_users():
+  "Does a one-time pass over users, cleaning up any which are now offline"
+
+  email_status_map = {}
+  channels = (key.split(":")[1] for key in redis_db.keys(redis_channel_key("") + "*"))
+  emails_to_check = []
+  for channel in channels:
+    for email, status in get_user_statuses(channel):
+      if email not in email_status_map:
+        if status == "active":
+          emails_to_check.append(email)
+        email_status_map[email] = status
+
+  pipeline = redis_db.pipeline()
+  for email in emails_to_check:
+    if get_active_clients_count(email) == 0:
+      send_user_offline(email, push_socket, pipeline)
+  pipeline.execute()
 
 if __name__ == "__main__":
   config = get_config_or_exit()
   app = create_app(config)
   with app.test_request_context():
-    run_clean_users()
+    clean_users_loop()

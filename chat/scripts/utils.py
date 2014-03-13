@@ -13,7 +13,7 @@ from werkzeug.utils import import_string, ImportStringError
 from ..config import DefaultConfig
 
 def get_config(module):
-  try :
+  try:
     return import_string(module)
   except ImportStringError:
     print("Invalid import string: {0}".format(argv[1]), file=stderr)
