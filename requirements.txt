@@ -12,3 +12,7 @@ pymongo==2.5.2
 pyzmq==13.1.0
 redis==2.7.6
 stylus==0.1.1
+
+# ancillary packages for gevent-websocket
+ujson==1.33
+wsaccel==0.6.2
