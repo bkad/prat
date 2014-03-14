@@ -238,6 +238,7 @@ def json_user_status_event_object(user, channel, status):
         }
       },
   })
+
 def handle_switch_channel(channel):
   # Update channel logged in user is subscribed to
   g.user["last_selected_channel"] = channel
