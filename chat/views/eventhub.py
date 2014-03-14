@@ -1,16 +1,18 @@
-from flask import Blueprint, request, g, current_app, render_template
 import datetime
+import socket
+import uuid
+
+from flask import Blueprint, request, g, current_app, render_template
 import geventwebsocket
-import zmq.green as zmq
 import ujson as json
+import zmq.green as zmq
+
+from chat import markdown
 from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
                             get_user_channel_status, reorder_user_channels, refresh_user_client)
 from chat.zmq_context import zmq_context, push_socket
-from chat import markdown
-import uuid
-import socket
 
 eventhub = Blueprint("eventhub", __name__)
 
