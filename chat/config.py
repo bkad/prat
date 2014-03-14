@@ -6,6 +6,10 @@ import os
 class DefaultConfig(object):
   """Default configuration for chat app"""
   DEBUG = True
+
+  # Needed for websocket cleanup
+  PRESERVE_CONTEXT_ON_EXCEPTION = False
+
   SECRET_KEY = os.environ.get("PRAT_SECRET", "seeeecrets")
 
   IMGUR_CLIENT_ID = "df8c7d107087408"
@@ -33,7 +37,7 @@ class DefaultConfig(object):
                       string_filters.replace_github_commits,
                       string_filters.replace_github_issues
                     ]
-  WEBSOCKET_KEEP_ALIVE_INTERVAL = 30000 # milliseconds
+  WEBSOCKET_KEEP_ALIVE_INTERVAL = 30 # seconds
   REDIS_USER_CLIENT_TIMEOUT = 40 # seconds
 
   # in production, we concatenate our assets and minify them

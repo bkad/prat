@@ -6,10 +6,8 @@ angular.module("prat.services.eventHub", [])
     constructor: (config) ->
       @address = config.address
       @reconnectTimeout = config.reconnectTimeout
-      @pingInterval = config.pingInterval
       @blockingDequeue = []
       @timeoutIDs = []
-      @pingIDs = []
       @queueing = true
       @reconnect = false
       @queue = []
@@ -18,8 +16,6 @@ angular.module("prat.services.eventHub", [])
 
     createSocket: =>
       @socket?.close()
-      @pingIDs = []
-      clearInterval(pingID) for pingID in @pingIDs
       @timeoutIDs.push(setTimeout(@createSocket, @reconnectTimeout))
       console.log "Connecting to #{@address}"
       @socket = new WebSocket(@address)
@@ -72,17 +68,9 @@ angular.module("prat.services.eventHub", [])
     onConnectionOpened: =>
       #@alertHelper.delAlert()
       @clearAllTimeoutIDs()
-      # TODO(kevin): $interval? maybe unnecessary
-      @pingIDs.push(setInterval(@keepAlive, @pingInterval))
       @deferDequeue(@blockingDequeue...) if @reconnect
       @reconnect = false
       console.log "Connection successful"
-
-    keepAlive: =>
-      @sendJSON
-        action: "ping"
-        data:
-          message: "PING"
 
     clearAllTimeoutIDs: =>
       clearTimeout(timeoutID) for timeoutID in @timeoutIDs
@@ -98,4 +86,3 @@ angular.module("prat.services.eventHub", [])
   new EventHub
     address: "#{websocketProtocol}://#{document.location.host}/eventhub"
     reconnectTimeout: 4000
-    pingInterval: INITIAL.websocket_keep_alive_interval

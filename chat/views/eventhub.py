@@ -2,13 +2,14 @@ import datetime
 import socket
 import uuid
 
-from flask import Blueprint, request, g, current_app, render_template
+from flask import Blueprint, request, g, current_app
+import gevent
 import geventwebsocket
 import ujson as json
 import zmq.green as zmq
 
 from chat import markdown
-from chat.datastore import (db, message_dict_from_event_object, remove_user_from_channel,
+from chat.datastore import (db, get_redis_connection, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
                             get_user_channel_status, reorder_user_channels, refresh_user_client)
@@ -16,19 +17,46 @@ from chat.zmq_context import zmq_context, push_socket
 
 eventhub = Blueprint("eventhub", __name__)
 
-@eventhub.route('')
+
+def keepalive(user, client_id, redis_timeout, websocket_interval, redis_db):
+  "Runs outside application context, so we have to pass everything in"
+  while True:
+    refresh_user_client(user, client_id, redis_db, redis_timeout)
+    gevent.sleep(websocket_interval)
+
+@eventhub.before_request
+def setup():
+  g.client_id = str(uuid.uuid4())
+  g.keepalive_interval = gevent.spawn(keepalive,
+                                      g.user,
+                                      g.client_id,
+                                      current_app.config["REDIS_USER_CLIENT_TIMEOUT"],
+                                      current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
+                                      get_redis_connection()) # can't use localproxy here
+
+@eventhub.teardown_request
+def teardown(*args, **kwargs):
+  remove_from_user_clients(g.user, g.client_id)
+  if get_active_clients_count(g.user) == 0:
+    for channel in g.user["channels"]:
+      set_user_channel_status(g.user, channel, "offline")
+      send_user_status_update(g.user, channel, push_socket, "offline")
+
+  if hasattr(g, "keepalive_interval"):
+    g.keepalive_interval.kill()
+
+@eventhub.route("")
 def eventhub_client():
-  websocket = request.environ.get('wsgi.websocket')
+  websocket = request.environ.get("wsgi.websocket")
   raw_websocket = websocket.stream.handler.socket
   if not websocket:
     return
   subscribe_socket = zmq_context.socket(zmq.SUB)
-  client_id = str(uuid.uuid4())
 
   subscribe_socket.connect(current_app.config["SUBSCRIBE_ADDRESS"])
 
   # add yourself to your current pool of open clients
-  add_to_user_clients(g.user, client_id)
+  add_to_user_clients(g.user, g.client_id)
 
   for channel in g.user["channels"]:
     # if redis was cleared, we'll need to resend the join channel event to populate the user status of open
@@ -40,7 +68,7 @@ def eventhub_client():
     set_user_channel_status(g.user, channel, "active")
     send_user_status_update(g.user, channel, push_socket, "active")
 
-    # due to 'slow joiner' effect, we can't rely on picking up on our initial messages sent
+    # due to 'slow joiner' effect, we can't rely on the client picking up on our initial messages sent
     websocket.send(json_user_status_event_object(g.user, channel, "active"))
 
   # listen for messages that happen on channels the user is subscribed to
@@ -54,6 +82,7 @@ def eventhub_client():
   poller = zmq.Poller()
   poller.register(subscribe_socket, zmq.POLLIN)
   poller.register(raw_websocket, zmq.POLLIN)
+
 
   try:
     message = None
@@ -74,7 +103,7 @@ def eventhub_client():
           websocket.send(packed)
         elif action in ["self_join_channel", "self_leave_channel"]:
           event_type = action.split("_")[1]
-          handle_self_channel_event(client_id, websocket, subscribe_socket, unpacked["data"], event_type)
+          handle_self_channel_event(g.client_id, websocket, subscribe_socket, unpacked["data"], event_type)
 
       # Client -> Server
       if raw_websocket.fileno() in events:
@@ -91,23 +120,15 @@ def eventhub_client():
         elif action == "preview_message":
           handle_preview_message(data, websocket)
         elif action == "join_channel":
-          handle_join_channel(data["channel"], subscribe_socket, push_socket, client_id)
+          handle_join_channel(data["channel"], subscribe_socket, push_socket, g.client_id)
         elif action == "leave_channel":
-          handle_leave_channel(data["channel"], subscribe_socket, push_socket, client_id)
+          handle_leave_channel(data["channel"], subscribe_socket, push_socket, g.client_id)
         elif action == "reorder_channels":
-          handle_reorder_channels(data["channels"], push_socket, client_id)
-        elif action == "ping":
-          handle_ping(websocket, push_socket, client_id)
+          handle_reorder_channels(data["channels"], push_socket, g.client_id)
   except geventwebsocket.WebSocketError, e:
     print "{0} {1}".format(e.__class__.__name__, e)
   except socket.error, e:
     pass
-
-  remove_from_user_clients(g.user, client_id)
-  if get_active_clients_count(g.user) == 0:
-    for channel in g.user["channels"]:
-      set_user_channel_status(g.user, channel, "offline")
-      send_user_status_update(g.user, channel, push_socket, "offline")
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
   subscribe_socket.close()
@@ -311,14 +332,3 @@ def handle_self_channel_event(client_id, websocket, subscribe_socket, data, even
   # force a refresh on all other clients
   # TODO(kle): live update the client's UI instead
   websocket.send(json.dumps({ "action": "force_refresh", "data": {} }))
-
-def handle_ping(websocket, push_socket, client_id):
-  result = refresh_user_client(g.user, client_id)
-
-  # if the user_client key wasn't present, the client missed a heartbeat but the websocket didnt time out
-  if result == 0:
-    for channel in g.user["channels"]:
-      set_user_channel_status(g.user, channel, "active")
-      send_user_status_update(g.user, channel, push_socket, "active")
-
-  websocket.send(json.dumps({ "action": "pong", "data": { "message": "PONG" } }))

@@ -142,20 +142,22 @@ def user_clients_key(user):
 
 def add_to_user_clients(user, client_id):
   redis_key = user_clients_key(user) + client_id
-  timeout = current_app.config["REDIS_USER_CLIENT_TIMEOUT"]
-  redis_db.pipeline().set(redis_key, 1).expire(redis_key, timeout).execute()
+  redis_db.pipeline().set(redis_key, 1).expire(redis_key, current_app.config["REDIS_USER_CLIENT_TIMEOUT"]).execute()
 
 @pipelinable
 def remove_from_user_clients(user, client_id, pipe):
   redis_key = user_clients_key(user) + client_id
   pipe.delete(redis_key)
 
-def refresh_user_client(user, client_id):
+def refresh_user_client(user, client_id, redis_db, timeout):
   redis_key = user_clients_key(user) + client_id
-  timeout = current_app.config["REDIS_USER_CLIENT_TIMEOUT"]
   result = redis_db.expire(redis_key, timeout)
   if result == 0:
-    add_to_user_clients(user, client_id)
+    # duplicates add_to_user_clients logic :/
+    result = redis_db.pipeline() \
+        .set(redis_key, 1) \
+        .expire(redis_key, timeout) \
+        .execute()
   return result
 
 def get_active_clients_count(user):

@@ -79,7 +79,6 @@ def index():
     "imgurClientId": current_app.config["IMGUR_CLIENT_ID"],
     "collapseTimeWindow": current_app.config["COLLAPSED_MESSAGE_TIME_WINDOW"],
     "name": current_app.config["APP_NAME"],
-    "websocketKeepAliveInterval": current_app.config["WEBSOCKET_KEEP_ALIVE_INTERVAL"],
   }
 
   if current_app.config["REWRITE_MAIN_TEMPLATE"]:
