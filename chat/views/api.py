@@ -1,5 +1,5 @@
 from flask import Blueprint, request, g
-import ujson as json
+from chat.utils import jsonify
 from bson import InvalidDocument
 from chat.datastore import (get_channel_users, get_recent_messages, get_messages_since_id,
     get_user_preferences, update_user_preferences)
@@ -9,28 +9,28 @@ api = Blueprint("api", __name__)
 
 @api.route("/user_status/<path:channel>")
 def user_statuses_channel(channel):
-  return json.dumps(get_channel_users(channel))
+  return jsonify(get_channel_users(channel))
 
 @api.route("/user_status")
 def user_status():
   user_statuses = { channel: get_channel_users(channel) for channel in g.user["channels"] }
-  return json.dumps(user_statuses)
+  return jsonify(user_statuses)
 
 @api.route("/messages/<path:channel>")
 def channel_messages(channel):
-  return json.dumps(get_recent_messages(channel))
+  return jsonify(get_recent_messages(channel))
 
 @api.route("/messages")
 def messages():
   messages = { channel: get_recent_messages(channel) for channel in g.user["channels"] }
-  return json.dumps(messages)
+  return jsonify(messages)
 
 @api.route("/messages_since/<message_id>")
 def messages_since_id(message_id):
   messages, errorString, errorCode = get_messages_since_id(message_id, g.user["channels"])
   if errorString is not None:
     return errorString, errorCode
-  return json.dumps(messages)
+  return jsonify(messages)
 
 @api.route("/whoami")
 def whoami():
@@ -41,7 +41,7 @@ def whoami():
     "channels": g.user["channels"],
     "username": g.user["email"].split("@")[0],
   }
-  return json.dumps({ "user": user })
+  return jsonify({ "user": user })
 
 @api.route("/markdown", methods=["POST"])
 def misaka():
@@ -55,9 +55,9 @@ def user_preferences():
     except ValueError:
       return "Could not parse JSON", 400
     try:
-      return json.dumps(update_user_preferences(g.user, new_preferences))
+      return jsonify(update_user_preferences(g.user, new_preferences))
     except InvalidDocument as e:
       return 400, "Invalid Document: {0}".format(e.message)
   elif request.method == "GET":
-    return json.dumps(get_user_preferences(g.user))
+    return jsonify(get_user_preferences(g.user))
 
