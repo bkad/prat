@@ -7,23 +7,17 @@
 
 """
 
-from __future__ import print_function
-from sys import stderr, argv
-from werkzeug.utils import import_string, ImportStringError
-from ..config import DefaultConfig
+from sys import argv
+from ..config import Config
 
-def get_config(module):
-  try:
-    return import_string(module)
-  except ImportStringError:
-    print("Invalid import string: {0}".format(argv[1]), file=stderr)
-  return None
+def get_config_from_argv():
+  return get_config(argv[1] if len(argv) > 1 else None)
 
-def get_config_or_exit():
-  if len(argv) == 2:
-    config = get_config(argv[1])
-    if config is None:
-      exit()
-  else:
-    config = DefaultConfig
-  return config
+def get_config_filename_from_argv():
+  return argv[1] if len(argv) > 1 else None
+
+def get_config(filename=None):
+  return Config.import_toml(filename) if filename else Config()
+
+if __name__ == "__main__":
+  get_config_from_argv()

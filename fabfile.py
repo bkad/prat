@@ -1,11 +1,14 @@
-from chat.views.frontend import vendor_js_files, coffee_files, sass_files, write_main_template
-from os import path
 import hashlib
-from fabric.operations import local
-from fabric.contrib.project import rsync_project
-from fabric.state import env
-from chat import create_app
 import imp
+from os import path
+
+from fabric.contrib.project import rsync_project
+from fabric.operations import local
+from fabric.state import env
+import toml
+
+from chat import create_app
+from chat.views.frontend import vendor_js_files, coffee_files, sass_files, write_main_template
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
@@ -16,16 +19,6 @@ imp.reload(threading)
 env.use_ssh_config = True
 if env.hosts == []:
   env.hosts = ["pratchat.com"]
-
-config_template = """
-from chat.config import DefaultConfig
-
-class Config(DefaultConfig):
-  DEBUG = False
-  COMPILED_JS = "{compiled_coffee_assets}"
-  COMPILED_CSS = "{compiled_sass_assets}"
-  REWRITE_MAIN_TEMPLATE = False
-"""
 
 uglify, coffee, ngmin = ["./node_modules/.bin/" + command for command in ["uglifyjs", "coffee", "ngmin"]]
 
@@ -72,16 +65,20 @@ def write_config():
     compiled += local("sass -t compressed chat/assets/stylesheets/{}.sass".format(name), capture=True)
   css_filename = write_asset_contents(compiled, "css")
 
-  compiled_config = config_template.format(compiled_coffee_assets=js_filename,
-                                           compiled_sass_assets=css_filename)
+  config = {
+    "debug": False,
+    "rewrite_main_template": False,
+    "compiled_js": js_filename,
+    "compiled_css": css_filename,
+  }
 
-  with open("config.py", "w") as config_file:
-    config_file.write(compiled_config)
+  with open("config.toml", "w") as config_file:
+    toml.dump(config, config_file)
+
 
 def precompile_template():
-  # Yes, we're importing a module we just wrote.
-  config_module = imp.load_module("config", *imp.find_module("config", ["./"]))
-  app = create_app(config_module.Config)
+  # write_config step must run before this
+  app = create_app("config.toml")
   with app.test_request_context():
     write_main_template()
 

@@ -1,9 +1,10 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 from chat import string_filters
 import os
+import toml
 
-class DefaultConfig(object):
+class Config(object):
   """Default configuration for chat app"""
   DEBUG = True
 
@@ -52,3 +53,13 @@ class DefaultConfig(object):
 
   # The email address to send exceptions from
   ERROR_EMAIL = "bar@foo.com"
+
+  def __init__(self, config_dict=None):
+    if config_dict:
+      for key, value in config_dict.iteritems():
+        setattr(self, key.upper(), value)
+
+  @classmethod
+  def import_toml(cls, file_name):
+    config = toml.load(file_name)
+    return cls(config)

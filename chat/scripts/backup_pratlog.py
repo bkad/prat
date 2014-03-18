@@ -11,11 +11,11 @@ from pymongo import MongoClient
 import string
 import sys
 
-from ..config import DefaultConfig
+from ..config import Config
 from .utils import get_config
 
 def main(args):
-    config = DefaultConfig()
+    config = Config()
     if args["config"] is not None:
         config = get_config(args["config"])
         if (config is None):

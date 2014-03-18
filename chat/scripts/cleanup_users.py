@@ -17,7 +17,7 @@ import re
 from ..app import create_app
 from ..datastore import (zmq_channel_key, db, redis_db, redis_channel_key, user_clients_key, get_user,
     get_active_clients_count, get_user_statuses, set_user_channel_status)
-from .utils import get_config_or_exit
+from .utils import get_config_filename_from_argv
 from ..views.eventhub import send_user_status_update
 from ..zmq_context import push_socket
 
@@ -71,7 +71,6 @@ def clean_users():
   pipeline.execute()
 
 if __name__ == "__main__":
-  config = get_config_or_exit()
-  app = create_app(config)
+  app = create_app(get_config_filename_from_argv())
   with app.test_request_context():
     clean_users_loop()

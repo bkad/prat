@@ -8,7 +8,7 @@
 """
 
 import zmq
-from .utils import get_config_or_exit
+from .utils import get_config_from_argv
 
 def run_event_server(config):
   context = zmq.Context()
@@ -24,4 +24,4 @@ def run_event_server(config):
     publish_socket.send(new_message)
 
 if __name__ == "__main__":
-  run_event_server(get_config_or_exit())
+  run_event_server(get_config_from_argv())
