@@ -79,7 +79,6 @@
   position: relative
   overflow-y: scroll
   max-height: 400px
-  padding: 20px
 
 .modal-footer
   padding: 10px 15px
@@ -98,8 +97,47 @@
     height: 27px
     width: 65px
 
-.modal.info .modal-dialog
-  width: 700px
+.modal.info
+  .modal-body
+    overflow-y: hidden
+  .modal-dialog
+    width: 700px
+  .tabbable
+    display: table
+    height: 400px
+    .nav-stacked
+      display: table-cell
+      width: 150px
+      border-right: 1px solid #eee
+      padding-top: 15px
+      +user-select(none)
+      li
+        &.active a
+          background-color: $accent-blue
+          color: $light-grey
+        &:not(.active) a:hover
+          background-color: shade($light-grey, 3%)
+          vertical-align: top
+      a
+        display: block
+        width: 80px
+        margin: 6px auto
+        color: $accent-blue
+        font-size: 14px
+        line-height: 32px
+        padding: 0 12px
+        border-radius: 2px
+        cursor: pointer
+    .tab-content
+      display: table-cell
+      padding: 15px
+      overflow-y: scroll
+      height: 300px
+      .tab-pane
+        height: 300px
+        display: none
+        &.active
+          display: block
 
 #save-preferences
   width: 100px
@@ -110,53 +148,6 @@
     border-color: tint($dark-grey, 20%)
   &:active
     background-color: tint($accent-blue, 10%)
-
-#info-body
-  width: 100%
-  display: table
-  .column
-    display: table-cell
-    vertical-align: top
-
-#info-nav
-  width: 150px
-  border-right: 1px solid #eee
-  padding-top: 15px
-  +user-select(none)
-  ul > li
-    display: block
-    width: 80px
-    margin: 6px auto
-    color: $accent-blue
-    font-size: 14px
-    line-height: 32px
-    padding: 0 12px
-    border-radius: 2px
-    cursor: pointer
-    &.selected
-      background-color: $accent-blue
-      color: $light-grey
-    &:not(.selected):hover
-      background-color: shade($light-grey, 3%)
-
-#info-contents
-  position: relative
-
-#info-body
-  $height: 350px
-  height: $height
-  .info-contents-pane
-    $padding: 15px
-    padding: $padding
-    position: absolute
-    height: $height - (2 * $padding)
-    overflow-y: auto
-    opacity: 0
-    +transition(opacity 100ms linear)
-    pointer-events: none
-    &.selected
-      opacity: 1
-      pointer-events: all
 
 #keyboard-shortcuts
   tr

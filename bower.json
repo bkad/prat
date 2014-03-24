@@ -24,8 +24,5 @@
     "angular-sanitize": "~1.2.13",
     "angular-cookies": "~1.2.13",
     "angular-ui-sortable": "~0.12.1"
-  },
-  "resolutions": {
-    "angular": "1.2.13"
   }
 }

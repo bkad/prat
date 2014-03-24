@@ -15,11 +15,11 @@ module = angular.module "prat", dependencies
 module.config ($routeProvider, $tooltipProvider) ->
   $routeProvider.when "/",
     templateUrl: "main-template"
-    controller: "mainCtrl"
+    controller: "main"
     controllerAs: "main"
 
   $tooltipProvider.options
     placement: "top"
-    animation: "true"
+    animation: true
     popupDelay: 0
     appendToBody: true

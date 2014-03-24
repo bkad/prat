@@ -1,5 +1,5 @@
 angular.module "prat"
-.controller "mainCtrl", ($scope, $http, $cookieStore, eventHub) ->
+.controller "main", ($scope, $http, $cookieStore, $modal, eventHub) ->
   $scope.leftSidebarClosed = $cookieStore.get("leftSidebarClosed") ? false
   $scope.rightSidebarClosed = $cookieStore.get("rightSidebarClosed") ? false
   $scope.activeChannel = INITIAL.lastSelectedChannel
@@ -85,6 +85,12 @@ angular.module "prat"
         action: "reorder_channels"
         data:
           channels: $scope.channelOrder
+
+  $scope.infoModal = ->
+    $modal.open
+      templateUrl: "info-template"
+      controller: "info"
+      windowClass: "info"
 
   fetchInitialMessages()
   fetchInitialStatuses()

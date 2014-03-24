@@ -50,13 +50,14 @@ coffee_files = [
   "angular/services",
   "angular/services/event-hub",
   "angular/controllers/main",
+  "angular/controllers/info",
 ]
 
 sass_files = ["all"]
 
 #mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
     #"boolean_preference"]
-template_files = ["main"]
+template_files = ["main", "info"]
 
 @frontend.route('')
 def index():
@@ -90,7 +91,7 @@ def index():
   return (render_square_bracket_template("index.htmljinja", { "initial": context }), 200, headers)
 
 def get_templates():
-  #write_info_template()
+  write_info_template()
   templates = []
   for template_name in template_files:
     template_content = read_template(template_name + ".html")
@@ -122,5 +123,5 @@ def write_info_template():
   args = { name: markdown.render(read_template(name + ".md"))
       for name in ["channel_info", "markdown_info", "faq"] }
   rendered = render_square_bracket_template("info.mustachejinja", args)
-  with codecs.open("chat/templates/info.mustache", "w", encoding="utf-8") as template_file:
+  with codecs.open("chat/templates/info.html", "w", encoding="utf-8") as template_file:
     template_file.write(rendered)
