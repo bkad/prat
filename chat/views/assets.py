@@ -6,8 +6,8 @@ from os import path
 
 import coffeescript
 import fabric.api
-from fabric.operations import local
 from flask import Blueprint, abort, current_app, make_response, _app_ctx_stack, url_for
+from gevent import subprocess
 from werkzeug.local import LocalProxy
 
 assets = Blueprint("assets", __name__)
@@ -60,6 +60,9 @@ def get_cached_asset(asset_path):
   relative_path, absolute_path = get_filesystem_paths(asset_path)
   last_modified = path.getmtime(absolute_path)
   cached_asset = assets_cache[asset_path]
+  #TODO(kevin): using a root sass file at the moment, which breaks this caching scheme
+  if asset_path.endswith(".sass"):
+    cached_asset = None
   if cached_asset is not None and last_modified <= cached_asset.last_modified:
     return cached_asset
   compiled_asset = compile_asset(asset_path)
@@ -71,12 +74,11 @@ def compile_asset(asset_path):
   with current_app.open_resource(relative_path) as fp:
     file_contents = fp.read()
   if asset_path.endswith(".sass"):
-    with fabric.api.settings(warn_only=True):
-      result = local("sass --line-numbers --line-comments chat/{}".format(relative_path), capture=True)
-    if result.succeeded:
-      content = result.decode("utf-8")
-    else:
-      raise ValueError(result.stderr)
+    try:
+      args = ["sass", "--line-numbers", "--line-comments", "chat/"+relative_path]
+      content = subprocess.check_output(args, stderr=subprocess.STDOUT).decode("utf-8")
+    except subprocess.CalledProcessError as e:
+      raise ValueError(e.output)
     content_type = "text/css"
   elif asset_path.endswith(".coffee"):
     content = coffee_compiler.compile(file_contents)
