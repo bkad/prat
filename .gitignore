@@ -2,7 +2,7 @@
 # TODO: don't ignore node_modules, use node shrinkwrap instead
 /node_modules/*
 /build/
-chat/templates/info.mustache
+chat/templates/info.html
 chat/templates/index.htmljinja
 chat/static/components
 .vagrant

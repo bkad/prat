@@ -122,6 +122,6 @@ def render_square_bracket_template(template_name, context):
 def write_info_template():
   args = { name: markdown.render(read_template(name + ".md"))
       for name in ["channel_info", "markdown_info", "faq"] }
-  rendered = render_square_bracket_template("info.mustachejinja", args)
+  rendered = render_square_bracket_template("info.htmljinja", args)
   with codecs.open("chat/templates/info.html", "w", encoding="utf-8") as template_file:
     template_file.write(rendered)
