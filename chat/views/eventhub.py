@@ -1,4 +1,5 @@
 import datetime
+import errno
 import socket
 import uuid
 
@@ -125,10 +126,15 @@ def eventhub_client():
           handle_leave_channel(data["channel"], subscribe_socket, push_socket, g.client_id)
         elif action == "reorder_channels":
           handle_reorder_channels(data["channels"], push_socket, g.client_id)
-  except geventwebsocket.WebSocketError, e:
-    print "{0} {1}".format(e.__class__.__name__, e)
-  except socket.error, e:
+  except geventwebsocket.WebSocketError:
     pass
+  except socket.error:
+    pass
+  except IOError, e:
+    if e.errno == errno.EPIPE:
+      pass
+    else:
+      raise
 
   # TODO(kle): figure out how to clean up websockets left in a CLOSE_WAIT state
   subscribe_socket.close()
