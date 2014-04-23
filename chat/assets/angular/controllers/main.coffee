@@ -42,7 +42,9 @@ angular.module "prat"
 
   appendMessage = (channel, message) ->
     messageGroups = $scope.channels[channel].messageGroups
-    if messageGroups.length is 0 or ((message.datetime - messageGroups[messageGroups.length - 1].datetime) > collapseTimeWindow)
+    lastMessageGroup = messageGroups[messageGroups.length - 1]
+    if messageGroups.length is 0 or lastMessageGroup.user.username isnt message.user.username or
+        (message.datetime - lastMessageGroup.datetime) > collapseTimeWindow
       messageGroups.push
         datetime: message.datetime
         user: message.user
