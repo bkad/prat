@@ -20,44 +20,34 @@ vendor_js_files = [
   "angular-cookies/angular-cookies.js",
   "angular-sanitize/angular-sanitize.js",
   "angular-route/angular-route.js",
-  "angular-bindonce/bindonce.js",
   "angular-ui-bootstrap-bower/ui-bootstrap-tpls.js",
-  "angular-ui-router/release/angular-ui-router.js",
   "angular-ui-utils/ui-utils.js",
   "angular-ui-sortable/sortable.js",
   "jquery-ui/ui/jquery.ui.core.js",
   "jquery-ui/ui/jquery.ui.widget.js",
   "jquery-ui/ui/jquery.ui.mouse.js",
   "jquery-ui/ui/jquery.ui.sortable.js",
-  #"jquery-caret/jquery.caret.js",
-  #"jquery.scrollTo/jquery.scrollTo.js",
-  #"prat-bootstrap/js/bootstrap-transition.js",
-  #"prat-bootstrap/js/bootstrap-alert.js",
-  #"prat-bootstrap/js/bootstrap-modal.js",
-  #"prat-bootstrap/js/bootstrap-tooltip.js",
-  "js-md5/js/md5.js",
-  #"mustache/mustache.js",
   "underscore/underscore.js",
   "backbone/backbone.js",
-  #"jquery.hotkeys/jquery.hotkeys.js",
-  #"spin.js/spin.js",
 ]
 
-#coffee_files = ["user_guide", "util", "message_hub", "chat", "chat_controls", "channel_controls",
-    #"datetime", "sound", "alert", "user_statuses", "preferences", "imgur_uploader", "initialize"]
 coffee_files = [
-  "angular/app",
-  "angular/services",
-  "angular/services/event-hub",
-  "angular/controllers/main",
-  "angular/controllers/info",
+  "app",
+  "directives",
+  "directives/messages",
+  "services",
+  "services/event-hub",
+  "services/human-date",
+  "controllers/main",
+  "controllers/info",
 ]
 
 sass_files = ["all"]
 
-#mustache_files = ["message_container", "message_partial", "alert", "user_status", "channel_button", "info",
-    #"boolean_preference"]
-template_files = ["main", "info"]
+template_files = [
+  ("main", "html"),
+  ("info", "html"),
+]
 
 @frontend.route('')
 def index():
@@ -88,13 +78,13 @@ def index():
     "Cache-Control": "no-store",
   }
 
-  return (render_square_bracket_template("index.htmljinja", { "initial": context }), 200, headers)
+  return (render_square_bracket_template("index.htmljinja", {"initial": context}), 200, headers)
 
 def get_templates():
   write_info_template()
   templates = []
-  for template_name in template_files:
-    template_content = read_template(template_name + ".html")
+  for template_name, extension in template_files:
+    template_content = read_template("{name}.{ext}".format(name=template_name, ext=extension))
     templates.append((template_name + "-template", template_content))
   return templates
 
@@ -120,7 +110,7 @@ def render_square_bracket_template(template_name, context):
   return template.render(**context)
 
 def write_info_template():
-  args = { name: markdown.render(read_template(name + ".md"))
+  args = { name: markdown.render(read_template("{}.md".format(name)))
       for name in ["channel_info", "markdown_info", "faq"] }
   rendered = render_square_bracket_template("info.htmljinja", args)
   with codecs.open("chat/templates/info.html", "w", encoding="utf-8") as template_file:

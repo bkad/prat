@@ -1,16 +1,14 @@
-dependencies = [
+module = angular.module "prat", [
   "ngCookies"
   "ngRoute"
   "ngSanitize"
   "ui.bootstrap"
   "ui.keypress"
-  "ui.router"
   "ui.sortable"
   "prat.services"
-  "pasvaz.bindonce"
 ]
 
-module = angular.module "prat", dependencies
+module.constant("config", INITIAL)
 
 module.config ($routeProvider, $tooltipProvider) ->
   $routeProvider.when "/",

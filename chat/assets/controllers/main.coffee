@@ -1,10 +1,10 @@
 angular.module "prat"
-.controller "main", ($scope, $http, $cookieStore, $modal, eventHub) ->
+.controller "main", ($scope, $http, $cookieStore, $modal, config, eventHub) ->
   $scope.leftSidebarClosed = $cookieStore.get("leftSidebarClosed") ? false
   $scope.rightSidebarClosed = $cookieStore.get("rightSidebarClosed") ? false
-  $scope.activeChannel = INITIAL.lastSelectedChannel
-  $scope.channelOrder = INITIAL.channels
-  collapseTimeWindow = INITIAL.collapseTimeWindow
+  $scope.activeChannel = config.lastSelectedChannel
+  $scope.channelOrder = config.channels
+  collapseTimeWindow = config.collapseTimeWindow
 
   $scope.preferences =
     hideOffline = false
