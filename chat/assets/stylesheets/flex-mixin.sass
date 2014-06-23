@@ -1,0 +1,152 @@
+// NOTE: This mixin overrides the Bourbon version, for IE 10 and Safari 6.0/6.1 support
+
+=display($value)
+  //  flex | inline-flex
+  @if $value == "flex"
+    display: -webkit-box
+    display: -ms-flexbox
+    display: -webkit-flex
+    display: flex
+  @else if $value == "inline-flex"
+    display: -ms-inline-flexbox
+    display: -webkit-inline-flex
+    display: inline-flex
+  @else
+    display: $value
+
+// Flexbox 2012 mixins
+=flex($value)
+  -webkit-box-flex: $value
+  +prefixer(flex, $value, webkit ms spec)
+
+=flex-direction($value: row)
+  @if $value == "row"
+    -webkit-box-orient: horizontal
+  @else if $value == "column"
+    -webkit-box-orient: vertical
+  @else if $value == "row-reverse"
+    -webkit-box-orient: horizontal
+    -webkit-box-direction: reverse
+  @else if $value == "column-reverse"
+    -webkit-box-orient: vertical
+    -webkit-box-direction: reverse
+  -ms-flex-flow: $value
+  //  row | row-reverse | column | column-reverse
+  +prefixer(flex-direction, $value, webkit spec)
+
+=flex-wrap($value: nowrap)
+  @if $value == "wrap"
+    -webkit-box-lines: multiple
+  @else if $value == "nowrap"
+    -webkit-box-lines: single
+  // nowrap | wrap | wrap-reverse
+  +prefixer(flex-wrap, $value, webkit spec)
+
+=flex-flow($value)
+  // flex-direction || flex-wrap
+  +prefixer(flex-flow, $value, webkit spec)
+
+=order($int: 0)
+  -webkit-box-ordinal-group: $int
+  -ms-flex-order: $int
+  +prefixer(order, $int, webkit spec)
+
+=flex-grow($number: 0)
+  -webkit-box-flex: $number
+  +prefixer(flex-grow, $number, webkit spec)
+
+=flex-shrink($number: 1)
+  +prefixer(flex-shrink, $number, webkit spec)
+
+=flex-basis($width: auto)
+  +prefixer(flex-basis, $width, webkit spec)
+
+=justify-content($value: flex-start)
+  @if $value == "flex-start"
+    -webkit-box-pack: start
+    -ms-flex-pack: start
+  @else if $value == "flex-end"
+    -webkit-box-pack: end
+    -ms-flex-pack: end
+  @else if $value == "space-between" or $value == "space-around"
+    -webkit-box-pack: justify
+    -ms-flex-pack: justify
+  @else
+    -webkit-box-pack: $value
+    -ms-flex-pack: $value
+
+  // flex-start | flex-end | center | space-between | space-around
+  +prefixer(justify-content, $value, webkit spec)
+
+=align-items($value: stretch)
+  @if $value == "flex-start"
+    -webkit-box-align: start
+    -ms-flex-align: start
+  @else if $value == "flex-end"
+    -webkit-box-align: end
+    -ms-flex-align: end
+  @else if $value == "space-between" or $value == "space-around"
+    -webkit-box-align: justify
+    -ms-flex-align: justify
+  @else
+    -webkit-box-align: $value
+    -ms-flex-align: $value
+
+  // flex-start | flex-end | center | baseline | stretch
+  +prefixer(align-items, $value, webkit spec)
+
+=align-self($value: auto)
+  // auto | flex-start | flex-end | center | baseline | stretch
+  +prefixer(align-self, $value, webkit spec)
+
+=align-content($value: stretch)
+  @if $value == "flex-start"
+    -ms-flex-line-pack: start
+  @else if $value == "flex-end"
+    -ms-flex-line-pack: end
+  @else if $value == "space-between" or $value == "space-around"
+    -ms-flex-line-pack: justify
+  @else
+    -ms-flex-line-pack: $value
+  // flex-start | flex-end | center | space-between | space-around | stretch
+  +prefixer(align-content, $value, webkit spec)
+
+
+.flex
+  +display(flex)
+
+  &.row
+    +flex-direction(row)
+
+  &.col
+    +flex-direction(column)
+
+  &.justify-center
+    +justify-content(center)
+
+  &.justify-start
+    +justify-content(flex-start)
+
+  &.justify-end
+    +justify-content(flex-end)
+
+  &.justify-between
+    +justify-content(space-between)
+
+  &.justify-around
+    +justify-content(space-around)
+
+  &.align-start
+    +align-items(flex-start)
+
+  &.align-end
+    +align-items(flex-end)
+
+  &.align-center
+    +align-items(center)
+
+  &.align-baseline
+    +align-items(baseline)
+
+  &.align-stretch
+    +align-items(stretch)
