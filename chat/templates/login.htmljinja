@@ -1,7 +1,7 @@
 
 {#{% block head %}#}
 <link type="text/css" rel="stylesheet" href="/static/vendor/css/openid.css" />
-<script src="/static/components/jquery/jquery.min.js"></script>
+<script src="/static/components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="/static/vendor/js/openid-jquery.js"></script>
 <script type="text/javascript" src="/static/vendor/js/openid-en.js"></script>
 <script type="text/javascript">

@@ -23,4 +23,4 @@ class window.Sound
     source = @context.createBufferSource()
     source.buffer = @newMessageAudio
     source.connect(@context.destination)
-    source.noteOn(0)
+    source.start()

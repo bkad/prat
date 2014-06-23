@@ -14,7 +14,7 @@ def read_template(template_name):
     return template.read().decode("utf-8")
 
 vendor_js_files = [
-  "jquery/jquery.js",
+  "jquery/dist/jquery.js",
   "jquery-ui/ui/jquery.ui.core.js",
   "jquery-ui/ui/jquery.ui.widget.js",
   "jquery-ui/ui/jquery.ui.mouse.js",
