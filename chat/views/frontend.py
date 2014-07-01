@@ -27,7 +27,7 @@ vendor_js_files = [
   "jquery-ui/ui/jquery.ui.widget.js",
   "jquery-ui/ui/jquery.ui.mouse.js",
   "jquery-ui/ui/jquery.ui.sortable.js",
-  "mustache/mustache.js"
+  "mustache/mustache.js",
   "underscore/underscore.js",
   "backbone/backbone.js",
 ]
@@ -42,6 +42,8 @@ coffee_files = [
   "controllers/main",
   "controllers/info",
 ]
+
+coffee_files = ["scripts/" + f for f in coffee_files]
 
 sass_files = ["all"]
 
