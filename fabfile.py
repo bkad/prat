@@ -20,7 +20,7 @@ env.use_ssh_config = True
 if env.hosts == []:
   env.hosts = ["pratchat.com"]
 
-uglify, coffee, ngmin = ["./node_modules/.bin/" + command for command in ["uglifyjs", "coffee", "ngmin"]]
+uglify, coffee, ngannotate = ["./node_modules/.bin/" + command for command in ["uglifyjs", "coffee", "ng-annotate"]]
 
 def write_asset_contents(contents, extension):
   fingerprint = hashlib.md5(contents).hexdigest()
@@ -54,8 +54,8 @@ def write_config():
   vendor_js = compile_vendor_js()
 
   coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
-  coffee_command = "{0} -cp {1} | {2} | {3} - -c -m --screw-ie8".format(coffee, coffee_paths, ngmin, uglify)
-  coffee_js = local(coffee_command, capture=True)
+  command = "{0} -cp {1} | {2} -a - | {3} - -c -m --screw-ie8".format(coffee, coffee_paths, ngannotate, uglify)
+  coffee_js = local(command, capture=True)
 
   all_js = vendor_js + coffee_js
   js_filename = write_asset_contents(all_js, "js")

@@ -1,6 +1,6 @@
 CoffeeScript==1.0.5
 Fabric==1.8.2
-Flask==0.10
+Flask==0.10.1
 Flask-OpenID==1.1.1
 Pygments==1.6
 chaussette==1.0
