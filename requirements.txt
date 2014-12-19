@@ -12,6 +12,7 @@ pymongo==2.5.2
 pyzmq==14.1.0
 redis==2.9.1
 toml==0.8.1
+click==3.3
 
 # ancillary packages for gevent-websocket
 ujson==1.33

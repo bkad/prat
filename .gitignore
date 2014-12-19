@@ -2,8 +2,8 @@
 # TODO: don't ignore node_modules, use node shrinkwrap instead
 /node_modules/*
 /build/
-chat/templates/info.html
-chat/templates/index.htmljinja
-chat/static/components
+prat/templates/info.html
+prat/templates/index.htmljinja
+prat/static/components
 .vagrant
 .sass-cache

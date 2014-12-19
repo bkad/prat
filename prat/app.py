@@ -1,19 +1,20 @@
+import gevent.monkey
+gevent.monkey.patch_all()
+
 from . import views
 from .config import Config
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
-from chat.views.auth import oid
-from chat.datastore import get_user
-from chat.crypto import check_request
-import gevent.monkey
+from prat.views.auth import oid
+from prat.datastore import get_user
+from prat.crypto import check_request
 import urllib
 from urlparse import urlparse
 import logging
 from logging.handlers import SMTPHandler
 from logging import Formatter
 
-gevent.monkey.patch_all()
 
-DEFAULT_APP = "chat"
+DEFAULT_APP = "prat"
 DEFAULT_BLUEPRINTS = (
     (views.frontend, "/", "login_required"),
     (views.assets, "/assets", "login_required"),
@@ -22,13 +23,12 @@ DEFAULT_BLUEPRINTS = (
     (views.auth, "/auth", None),
 )
 
-def create_app(config_filename=None, app_name=None, blueprints=None):
+def create_app(config=None, app_name=None, blueprints=None):
   if app_name is None:
     app_name = DEFAULT_APP
-  if config_filename is None:
+  if config is None:
     config = Config()
-  else:
-    config = Config.import_toml(config_filename)
+
   if blueprints is None:
     blueprints = DEFAULT_BLUEPRINTS
 

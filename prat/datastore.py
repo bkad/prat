@@ -1,6 +1,6 @@
 import pymongo
-from chat import markdown
-from chat.tardis import datetime_to_unix
+from prat import markdown
+from prat.tardis import datetime_to_unix
 from pymongo import DESCENDING, ASCENDING, MongoClient
 from flask import current_app
 from werkzeug.local import LocalProxy

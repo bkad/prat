@@ -1,11 +1,11 @@
 # coding=utf-8
 
 from flask import Blueprint, g, render_template, request, current_app, redirect, url_for
-from chat.views.assets import asset_url
-from chat.datastore import get_user_preferences, db, add_user_to_channel
+from prat.views.assets import asset_url
+from prat.datastore import get_user_preferences, db, add_user_to_channel
 from urlparse import urlparse
 import codecs
-from chat import markdown
+from prat import markdown
 
 frontend = Blueprint("frontend", __name__)
 
@@ -98,7 +98,7 @@ def write_main_template():
       sass_files=sass_files,
       asset_url=asset_url,
       vendor_js_files=vendor_js_files)
-  with codecs.open("chat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:
+  with codecs.open("prat/templates/index.htmljinja", "w", encoding="utf-8") as template_file:
     template_file.write(template)
 
 def render_square_bracket_template(template_name, context):
@@ -116,5 +116,5 @@ def write_info_template():
   args = { name: markdown.render(read_template("{}.md".format(name)))
       for name in ["channel_info", "markdown_info", "faq"] }
   rendered = render_square_bracket_template("info.htmljinja", args)
-  with codecs.open("chat/templates/info.html", "w", encoding="utf-8") as template_file:
+  with codecs.open("prat/templates/info.html", "w", encoding="utf-8") as template_file:
     template_file.write(rendered)

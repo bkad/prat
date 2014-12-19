@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from chat import string_filters
+from prat import string_filters
 import os
 import toml
 
 class Config(object):
-  """Default configuration for chat app"""
+  """Default configuration for prat app"""
   DEBUG = True
 
   # Needed for websocket cleanup
@@ -60,6 +60,6 @@ class Config(object):
         setattr(self, key.upper(), value)
 
   @classmethod
-  def import_toml(cls, file_name):
-    config = toml.load(file_name)
+  def import_toml(cls, fd):
+    config = {} if fd is None else toml.load(fd)
     return cls(config)

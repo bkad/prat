@@ -1,9 +1,9 @@
 from flask import Blueprint, request, g
-from chat.utils import jsonify
+from prat.utils import jsonify
 from bson import InvalidDocument
-from chat.datastore import (get_channel_users, get_recent_messages, get_messages_since_id,
+from prat.datastore import (get_channel_users, get_recent_messages, get_messages_since_id,
     get_user_preferences, update_user_preferences)
-from chat import markdown
+from prat import markdown
 
 api = Blueprint("api", __name__)
 

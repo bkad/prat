@@ -14,16 +14,10 @@ import sys
 from ..config import Config
 from .utils import get_config
 
-def main(args):
-    config = Config()
-    if args["config"] is not None:
-        config = get_config(args["config"])
-        if (config is None):
-            sys.exit("Could not load config")
-
+def backup_events(config, date, log_directory):
     event_collection = mongo_collection(config.MONGO_HOST, config.MONGO_PORT,
                                         config.MONGO_DB_NAME, "events")
-    backup_date = datetime.datetime.strptime(args["backup_date"], "%Y-%m-%d")
+    backup_date = datetime.datetime.strptime(date, "%Y-%m-%d")
     next_day = backup_date + datetime.timedelta(days=1)
 
     days_events = event_collection.find({"datetime": {"$gte": backup_date,
@@ -34,7 +28,7 @@ def main(args):
         if channel not in channel_files:
             filename = "pratlog.{0}.{1}.txt".format(valid_filename(channel),
                                                     backup_date.strftime("%Y-%m-%d"))
-            output_file = open(os.path.join(args["log_directory"], filename), "w")
+            output_file = open(os.path.join(log_directory, filename), "w")
             channel_files[channel] = output_file
         else:
             output_file = channel_files[channel]
@@ -59,18 +53,3 @@ def valid_filename(filename):
     valid_chars = "-_.() {0}{1}".format(string.ascii_letters, string.digits)
     filename = ''.join(c for c in filename if c in valid_chars)
     return filename
-
-if __name__ == "__main__":
-    yesterday = datetime.datetime.combine(
-        datetime.date.today() - datetime.timedelta(days=1),
-        datetime.time()).strftime("%Y-%m-%d")
-    parser = argparse.ArgumentParser(description = __doc__)
-    parser.add_argument("-d", "--backup-date", default=yesterday,
-                        help="As 'YYYY-mm-dd'")
-    parser.add_argument("-c", "--config", default=None,
-                        help="eg. 'config.MyConfig'")
-    parser.add_argument("-l", "--log-directory", default=".",
-                        help="eg. '/var/log/prat'")
-    args = vars(parser.parse_args())
-
-    main(args)

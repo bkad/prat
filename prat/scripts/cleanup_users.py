@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-  chat.scripts.cleanup_users
+  prat.scripts.cleanup_users
   ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   Small process that sets users to "offline" if their user-client key has expired in Redis.
@@ -16,8 +16,7 @@ import re
 
 from ..app import create_app
 from ..datastore import (zmq_channel_key, db, redis_db, redis_channel_key, user_clients_key, get_user,
-    get_active_clients_count, get_user_statuses, set_user_channel_status)
-from .utils import get_config_filename_from_argv
+                         get_active_clients_count, get_user_statuses, set_user_channel_status)
 from ..views.eventhub import send_user_status_update
 from ..zmq_context import push_socket
 
@@ -69,8 +68,3 @@ def clean_users():
     if get_active_clients_count(email) == 0:
       send_user_offline(email, push_socket, pipeline)
   pipeline.execute()
-
-if __name__ == "__main__":
-  app = create_app(get_config_filename_from_argv())
-  with app.test_request_context():
-    clean_users_loop()

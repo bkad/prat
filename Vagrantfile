@@ -10,8 +10,9 @@ Welcome to your Vagrant-built virtual machine for prat.
 
 To start your prat server go into the prat directory and start the two servers:
   cd #{prat_dir_name}
-  python -m chat.scripts.event_server &
-  python run_server.py
+  pip install .
+  prat event-server
+  prat app-server
 
 Then open up your host browser to http://localhost:5000
 MOTD

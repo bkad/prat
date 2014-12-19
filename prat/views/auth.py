@@ -1,9 +1,9 @@
 from flask import Blueprint, g, render_template, request, session, redirect, current_app
 from flask.ext.openid import OpenID
 from hashlib import md5
-from chat.datastore import db, add_user_to_channel, get_user
-from chat.zmq_context import zmq_context, push_socket
-from chat.views.eventhub import send_join_channel
+from prat.datastore import db, add_user_to_channel, get_user
+from prat.zmq_context import zmq_context, push_socket
+from prat.views.eventhub import send_join_channel
 import urllib
 import uuid
 

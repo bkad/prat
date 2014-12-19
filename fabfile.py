@@ -7,8 +7,8 @@ from fabric.operations import local
 from fabric.state import env
 import toml
 
-from chat import create_app
-from chat.views.frontend import vendor_js_files, coffee_files, sass_files, write_main_template
+from prat import create_app
+from prat.views.frontend import vendor_js_files, coffee_files, sass_files, write_main_template
 
 # bullshit where we need to unmonkey patch stuff gevent touched
 import select
@@ -25,7 +25,7 @@ uglify, coffee, ngannotate = ["./node_modules/.bin/" + command for command in ["
 def write_asset_contents(contents, extension):
   fingerprint = hashlib.md5(contents).hexdigest()
   target_filename = "/static/app_{1}_{0}.{1}".format(fingerprint, extension)
-  with open("chat" + target_filename, "w") as target_file:
+  with open("prat" + target_filename, "w") as target_file:
     target_file.write(contents)
   return target_filename
 
@@ -34,10 +34,10 @@ def compile_assets_file(command, extension):
   return write_asset_contents(compiled, extension)
 
 def cleanup():
-  files = ["chat/static/app_js_*.js",
-           "chat/static/app_css_*.css",
+  files = ["prat/static/app_js_*.js",
+           "prat/static/app_css_*.css",
            "config.py",
-           "chat/templates/index.htmljinja",
+           "prat/templates/index.htmljinja",
           ]
   local("rm -f {0}".format(" ".join(files)))
 
@@ -45,7 +45,7 @@ def cleanup():
   local("find . -name \"*.pyc\" -exec rm -rf {} \\;")
 
 def compile_vendor_js():
-  vendor_files = ["chat/static/components/{0}".format(filename) for filename in vendor_js_files]
+  vendor_files = ["prat/static/components/{0}".format(filename) for filename in vendor_js_files]
   return local("{0} {1} -c -m --screw-ie8".format(uglify, " ".join(vendor_files)), capture=True)
 
 def write_config():
@@ -53,7 +53,7 @@ def write_config():
 
   vendor_js = compile_vendor_js()
 
-  coffee_paths = " ".join(["chat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
+  coffee_paths = " ".join(["prat/assets/{0}.coffee".format(file_path) for file_path in coffee_files])
   command = "{0} -cp {1} | {2} -a - | {3} - -c -m --screw-ie8".format(coffee, coffee_paths, ngannotate, uglify)
   coffee_js = local(command, capture=True)
 
@@ -62,7 +62,7 @@ def write_config():
 
   compiled = ""
   for name in sass_files:
-    compiled += local("sass -t compressed chat/assets/stylesheets/{}.sass".format(name), capture=True)
+    compiled += local("sass -t compressed prat/assets/stylesheets/{}.sass".format(name), capture=True)
   css_filename = write_asset_contents(compiled, "css")
 
   config = {

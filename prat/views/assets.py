@@ -75,7 +75,7 @@ def compile_asset(asset_path):
     file_contents = fp.read()
   if asset_path.endswith(".sass"):
     try:
-      args = ["sass", "--line-numbers", "--line-comments", "chat/"+relative_path]
+      args = ["sass", "--line-numbers", "--line-comments", "prat/"+relative_path]
       content = subprocess.check_output(args, stderr=subprocess.STDOUT).decode("utf-8")
     except subprocess.CalledProcessError as e:
       raise ValueError(e.output)

@@ -9,12 +9,12 @@ import geventwebsocket
 import ujson as json
 import zmq.green as zmq
 
-from chat import markdown
-from chat.datastore import (db, get_redis_connection, message_dict_from_event_object, remove_user_from_channel,
+from prat import markdown
+from prat.datastore import (db, get_redis_connection, message_dict_from_event_object, remove_user_from_channel,
                             add_user_to_channel, zmq_channel_key, set_user_channel_status,
                             add_to_user_clients, remove_from_user_clients, get_active_clients_count,
                             get_user_channel_status, reorder_user_channels, refresh_user_client)
-from chat.zmq_context import zmq_context, push_socket
+from prat.zmq_context import zmq_context, push_socket
 
 eventhub = Blueprint("eventhub", __name__)
 

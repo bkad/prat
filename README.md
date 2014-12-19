@@ -6,7 +6,7 @@ system package prerequisites:
 
 to install python requirements (i recommend use of virtualenv)
 
-`pip install -r requirements.txt`
+`pip install --editable .`
 
 to install nodejs requirements (using local package.json file)
 
@@ -22,6 +22,6 @@ to install javascript/css dependencies
 
 running the servers:
 
-`python -m chat.scripts.event_server`
-`python run_server.py`
+`prat event-server`
+`prat app-server`
 and make sure mongod and redis-server is running
