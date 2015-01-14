@@ -1,4 +1,4 @@
-angular.module "prat.services"
+angular.module "prat"
 .factory "eventHub", ($q) ->
   class EventHub
     _.extend @::, Backbone.Events

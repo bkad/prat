@@ -47,14 +47,14 @@
     <div class="message-container" ng-repeat="group in channels[channel].messageGroups">
       <div class="author-container">
         <div>
-          <img class="gravatar" height="18" width="18" ng-src="{{group.user.gravatar}}">
-          <div class="author">{{group.user.name}} <span class="username">({{group.user.username}})</span></div>
+          <img class="gravatar" height="18" width="18" ng-src="{{::group.user.gravatar}}">
+          <div class="author">{{::group.user.name}} <span class="username">({{::group.user.username}})</span></div>
         </div>
         <div>
           <div class="time">24 minutes ago</div>
         </div>
       </div>
-      <div class="message" ng-repeat="message in group.messages" ng-bind-html="message.rendered_message"></div>
+      <div class="message" ng-repeat="message in group.messages" ng-bind-html="::message.rendered_message"></div>
     </div>
   </div>
   <div class="input-container" ng-show="channel == activeChannel" ng-repeat="channel in channelOrder"
@@ -73,8 +73,8 @@
   <div class="channel-users" ng-repeat="channel in channelOrder" ng-show="channel == activeChannel">
     <div class="user-status" ng-repeat="user in channels[channel].users|orderBy:userSort"
           ng-hide="preferences.hideOffline && user.status == 'offline'" ng-class="{offline: user.status == 'offline'}">
-      <img class="gravatar" height="18" width="18" ng-src="{{user.gravatar}}"></img>
-      {{user.name}}
+      <img class="gravatar" height="18" width="18" ng-src="{::{user.gravatar}}"></img>
+      {{::user.name}}
     </div>
   </div>
 </div>

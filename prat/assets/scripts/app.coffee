@@ -5,7 +5,6 @@ module = angular.module "prat", [
   "ui.bootstrap"
   "ui.keypress"
   "ui.sortable"
-  "prat.services"
 ]
 
 module.constant("config", INITIAL)

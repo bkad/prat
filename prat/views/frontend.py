@@ -32,18 +32,16 @@ vendor_js_files = [
   "backbone/backbone.js",
 ]
 
-coffee_files = [
+coffee_files = ["scripts/" + f for f in [
   "app",
-  "directives",
   "directives/messages",
-  "services",
+  "directives/check-scrolled-to-bottom",
   "services/event-hub",
   "services/human-date",
+  "services/scrolled-to-bottom",
   "controllers/main",
   "controllers/info",
-]
-
-coffee_files = ["scripts/" + f for f in coffee_files]
+]]
 
 sass_files = ["all"]
 

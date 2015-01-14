@@ -5,7 +5,7 @@ class MessageView extends Backbone.View
     @datetime = options.datetime
     @collapseTime = options.collapseTime
   
-angular.module "prat.directives"
+angular.module "prat"
 .directive "messages", (eventHub, config, humanDate) ->
   restrict: "E"
   template: ""
