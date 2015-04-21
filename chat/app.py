@@ -1,7 +1,6 @@
 from . import views
 from .config import DefaultConfig
 from flask import Flask, g, jsonify, request, render_template, session, redirect, url_for
-from chat.views.auth import oid
 from chat.datastore import get_user
 from chat.crypto import check_request
 import gevent.monkey
@@ -36,7 +35,6 @@ def create_app(config=None, app_name=None, blueprints=None):
   configure_blueprints(app, blueprints)
   configure_before_handlers(app)
   configure_error_handlers(app)
-  oid.init_app(app)
   return app
 
 
@@ -44,9 +42,7 @@ def check_login():
   if getattr(g, "user", None) is None:
     if using_api_key_auth():
       return "Invalid signature", 400
-    redirect_query_string = urllib.urlencode([("next", request.path),
-                                              ("args", urlparse(request.url).query)])
-    return redirect(url_for("auth.login") + "?" +  redirect_query_string)
+    return redirect(url_for("auth.login"))
 
 def using_api_key_auth():
   return all(arg in request.args for arg in ["api_key", "signature", "expires"])
