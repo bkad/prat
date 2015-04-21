@@ -8,6 +8,16 @@ class DefaultConfig(object):
   DEBUG = True
   SECRET_KEY = os.environ.get("PRAT_SECRET", "seeeecrets")
 
+  GOOGLE_LOGIN_CLIENT_ID = "<client-id>.apps.googleusercontent.com"
+  GOOGLE_LOGIN_CLIENT_SECRET = "seeeeeecrets"
+
+  OAUTH_CREDENTIALS={
+    'google': {
+      'id': GOOGLE_LOGIN_CLIENT_ID,
+      'secret': GOOGLE_LOGIN_CLIENT_SECRET
+    }
+  }
+
   IMGUR_CLIENT_ID = "df8c7d107087408"
 
   APP_NAME = u"prat"
