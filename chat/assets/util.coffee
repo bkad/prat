@@ -9,9 +9,11 @@ window.Util =
   # Cons: Deleting text requires a trick (select the text before emitting this event). Also, this doesn't work
   # in Firefox. Whatevs.
   insertTextAtCursor: (element, text) ->
-    event = document.createEvent("TextEvent")
-    event.initTextEvent("textInput", true, true, null, text)
-    element.dispatchEvent(event)
+    startPos = element.selectionStart
+    endPos = element.selectionEnd
+    element.value = element.value.substring(0, startPos) + text + element.value.substring(endPos, element.value.length)
+    element.selectionStart = startPos + text.length
+    element.selectionEnd = startPos + text.length
 
   scrolledToBottom: ->
     # if a scrolling animation is taking place, we are at the bottom
